@@ -438,9 +438,7 @@ export default function PricingCard({
             }
             setShowUpgradeOptions(!showUpgradeOptions);
           }}
-          className={`bg-[#ff4c00] text-white border-none py-2 px-4 font-semibold text-sm rounded-[0.5rem] w-full cursor-pointer transition-all duration-300 hover:bg-[#e24300] mb-4 ${
-            title === "IGNITE" || title === "PRIME" ? "mt-[1rem]" : ""
-          }`}
+          className="bg-[#ff4c00] text-white border-none py-2 px-4 font-semibold text-sm rounded-[0.5rem] w-full cursor-pointer transition-all duration-300 hover:bg-[#e24300] mb-4"
         >
           {showUpgradeOptions ? "Hide Upgrade Options" : "Upgrade Plan"}
         </button>
