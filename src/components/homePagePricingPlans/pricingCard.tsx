@@ -395,7 +395,7 @@ export default function PricingCard({
         <div
           className={`bg-[#f8f7f6] border border-[#f3dfd5] rounded-[0.4rem] p-4 mb-6 ${
             title === "IGNITE" || title === "PRIME"
-              ? "mt-[3.75rem]"
+              ? "mt-[2.3rem]"
               : tag === "ECONOMICAL" 
               ? "mt-9"
               : ""
