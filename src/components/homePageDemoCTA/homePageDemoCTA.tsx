@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useState } from "react";
 import styles from "./homePageDemoCTA.module.css";
 import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking";
 import { GTagUTM } from "@/src/utils/GTagUTM";
@@ -9,11 +10,45 @@ import { useGeoBypass } from "@/src/utils/useGeoBypass";
 
 export default function HomePageDemoCTA() {
   const router = useRouter();
+  const [emailCopied, setEmailCopied] = useState(false);
   const { isHolding, holdProgress, getButtonProps } = useGeoBypass({
     onBypass: () => {
       // Bypass will be handled by the event listener
     },
   });
+
+  const handleEmailClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const email = "support@flashfirejobs.com";
+    
+    try {
+      await navigator.clipboard.writeText(email);
+      setEmailCopied(true);
+      
+      // Reset the "Copied!" message after 2 seconds
+      setTimeout(() => {
+        setEmailCopied(false);
+      }, 2000);
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = email;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        setEmailCopied(true);
+        setTimeout(() => {
+          setEmailCopied(false);
+        }, 2000);
+      } catch (fallbackErr) {
+        console.error("Failed to copy email:", fallbackErr);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
 
   return (
     <section className={styles.demoSectionOuter}>
@@ -152,8 +187,32 @@ export default function HomePageDemoCTA() {
         <p className={styles.demoNote}>
           Limited slots available. Book your call now!
         </p>
+
+        <p className={styles.demoEmail}>
+          Or email us at{" "}
+          <a 
+            href="mailto:support@flashfirejobs.com"
+            onClick={handleEmailClick}
+            style={{ 
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              position: 'relative'
+            }}
+          >
+            support@flashfirejobs.com
+          </a>
+          {emailCopied && (
+            <span style={{ 
+              marginLeft: '8px', 
+              color: '#fff', 
+              fontSize: '0.9em',
+              fontWeight: '500'
+            }}>
+              - Copied to clipboard!
+            </span>
+          )}
+        </p>
       </div>
     </section>
   );
 }
-
