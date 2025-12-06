@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import PricingCard from "./pricingCard";
 import Image from "next/image";
@@ -31,8 +31,32 @@ export default function HomePagePricingPlans() {
   const [selectedPlanForBooster, setSelectedPlanForBooster] = useState<string | null>(null);
   const [selectedBoosterPlanIndex, setSelectedBoosterPlanIndex] = useState<number | null>(null);
   const [selectedBoosterIndex, setSelectedBoosterIndex] = useState<number | null>(null);
+  const optionsSectionRef = useRef<HTMLDivElement>(null);
+  const shouldScrollRef = useRef<boolean>(false);
 
   const currencySymbol = isCanadaContext ? "CA$" : "$";
+
+  // Scroll to options section when it becomes visible
+  useEffect(() => {
+    if (shouldScrollRef.current && optionsSectionRef.current) {
+      const scrollToOptions = () => {
+        if (optionsSectionRef.current) {
+          const elementTop = optionsSectionRef.current.getBoundingClientRect().top;
+          const offsetPosition = elementTop + window.pageYOffset - 100; // 100px offset from top
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+          shouldScrollRef.current = false;
+        }
+      };
+      
+      // Use requestAnimationFrame to ensure DOM is updated
+      requestAnimationFrame(() => {
+        setTimeout(scrollToOptions, 150);
+      });
+    }
+  }, [selectedPlanForBooster, selectedPlanForUpgrade, selectedBoosterPlanIndex, selectedPlanIndex]);
 
   // Get upgrade options for the selected plan
   const upgradeOptions = useMemo(() => {
@@ -73,12 +97,15 @@ export default function HomePagePricingPlans() {
     if (selectedPlanForUpgrade === planTitle) {
       setSelectedPlanForUpgrade(null);
       setSelectedPlanIndex(null);
+      shouldScrollRef.current = false;
     } else {
       setSelectedPlanForUpgrade(planTitle);
       setSelectedPlanIndex(planIndex);
       // Close booster if upgrade is opened
       setSelectedPlanForBooster(null);
       setSelectedBoosterPlanIndex(null);
+      // Mark that we should scroll
+      shouldScrollRef.current = true;
     }
   };
 
@@ -87,6 +114,7 @@ export default function HomePagePricingPlans() {
       setSelectedPlanForBooster(null);
       setSelectedBoosterPlanIndex(null);
       setSelectedBoosterIndex(null);
+      shouldScrollRef.current = false;
     } else {
       setSelectedPlanForBooster(planTitle);
       setSelectedBoosterPlanIndex(planIndex);
@@ -94,6 +122,8 @@ export default function HomePagePricingPlans() {
       // Close upgrade if booster is opened
       setSelectedPlanForUpgrade(null);
       setSelectedPlanIndex(null);
+      // Mark that we should scroll
+      shouldScrollRef.current = true;
     }
   };
 
@@ -117,6 +147,7 @@ export default function HomePagePricingPlans() {
       setSelectedBoosterIndex(null);
       setSelectedPlanForUpgrade(null);
       setSelectedPlanIndex(null);
+      shouldScrollRef.current = false;
     } else {
       // Open both if available
       if (hasBooster) {
@@ -128,6 +159,8 @@ export default function HomePagePricingPlans() {
         setSelectedPlanForUpgrade(planTitle);
         setSelectedPlanIndex(planIndex);
       }
+      // Mark that we should scroll
+      shouldScrollRef.current = true;
     }
   };
 
@@ -234,7 +267,7 @@ export default function HomePagePricingPlans() {
 
       {/* === Combined Options Display - Below Cards === */}
       {((selectedPlanForBooster !== null && selectedBoosterPlanIndex !== null) || (selectedPlanForUpgrade !== null && selectedPlanIndex !== null)) && (
-        <div className="mb-16 max-[768px]:mb-12">
+        <div ref={optionsSectionRef} className="mb-16 max-[768px]:mb-12">
           <div className="grid grid-cols-4 gap-6 max-[1200px]:grid-cols-2 max-[768px]:grid-cols-1 max-[768px]:gap-8">
             {/* Determine which plan index to use for alignment */}
             {(() => {
