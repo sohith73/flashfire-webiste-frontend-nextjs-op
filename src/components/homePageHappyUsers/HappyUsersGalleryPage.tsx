@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type React from "react";
 import { ALL_REVIEW_IMAGES } from "./homePageHappyUsers";
 import HomePageOfferLetters from "@/src/components/homePageOfferLetters/homePageOfferLetters";
@@ -10,6 +10,8 @@ import HomePageDemoCTA from "@/src/components/homePageDemoCTA/homePageDemoCTA";
 export default function HappyUsersGalleryPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  const [imageLoading, setImageLoading] = useState<boolean>(true);
+  const preloadedImages = useRef<Set<string>>(new Set());
 
   const videos = [
     {
@@ -40,11 +42,21 @@ export default function HappyUsersGalleryPage() {
   };
 
   const handleImageClick = (index: number) => {
+    setImageLoading(true);
     setSelectedImageIndex(index);
   };
 
   const closeImageModal = () => {
     setSelectedImageIndex(null);
+  };
+
+  // Preload image on hover for faster modal opening
+  const handleImageHover = (imageSrc: string) => {
+    if (preloadedImages.current.has(imageSrc)) return;
+    
+    preloadedImages.current.add(imageSrc);
+    const img = new window.Image();
+    img.src = imageSrc;
   };
 
   // Close modal on ESC key press
@@ -68,7 +80,7 @@ export default function HappyUsersGalleryPage() {
   }, [selectedImageIndex]);
 
   return (
-    <section className="bg-[#F55E1D] py-24 px-6 font-['Space_Grotesk',sans-serif]">
+    <section className="bg-gradient-to-b from-[#F55E1D] via-[#f9c0a9] to-white py-24 px-6 font-['Space_Grotesk',sans-serif]">
       <div className="max-w-[1200px] mx-auto text-center">
         <h1 className="mb-6 text-5xl  font-bold text-white">
           All Happy Users' Testimonials
@@ -83,6 +95,7 @@ export default function HappyUsersGalleryPage() {
               key={i}
               className="inline-block w-full mb-4 [break-inside:avoid] rounded-[0.6rem] overflow-hidden bg-[#fffaf8] shadow-[0_3px_10px_rgba(0,0,0,0.25)] cursor-pointer hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] transition-all duration-300"
               onClick={() => handleImageClick(i)}
+              onMouseEnter={() => handleImageHover(imageSrc)}
             >
               <Image
                 src={imageSrc}
@@ -90,6 +103,8 @@ export default function HappyUsersGalleryPage() {
                 width={400}
                 height={600}
                 className="w-full h-auto object-contain block rounded-[0.4rem]"
+                loading={i < 8 ? "eager" : "lazy"}
+                quality={85}
               />
             </div>
           ))}
@@ -113,23 +128,34 @@ export default function HappyUsersGalleryPage() {
             className="relative max-w-[90vw] max-h-[90vh] w-auto h-auto"
             onClick={(e) => e.stopPropagation()}
           >
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+              </div>
+            )}
             <Image
               src={ALL_REVIEW_IMAGES[selectedImageIndex]}
               alt={`Flashfire user review ${selectedImageIndex + 1}`}
               width={1200}
               height={1800}
-              className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+              className={`max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl transition-opacity duration-300 ${
+                imageLoading ? "opacity-0" : "opacity-100"
+              }`}
               style={{ width: "auto", height: "auto" }}
+              priority
+              quality={90}
+              onLoad={() => setImageLoading(false)}
+              onLoadingComplete={() => setImageLoading(false)}
             />
           </div>
         </div>
       )}
 
       {/* Video Testimonials Section */}
-      <div className="bg-[#F55E1D] py-32 px-8 pb-20 text-center max-[768px]:py-16 max-[768px]:px-4">
-        <h2 className="text-4xl font-bold mb-12 text-white max-[768px]:text-3xl">
+      <div className=" py-24 px-8 pb-20 text-center w-full max-[768px]:py-16 max-[768px]:px-4">
+        {/* <h2 className="text-4xl font-bold mb-12 text-black max-[768px]:text-3xl">
           Video Testimonials
-        </h2>
+        </h2> */}
         <div className="flex justify-center items-stretch flex-nowrap gap-6 w-full max-[768px]:flex-col max-[768px]:items-center max-[768px]:gap-6">
           {videos.map((video, index) => (
             <div
@@ -240,12 +266,12 @@ export default function HappyUsersGalleryPage() {
       </div>
 
       {/* Offer Letters Section */}
-      <div className="bg-[#F55E1D]">
+      
         <HomePageOfferLetters />
-      </div>
+      
 
       {/* Demo CTA Section */}
-      <div className="bg-[#F55E1D]">
+      <div>
         <HomePageDemoCTA />
       </div>
     </section>
