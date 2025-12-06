@@ -6,6 +6,7 @@ import React from "react";
 import { ALL_REVIEW_IMAGES } from "./homePageHappyUsers";
 import HomePageOfferLetters from "@/src/components/homePageOfferLetters/homePageOfferLetters";
 import HomePageDemoCTA from "@/src/components/homePageDemoCTA/homePageDemoCTA";
+import HomePageMilestones from "@/src/components/homePageMilestones/homePageMilestones";
 
 export default function HappyUsersGalleryPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -83,36 +84,39 @@ export default function HappyUsersGalleryPage() {
   }, [selectedImageIndex]);
 
   return (
-    <section className="bg-gradient-to-b from-[#F55E1D] via-[#f9c0a9] to-white py-24 px-6 font-['Space_Grotesk',sans-serif]">
-      <div className="max-w-[1200px] mx-auto text-center">
-        <h1 className="mb-6 text-5xl  font-bold text-white">
-          All Happy Users' Testimonials
-        </h1>
-        <p className="mb-6 text-base md:text-lg text-white">
-          We’ve helped hundreds get there — and there’s absolutely no reason you won’t be next.
-        </p>
+    <div className="font-['Space_Grotesk',sans-serif]">
+      {/* Image Testimonials Section */}
+      <section className="bg-[#F55E1D] py-24 px-6">
+        <div className="max-w-[1200px] mx-auto text-center">
+          <h1 className="mb-6 text-5xl  font-bold text-white">
+            All Happy Users' Testimonials
+          </h1>
+          <p className="mb-6 text-base md:text-lg text-white">
+            We've helped hundreds get there — and there's absolutely no reason you won't be next.
+          </p>
 
-        <div className="columns-4 gap-4 max-w-[1100px] mx-auto max-[1200px]:columns-4 max-[900px]:columns-3 max-[600px]:columns-2 max-[400px]:columns-1">
-          {ALL_REVIEW_IMAGES.map((imageSrc, i) => (
-            <div
-              key={i}
-              className="inline-block w-full mb-4 [break-inside:avoid] rounded-[0.6rem] overflow-hidden bg-[#fffaf8] shadow-[0_3px_10px_rgba(0,0,0,0.25)] cursor-pointer hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] transition-all duration-300"
-              onClick={() => handleImageClick(i)}
-              onMouseEnter={() => handleImageHover(imageSrc)}
-            >
-              <Image
-                src={imageSrc}
-                alt={`Flashfire user review ${i + 1}`}
-                width={400}
-                height={600}
-                className="w-full h-auto object-contain block rounded-[0.4rem]"
-                loading={i < 8 ? "eager" : "lazy"}
-                quality={85}
-              />
-            </div>
-          ))}
+          <div className="columns-4 gap-4 max-w-[1100px] mx-auto max-[1200px]:columns-4 max-[900px]:columns-3 max-[600px]:columns-2 max-[400px]:columns-1">
+            {ALL_REVIEW_IMAGES.map((imageSrc, i) => (
+              <div
+                key={i}
+                className="inline-block w-full mb-4 [break-inside:avoid] rounded-[0.6rem] overflow-hidden bg-[#fffaf8] shadow-[0_3px_10px_rgba(0,0,0,0.25)] cursor-pointer hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] transition-all duration-300"
+                onClick={() => handleImageClick(i)}
+                onMouseEnter={() => handleImageHover(imageSrc)}
+              >
+                <Image
+                  src={imageSrc}
+                  alt={`Flashfire user review ${i + 1}`}
+                  width={400}
+                  height={600}
+                  className="w-full h-auto object-contain block rounded-[0.4rem]"
+                  loading={i < 8 ? "eager" : "lazy"}
+                  quality={85}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Image Modal/Lightbox */}
       {selectedImageIndex !== null && (
@@ -154,7 +158,7 @@ export default function HappyUsersGalleryPage() {
       )}
 
       {/* Video Testimonials Section */}
-      <div className=" py-24 px-8 pb-20 text-center w-full max-[768px]:py-16 max-[768px]:px-4">
+      <section className="bg-[#f9c0a9] py-24 px-8 pb-20 text-center w-full max-[768px]:py-16 max-[768px]:px-4">
         {/* <h2 className="text-4xl font-bold mb-12 text-black max-[768px]:text-3xl">
           Video Testimonials
         </h2> */}
@@ -265,18 +269,18 @@ export default function HappyUsersGalleryPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Offer Letters Section */}
-      
-        <HomePageOfferLetters />
-      
+      {/* Milestones Section */}
+      <section className="bg-white">
+        <HomePageMilestones />
+      </section>
 
       {/* Demo CTA Section */}
-      <div>
+      <section className="bg-white">
         <HomePageDemoCTA />
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
 

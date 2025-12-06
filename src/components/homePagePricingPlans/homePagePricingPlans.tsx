@@ -1,15 +1,195 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import PricingCard from "./pricingCard";
 import Image from "next/image";
 import { usPricingPlans, canadaPricingPlans } from "@/src/data/pricingData";
 import FlashfireLogo from "@/src/components/FlashfireLogo";
 
+interface UpgradePrice {
+  from: string;
+  to: string;
+  price: number;
+  paymentUrl?: string;
+}
+
+const upgradePrices: UpgradePrice[] = [
+  { from: "PRIME", to: "PROFESSIONAL", price: 240, paymentUrl: "https://www.paypal.com/ncp/payment/SZW8UGWUF4KRC" },
+  { from: "PRIME", to: "EXECUTIVE", price: 490, paymentUrl: "https://www.paypal.com/ncp/payment/4S564BKM8577N" },
+  { from: "IGNITE", to: "PROFESSIONAL", price: 170, paymentUrl: "https://www.paypal.com/ncp/payment/7Z7GT5CF75L3A" },
+  { from: "IGNITE", to: "EXECUTIVE", price: 420, paymentUrl: "https://www.paypal.com/ncp/payment/AHW9DGNYWABZ4" },
+  { from: "PROFESSIONAL", to: "EXECUTIVE", price: 285, paymentUrl: "https://www.paypal.com/ncp/payment/VR5YKZW26JUEL" },
+];
+
 export default function HomePagePricingPlans() {
   const pathname = usePathname();
   const isCanadaContext = pathname.startsWith("/en-ca");
   const pricingPlans = isCanadaContext ? canadaPricingPlans : usPricingPlans;
+  const [selectedPlanForUpgrade, setSelectedPlanForUpgrade] = useState<string | null>(null);
+  const [selectedPlanIndex, setSelectedPlanIndex] = useState<number | null>(null);
+  const [selectedPlanForBooster, setSelectedPlanForBooster] = useState<string | null>(null);
+  const [selectedBoosterPlanIndex, setSelectedBoosterPlanIndex] = useState<number | null>(null);
+  const [selectedBoosterIndex, setSelectedBoosterIndex] = useState<number | null>(null);
+
+  const currencySymbol = isCanadaContext ? "CA$" : "$";
+
+  // Get upgrade options for the selected plan
+  const upgradeOptions = useMemo(() => {
+    if (!selectedPlanForUpgrade) return [];
+    
+    const planHierarchy = ["PRIME", "IGNITE", "PROFESSIONAL", "EXECUTIVE"];
+    const currentPlanIndex = planHierarchy.indexOf(selectedPlanForUpgrade);
+    
+    if (currentPlanIndex === -1 || currentPlanIndex === planHierarchy.length - 1) {
+      return [];
+    }
+    
+    return pricingPlans
+      .filter(plan => {
+        const planIndex = planHierarchy.indexOf(plan.title);
+        // Exclude IGNITE from PRIME upgrade options
+        if (selectedPlanForUpgrade === "PRIME" && plan.title === "IGNITE") {
+          return false;
+        }
+        return planIndex > currentPlanIndex;
+      })
+      .map(plan => {
+        const upgradePriceConfig = upgradePrices.find(
+          up => up.from === selectedPlanForUpgrade && up.to === plan.title
+        );
+        const upgradePrice = upgradePriceConfig?.price || 0;
+        const upgradePaymentUrl = upgradePriceConfig?.paymentUrl;
+        
+        return {
+          ...plan,
+          upgradePrice: upgradePrice,
+          upgradePaymentUrl: upgradePaymentUrl,
+        };
+      });
+  }, [selectedPlanForUpgrade, pricingPlans]);
+
+  const handleUpgradeClick = (planTitle: string, planIndex: number) => {
+    if (selectedPlanForUpgrade === planTitle) {
+      setSelectedPlanForUpgrade(null);
+      setSelectedPlanIndex(null);
+    } else {
+      setSelectedPlanForUpgrade(planTitle);
+      setSelectedPlanIndex(planIndex);
+      // Close booster if upgrade is opened
+      setSelectedPlanForBooster(null);
+      setSelectedBoosterPlanIndex(null);
+    }
+  };
+
+  const handleBoosterClick = (planTitle: string, planIndex: number) => {
+    if (selectedPlanForBooster === planTitle) {
+      setSelectedPlanForBooster(null);
+      setSelectedBoosterPlanIndex(null);
+      setSelectedBoosterIndex(null);
+    } else {
+      setSelectedPlanForBooster(planTitle);
+      setSelectedBoosterPlanIndex(planIndex);
+      setSelectedBoosterIndex(null);
+      // Close upgrade if booster is opened
+      setSelectedPlanForUpgrade(null);
+      setSelectedPlanIndex(null);
+    }
+  };
+
+  const handleOptionsClick = (planTitle: string, planIndex: number) => {
+    const plan = pricingPlans[planIndex];
+    const hasBooster = plan.addOn;
+    const planHierarchy = ["PRIME", "IGNITE", "PROFESSIONAL", "EXECUTIVE"];
+    const currentPlanIndex = planHierarchy.indexOf(planTitle);
+    const hasUpgrade = currentPlanIndex !== -1 && currentPlanIndex < planHierarchy.length - 1 && 
+      pricingPlans.some(p => {
+        const pIndex = planHierarchy.indexOf(p.title);
+        if (planTitle === "PRIME" && p.title === "IGNITE") return false;
+        return pIndex > currentPlanIndex;
+      });
+
+    // Toggle both options
+    if ((selectedPlanForBooster === planTitle && hasBooster) || (selectedPlanForUpgrade === planTitle && hasUpgrade)) {
+      // Close both if already open
+      setSelectedPlanForBooster(null);
+      setSelectedBoosterPlanIndex(null);
+      setSelectedBoosterIndex(null);
+      setSelectedPlanForUpgrade(null);
+      setSelectedPlanIndex(null);
+    } else {
+      // Open both if available
+      if (hasBooster) {
+        setSelectedPlanForBooster(planTitle);
+        setSelectedBoosterPlanIndex(planIndex);
+        setSelectedBoosterIndex(null);
+      }
+      if (hasUpgrade) {
+        setSelectedPlanForUpgrade(planTitle);
+        setSelectedPlanIndex(planIndex);
+      }
+    }
+  };
+
+  // Get booster options for the selected plan
+  const boosterOptions = useMemo(() => {
+    if (!selectedPlanForBooster) return [];
+    
+    const country = isCanadaContext ? "CA" : "US";
+    const planBoosterOptions: Record<string, Record<string, Array<{
+      applications: number;
+      price: number;
+      label: string;
+      paymentUrl: string;
+    }>>> = {
+      US: {
+        PRIME: [
+          { applications: 250, price: 120, label: "+250 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/5Z872VARCZ6R8" },
+          { applications: 500, price: 200, label: "+500 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/QCMVESBD5YL7E" },
+          { applications: 1000, price: 350, label: "+1000 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/24YFDJZBTQA5U" },
+        ],
+        IGNITE: [
+          { applications: 250, price: 130, label: "+250 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/ZTFDFLX4LDXRN" },
+          { applications: 500, price: 220, label: "+500 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/N9UN59NZ4TCZ6" },
+          { applications: 1000, price: 380, label: "+1000 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/5RLLXWWV7KBL2" },
+        ],
+        PROFESSIONAL: [
+          { applications: 250, price: 120, label: "+250 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/95X9FAUHTUPM4" },
+          { applications: 500, price: 200, label: "+500 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/58R6C59U8LBMS" },
+          { applications: 1000, price: 350, label: "+1000 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/QCQ5JTXK9ZY5L" },
+        ],
+        EXECUTIVE: [
+          { applications: 250, price: 110, label: "+250 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/R3UJGRAV9363A" },
+          { applications: 500, price: 190, label: "+500 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/JNJ7Y36YDSGYW" },
+          { applications: 1000, price: 330, label: "+1000 Add-On", paymentUrl: "https://www.paypal.com/ncp/payment/2RZEKDPESWA5A" },
+        ],
+      },
+      CA: {
+        PRIME: [
+          { applications: 250, price: 170, label: "+250 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/PRIME_250_CA_PLACEHOLDER" },
+          { applications: 500, price: 280, label: "+500 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/PRIME_500_CA_PLACEHOLDER" },
+          { applications: 1000, price: 490, label: "+1000 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/PRIME_1000_CA_PLACEHOLDER" },
+        ],
+        IGNITE: [
+          { applications: 250, price: 180, label: "+250 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/VTDKG7AXSJ75Y" },
+          { applications: 500, price: 305, label: "+500 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/EX2YV4CN2WV3L" },
+          { applications: 1000, price: 530, label: "+1000 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/X4AC3EKGLV4WN" },
+        ],
+        PROFESSIONAL: [
+          { applications: 250, price: 170, label: "+250 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/GMKAWCJ8TBV4J" },
+          { applications: 500, price: 280, label: "+500 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/MMNRPXCKKLFX8" },
+          { applications: 1000, price: 490, label: "+1000 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/AA2DZ2ZBUEQSQ" },
+        ],
+        EXECUTIVE: [
+          { applications: 250, price: 155, label: "+250 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/S43ZN9SE6ER6U" },
+          { applications: 500, price: 265, label: "+500 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/Y3Q97WGY7HCTW" },
+          { applications: 1000, price: 460, label: "+1000 Extra Applications", paymentUrl: "https://www.paypal.com/ncp/payment/NM9683EWP7GKG" },
+        ],
+      },
+    };
+    
+    return planBoosterOptions[country]?.[selectedPlanForBooster] || [];
+  }, [selectedPlanForBooster, isCanadaContext]);
 
   return (
     <section
@@ -27,9 +207,9 @@ export default function HomePagePricingPlans() {
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-6 mb-16 max-[1200px]:grid-cols-2 max-[768px]:grid-cols-1 max-[768px]:gap-8 items-stretch">
+      <div className="grid grid-cols-4 gap-6 mb-8 max-[1200px]:grid-cols-2 max-[768px]:grid-cols-1 max-[768px]:gap-8 items-stretch">
         {pricingPlans.map((plan, index) => (
-          <PricingCard
+            <PricingCard
             key={index}
             title={plan.title}
             tag={plan.tag}
@@ -42,9 +222,148 @@ export default function HomePagePricingPlans() {
             highlight={plan.highlight}
             paymentLink={plan.paymentLink}
             allPlans={pricingPlans}
+            onUpgradeClick={(planTitle) => handleUpgradeClick(planTitle, index)}
+            isUpgradeOptionsVisible={selectedPlanForUpgrade === plan.title}
+            onBoosterClick={(planTitle) => handleBoosterClick(planTitle, index)}
+            isBoosterOptionsVisible={selectedPlanForBooster === plan.title}
+            onOptionsClick={(planTitle) => handleOptionsClick(planTitle, index)}
+            isOptionsVisible={(selectedPlanForBooster === plan.title || selectedPlanForUpgrade === plan.title)}
           />
         ))}
       </div>
+
+      {/* === Combined Options Display - Below Cards === */}
+      {((selectedPlanForBooster !== null && selectedBoosterPlanIndex !== null) || (selectedPlanForUpgrade !== null && selectedPlanIndex !== null)) && (
+        <div className="mb-16 max-[768px]:mb-12">
+          <div className="grid grid-cols-4 gap-6 max-[1200px]:grid-cols-2 max-[768px]:grid-cols-1 max-[768px]:gap-8">
+            {/* Determine which plan index to use for alignment */}
+            {(() => {
+              const planIndex = selectedBoosterPlanIndex !== null ? selectedBoosterPlanIndex : (selectedPlanIndex !== null ? selectedPlanIndex : 0);
+              const planTitle = selectedPlanForBooster || selectedPlanForUpgrade;
+              
+              if (planIndex === null || planTitle === null) return null;
+              
+              return (
+                <>
+                  {/* Empty columns before the selected card */}
+                  {Array.from({ length: planIndex }).map((_, i) => (
+                    <div key={`empty-${i}`} />
+                  ))}
+                  
+                  {/* Combined section aligned with the selected card */}
+                  <div className="bg-white border-2 border-[#ff4c00] rounded-[0.4rem] p-4 max-[768px]:p-3">
+                    <div className="flex justify-between items-start mb-4 max-[768px]:mb-3">
+                      <div>
+                        <h5 className="text-[1.1rem] font-bold mb-1 text-black max-[768px]:text-[1rem]">
+                          Plan Options
+                        </h5>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setSelectedPlanForBooster(null);
+                          setSelectedBoosterPlanIndex(null);
+                          setSelectedBoosterIndex(null);
+                          setSelectedPlanForUpgrade(null);
+                          setSelectedPlanIndex(null);
+                        }}
+                        className="text-[#ff4c00] font-semibold text-xs hover:underline flex-shrink-0 ml-2"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    {/* Booster Add-On Section */}
+                    {selectedPlanForBooster === planTitle && boosterOptions.length > 0 && (
+                      <div className={`mb-4 ${selectedPlanForUpgrade === planTitle && upgradeOptions.length > 0 ? 'pb-4 border-b-2 border-[#f3dfd5]' : ''}`}>
+                        <h6 className="text-[0.95rem] font-bold mb-2 text-black max-[768px]:text-[0.85rem]">
+                          Booster Add-On
+                        </h6>
+                        <p className="text-[0.75rem] text-[#666] mb-3 max-[768px]:text-[0.7rem]">
+                          Add more applications to boost your reach
+                        </p>
+                        <div className="space-y-2 max-[768px]:space-y-1.5">
+                          {boosterOptions.map((option, index) => (
+                            <button
+                              key={index}
+                              onClick={() => {
+                                setSelectedBoosterIndex(index);
+                                if (option.paymentUrl) {
+                                  window.open(option.paymentUrl, "_blank");
+                                }
+                              }}
+                              className={`w-full text-left p-2 rounded border-2 transition-all duration-200 ${
+                                selectedBoosterIndex === index
+                                  ? "bg-[#ff4c00] border-[#ff4c00] text-white"
+                                  : "bg-[#f8f7f6] border-[#f3dfd5] text-black hover:bg-[#f3dfd5]"
+                              } max-[768px]:p-1.5`}
+                            >
+                              <div className="flex justify-between items-center gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-xs mb-0.5 max-[768px]:text-[0.7rem]">
+                                    {option.label}
+                                  </div>
+                                </div>
+                                <div className="font-bold text-xs flex-shrink-0 max-[768px]:text-[0.7rem]">
+                                  {currencySymbol}{option.price}
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Upgrade Plan Section */}
+                    {selectedPlanForUpgrade === planTitle && upgradeOptions.length > 0 && (
+                      <div>
+                        <h6 className="text-[0.95rem] font-bold mb-2 text-black max-[768px]:text-[0.85rem]">
+                          Upgrade Plan
+                        </h6>
+                        <p className="text-[0.75rem] text-[#666] mb-3 max-[768px]:text-[0.7rem]">
+                          Upgrade to a higher tier for more applications and features
+                        </p>
+                        <div className="space-y-2 max-[768px]:space-y-1.5">
+                          {upgradeOptions.map((upgradePlan) => (
+                            <button
+                              key={upgradePlan.title}
+                              onClick={() => {
+                                const paymentUrl = (upgradePlan as any).upgradePaymentUrl || upgradePlan.paymentLink;
+                                if (paymentUrl) {
+                                  window.open(paymentUrl, "_blank");
+                                }
+                              }}
+                              className="w-full text-left p-2 rounded border-2 transition-all duration-200 bg-white border-[#ff4c00] text-black hover:bg-[#fff4e6] max-[768px]:p-1.5"
+                            >
+                              <div className="flex justify-between items-center gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-xs mb-0.5 max-[768px]:text-[0.7rem]">
+                                    {upgradePlan.title}
+                                  </div>
+                                  <div className="text-[0.7rem] opacity-90 max-[768px]:text-[0.65rem]">
+                                    {upgradePlan.subTitle}
+                                  </div>
+                                </div>
+                                <div className="font-bold text-xs flex-shrink-0 max-[768px]:text-[0.7rem]">
+                                  {currencySymbol}{(upgradePlan as any).upgradePrice || 0}
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Empty columns after the selected card */}
+                  {Array.from({ length: pricingPlans.length - planIndex - 1 }).map((_, i) => (
+                    <div key={`empty-after-${i}`} />
+                  ))}
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       {/* === Risk-Free Section === */}
       <div className="bg-[rgba(251,240,235,1)] w-full max-w-[1280px] mx-auto  border border-[#ff4c00] mt-8 max-[1320px]:w-[95%] max-[768px]:w-full max-[768px]:px-4">
