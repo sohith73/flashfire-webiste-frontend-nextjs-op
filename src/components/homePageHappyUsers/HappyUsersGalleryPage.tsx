@@ -10,7 +10,7 @@ import HomePageDemoCTA from "@/src/components/homePageDemoCTA/homePageDemoCTA";
 export default function HappyUsersGalleryPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  const [imageLoading, setImageLoading] = useState<boolean>(true);
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
   const preloadedImages = useRef<Set<string>>(new Set());
 
   const videos = [
@@ -48,6 +48,7 @@ export default function HappyUsersGalleryPage() {
 
   const closeImageModal = () => {
     setSelectedImageIndex(null);
+    setImageLoading(false);
   };
 
   // Preload image on hover for faster modal opening
@@ -147,7 +148,6 @@ export default function HappyUsersGalleryPage() {
               priority
               quality={90}
               onLoad={() => setImageLoading(false)}
-              onLoadingComplete={() => setImageLoading(false)}
             />
           </div>
         </div>
