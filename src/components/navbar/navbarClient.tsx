@@ -774,10 +774,7 @@ export default function NavbarClient({ links, ctas }: Props) {
   // Handle section clicks - jump to section start AND update URL
   const handleSectionClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, skipNavigation = false) => {
     const sectionMap: { [key: string]: string } = {
-      '/feature': 'feature',
-      '/pricing': 'pricing',
       '/testimonials': 'testimonials',
-      '/faq': 'faq',
     };
 
     const sectionId = sectionMap[href];
@@ -840,14 +837,8 @@ export default function NavbarClient({ links, ctas }: Props) {
     const handlePopState = () => {
       const currentPath = window.location.pathname;
       const sectionMap: { [key: string]: string } = {
-        '/feature': 'feature',
-        '/pricing': 'pricing',
         '/testimonials': 'testimonials',
-        '/faq': 'faq',
-        '/en-ca/feature': 'feature',
-        '/en-ca/pricing': 'pricing',
         '/en-ca/testimonials': 'testimonials',
-        '/en-ca/faq': 'faq',
       };
 
       const sectionId = sectionMap[currentPath];
@@ -1020,8 +1011,9 @@ export default function NavbarClient({ links, ctas }: Props) {
         {/* Center Section: Links (Desktop) */}
         <ul className={styles.navLinks}>
           {links.map((link) => {
-            const isSectionLink = ['/feature', '/pricing', '/testimonials', '/faq'].includes(link.href);
+            const isSectionLink = ['/testimonials'].includes(link.href);
             const isOnHomePage = pathname === '/' || pathname === '/en-ca' || pathname === prefix + '/';
+            const isOnPricingPage = pathname === '/pricing' || pathname === '/en-ca/pricing' || pathname === prefix + '/pricing';
             const isOnSectionPage = pathname === getHref(link.href) || pathname === link.href || pathname === prefix + link.href;
             const isExternal = isExternalHref(link.href) || link.target === "_blank";
             
@@ -1033,16 +1025,38 @@ export default function NavbarClient({ links, ctas }: Props) {
                     className={styles.navLinkText}
                     onClick={(e) => {
                       e.preventDefault();
-                      // If on section page, just scroll to section without navigating
-                      if (isOnSectionPage && !isOnHomePage) {
-                        // Stay on current page, just scroll to section
-                        handleSectionClick(e, link.href, true);
-                      } else if (!isOnHomePage) {
-                        // If on different page, navigate to home first, then scroll
+                      // Always navigate to home page if on pricing page
+                      if (isOnPricingPage || (!isOnHomePage && !isOnSectionPage)) {
+                        // Navigate to home first
                         router.push(prefix + '/');
-                        setTimeout(() => {
-                          handleSectionClick(e, link.href);
-                        }, 100);
+                        // Wait for navigation to complete and DOM to update
+                        const scrollToSectionOnHome = () => {
+                          const currentPath = window.location.pathname;
+                          const isNowOnHome = currentPath === '/' || currentPath === '/en-ca' || currentPath === prefix + '/';
+                          
+                          if (isNowOnHome) {
+                            // Double check that we're on home page and section exists
+                            const sectionId = link.href.replace('/', '');
+                            const section = document.getElementById(sectionId);
+                            if (section) {
+                              handleSectionClick(e, link.href);
+                            } else {
+                              // Section not found yet, wait a bit more
+                              setTimeout(scrollToSectionOnHome, 100);
+                            }
+                          } else {
+                            // Not on home yet, wait a bit more
+                            setTimeout(scrollToSectionOnHome, 100);
+                          }
+                        };
+                        
+                        // Start checking after a short delay
+                        requestAnimationFrame(() => {
+                          setTimeout(scrollToSectionOnHome, 300);
+                        });
+                      } else if (isOnSectionPage && !isOnHomePage) {
+                        // If on section page (like /feature), just scroll to section without navigating
+                        handleSectionClick(e, link.href, true);
                       } else {
                         // Already on home page, just scroll
                         handleSectionClick(e, link.href);
@@ -1162,8 +1176,9 @@ export default function NavbarClient({ links, ctas }: Props) {
         <div className={styles.navMobileMenu}>
           <ul className={styles.navMobileLinks}>
             {links.map((link) => {
-              const isSectionLink = ['/feature', '/pricing', '/testimonials', '/faq'].includes(link.href);
+              const isSectionLink = ['/testimonials'].includes(link.href);
               const isOnHomePage = pathname === '/' || pathname === '/en-ca' || pathname === prefix + '/';
+              const isOnPricingPage = pathname === '/pricing' || pathname === '/en-ca/pricing' || pathname === prefix + '/pricing';
               const isOnSectionPage = pathname === getHref(link.href) || pathname === link.href || pathname === prefix + link.href;
               const isExternal = isExternalHref(link.href) || link.target === "_blank";
               
@@ -1176,16 +1191,38 @@ export default function NavbarClient({ links, ctas }: Props) {
                       onClick={(e) => {
                         e.preventDefault();
                         setIsMenuOpen(false);
-                        // If on section page, just scroll to section without navigating
-                        if (isOnSectionPage && !isOnHomePage) {
-                          // Stay on current page, just scroll to section
-                          handleSectionClick(e, link.href, true);
-                        } else if (!isOnHomePage) {
-                          // If on different page, navigate to home first, then scroll
+                        // Always navigate to home page if on pricing page
+                        if (isOnPricingPage || (!isOnHomePage && !isOnSectionPage)) {
+                          // Navigate to home first
                           router.push(prefix + '/');
-                          setTimeout(() => {
-                            handleSectionClick(e, link.href);
-                          }, 100);
+                          // Wait for navigation to complete and DOM to update
+                          const scrollToSectionOnHome = () => {
+                            const currentPath = window.location.pathname;
+                            const isNowOnHome = currentPath === '/' || currentPath === '/en-ca' || currentPath === prefix + '/';
+                            
+                            if (isNowOnHome) {
+                              // Double check that we're on home page and section exists
+                              const sectionId = link.href.replace('/', '');
+                              const section = document.getElementById(sectionId);
+                              if (section) {
+                                handleSectionClick(e, link.href);
+                              } else {
+                                // Section not found yet, wait a bit more
+                                setTimeout(scrollToSectionOnHome, 100);
+                              }
+                            } else {
+                              // Not on home yet, wait a bit more
+                              setTimeout(scrollToSectionOnHome, 100);
+                            }
+                          };
+                          
+                          // Start checking after a short delay
+                          requestAnimationFrame(() => {
+                            setTimeout(scrollToSectionOnHome, 300);
+                          });
+                        } else if (isOnSectionPage && !isOnHomePage) {
+                          // If on section page (like /feature), just scroll to section without navigating
+                          handleSectionClick(e, link.href, true);
                         } else {
                           // Already on home page, just scroll
                           handleSectionClick(e, link.href);

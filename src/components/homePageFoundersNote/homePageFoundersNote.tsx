@@ -3,7 +3,7 @@ import { FaLinkedin } from "react-icons/fa";
 
 export default function HomePageFoundersNote() {
   return (
-    <section className="bg-[rgba(249,238,234,1)] py-24 px-6 font-['Space_Grotesk',sans-serif] max-[768px]:py-12 max-[768px]:px-4">
+    <section id="founders-note" className="bg-[rgba(249,238,234,1)] py-24 px-6 font-['Space_Grotesk',sans-serif] max-[768px]:py-12 max-[768px]:px-4">
       <div className="max-w-[1200px] mx-auto flex justify-between items-start gap-12 max-[1024px]:flex-col max-[1024px]:items-center max-[1024px]:text-center">
         {/* === LEFT COLUMN === */}
         <div className="flex-[1.6] font-semibold text-left text-black text-[1.1rem] leading-[1.7] max-[1024px]:order-2 max-[1024px]:w-[90%] max-[768px]:text-base">

@@ -7,7 +7,6 @@ import HomePageFoundersNote from "@/src/components/homePageFoundersNote/homePage
 import HomePageHappyUsers from "@/src/components/homePageHappyUsers/homePageHappyUsers";
 import HomePageMilestones from "@/src/components/homePageMilestones/homePageMilestones";
 import HomePageOfferLetters from "@/src/components/homePageOfferLetters/homePageOfferLetters";
-import HomePagePricingPlans from "@/src/components/homePagePricingPlans/homePagePricingPlans";
 import HomePagePTNote from "@/src/components/homePagePTNote/homePagePTNote";
 import HomePageResultStats from "@/src/components/homePageResultStats/homePageResultStats";
 import HomePageStatsCards from "@/src/components/homePageStatsCards/homePageStatsCards";
@@ -34,7 +33,6 @@ const Home = () => {
      
       <HomePageWhyChooseFF /> 
       <HomePageHappyUsers />
-      <HomePagePricingPlans />
       <HomePageFoundersNote />
 
       {/* using useState, so client */}

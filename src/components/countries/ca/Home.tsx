@@ -10,7 +10,6 @@ import HomePageOfferLetters from "../../homePageOfferLetters/homePageOfferLetter
 import HomePageWhyChooseFF from "../../homePageWhyChooseFF/homePageWhyChooseFF";
 import HomePageHappyUsers from "../../homePageHappyUsers/homePageHappyUsers";
 import HomePagePTNote from "../../homePagePTNote/homePagePTNote";
-import HomePagePricingPlans from "../../homePagePricingPlans/homePagePricingPlans";
 import HomePageFAQ from "../../homePageFAQ/homePageFAQ";
 import HomePageFoundersNote from "../../homePageFoundersNote/homePageFoundersNote";
 import HomePageCareerCTA from "../../homePageCareerCTA/homePageCareerCTA";
@@ -39,7 +38,6 @@ export default function CanadaHome() {
       <HomePageWhyChooseFF />
       <HomePageHappyUsers />
       <HomePagePTNote />
-      <HomePagePricingPlans />
       <HomePageFAQ />
       <HomePageFoundersNote />
       <HomePageCareerCTA />
