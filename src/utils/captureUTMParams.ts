@@ -14,23 +14,18 @@ export const captureUTMParams = () => {
 
   if (utmSource) {
     localStorage.setItem("utm_source", utmSource);
-    console.log("Stored utm_source:", utmSource);
   }
   if (utmMedium) {
     localStorage.setItem("utm_medium", utmMedium);
-    console.log("Stored utm_medium:", utmMedium);
   }
   if (utmCampaign) {
     localStorage.setItem("utm_campaign", utmCampaign);
-    console.log("Stored utm_campaign:", utmCampaign);
   }
   if (utmContent) {
     localStorage.setItem("utm_content", utmContent);
-    console.log("Stored utm_content:", utmContent);
   }
   if (utmTerm) {
     localStorage.setItem("utm_term", utmTerm);
-    console.log("Stored utm_term:", utmTerm);
   }
 
   let visitorId = localStorage.getItem("visitor_id");
@@ -56,9 +51,7 @@ export const captureUTMParams = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) {
-          console.log("✅ Campaign page visit tracked:", data.data);
-        }
+        // Campaign visit tracked
       })
       .catch((err) => console.error("Campaign tracking failed:", err));
   }
@@ -81,7 +74,6 @@ export const captureUTMParams = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
-          console.log("UTM Source from ref:", data.utm_source);
           if (!localStorage.getItem("utm_source")) {
             localStorage.setItem("utm_source", data.utm_source);
           }

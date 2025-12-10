@@ -62,12 +62,6 @@ export default function CalendlyModal({
   // Handle loading state when modal opens
   useEffect(() => {
     if (isVisible) {
-      console.log("📅 CalendlyModal opened with user:", user);
-      console.log("📅 UTM params:", {
-        utm_source: typeof window !== "undefined" ? localStorage.getItem("utm_source") : null,
-        utm_medium: typeof window !== "undefined" ? localStorage.getItem("utm_medium") : null,
-        utm_campaign: typeof window !== "undefined" ? localStorage.getItem("utm_campaign") : null,
-      });
 
       // Always show loader briefly to cover Calendly's own loader
       setIsLoading(true);
@@ -88,7 +82,6 @@ export default function CalendlyModal({
         if (hasLoadedOnce && calendlyIframe && checkCount >= 5) {
           setIsLoading(false);
           clearInterval(checkCalendlyLoaded);
-          console.log("✅ Calendly widget ready (cached)");
         }
         // For first load, wait for full load
         else if (!hasLoadedOnce && calendlyIframe) {
@@ -98,7 +91,6 @@ export default function CalendlyModal({
               setIsLoading(false);
               setHasLoadedOnce(true);
               clearInterval(checkCalendlyLoaded);
-              console.log("✅ Calendly widget loaded");
             }
           } catch {
             // Cross-origin restriction, just wait for the timeout
@@ -118,7 +110,6 @@ export default function CalendlyModal({
           setHasLoadedOnce(true);
         }
         clearInterval(checkCalendlyLoaded);
-        console.log("📅 Calendly loaded (fallback)");
       }, loadingDuration);
 
       return () => {
@@ -157,14 +148,12 @@ export default function CalendlyModal({
               if (email) localStorage.setItem("cal_invitee_email", email);
             }
           } catch {}
-          console.log("📝 Calendly profile captured:", { name, email });
         }
       } catch (err) {
         console.error("❌ Failed to capture Calendly profile submission", err);
       }
     },
     onEventScheduled: async (e: CalendlyEvent) => {
-      console.log("🎉 Calendly Event Triggered!", e);
       try {
         const payload = e?.data?.payload || e?.payload || {};
         const inviteeEmail =
@@ -207,8 +196,7 @@ export default function CalendlyModal({
         const utm_term =
           typeof window !== "undefined" ? localStorage.getItem("utm_term") : null;
 
-        console.log("📊 Booking Event Data:", {
-          email: inviteeEmail,
+        // Booking event data captured
           inviteeName,
           meetingUrl,
           eventStartTime,
@@ -245,10 +233,7 @@ export default function CalendlyModal({
             source: "frontend_direct", // Mark this as coming from frontend
           };
 
-          console.log(
-            "📤 Sending booking to backend (backup to webhook)...",
-            bookingData
-          );
+          // Sending booking to backend
 
           if (!API_BASE_URL) {
             console.error("API_BASE_URL is not configured, skipping backend call");
@@ -268,7 +253,7 @@ export default function CalendlyModal({
 
           if (response.ok) {
             const result = await response.json();
-            console.log("✅ Booking saved to backend (direct):", result);
+            // Booking saved to backend
           } else {
             console.warn(
               "⚠️ Backend booking save failed, webhook will handle it:",

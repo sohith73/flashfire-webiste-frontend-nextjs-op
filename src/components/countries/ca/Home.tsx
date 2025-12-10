@@ -22,8 +22,29 @@ export default function CanadaHome() {
 
   useEffect(() => {
     // Track Canada-specific page view
-    console.log("🇨🇦 Canada Home page view:", pathname);
     // Add PostHog tracking here if needed
+    
+    // Scroll to top when navigating to Canada home page
+    const isCanadaHomePage = pathname === "/en-ca";
+    
+    if (isCanadaHomePage) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        
+        // Also scroll after a short delay to catch any late scrolls from browser restoration
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "instant" });
+        }, 50);
+        
+        // One more check after layout
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }, 100);
+        });
+      });
+    }
   }, [pathname]);
 
   return (

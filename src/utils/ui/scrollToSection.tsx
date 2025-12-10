@@ -21,13 +21,10 @@ export default function ScrollToSection({
           duration: 800, 
           easing: 'easeInOutCubic',
         }).then(() => {
-          console.log(`✅ Smoothly scrolled to section: ${targetId}`);
         });
       } else if (attempt < maxAttempts) {
-        console.log(`⏳ Waiting for section "${targetId}" to render (attempt ${attempt}/${maxAttempts})...`);
         setTimeout(() => attemptScroll(attempt + 1, maxAttempts), 100);
       } else {
-        console.warn(`❌ Could not find section with id="${targetId}" after ${maxAttempts} attempts`);
       }
     };
 

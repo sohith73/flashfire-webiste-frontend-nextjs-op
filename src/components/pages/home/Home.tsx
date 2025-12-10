@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Footer from "@/src/components/footer/footer";
 import HeroSection from "@/src/components/heroSection/heroSection";
 import HomePageCareerCTA from "@/src/components/homePageCareerCTA/homePageCareerCTA";
@@ -17,6 +21,32 @@ import Navbar from "@/src/components/navbar/navbar";
 import SalesPopUp from "@/src/components/SalesPopUp";
 
 const Home = () => {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Scroll to top when navigating to homepage (handles back button and direct navigation)
+    const isHomePage = pathname === "/" || pathname === "/en-ca";
+    
+    if (isHomePage) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        
+        // Also scroll after a short delay to catch any late scrolls from browser restoration
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "instant" });
+        }, 50);
+        
+        // One more check after layout
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }, 100);
+        });
+      });
+    }
+  }, [pathname]);
+
   return (
     <>
       <Navbar />

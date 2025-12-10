@@ -85,7 +85,6 @@ export function smoothScrollToElement(
       : element;
 
   if (!targetElement) {
-    console.warn('Smooth scroll: Element not found', element);
     return Promise.resolve();
   }
 

@@ -786,7 +786,6 @@ export default function NavbarClient({ links, ctas }: Props) {
 
     const section = document.getElementById(sectionId);
     if (!section) {
-      console.warn(`❌ Section with id="${sectionId}" not found`);
       return;
     }
 
@@ -804,7 +803,6 @@ export default function NavbarClient({ links, ctas }: Props) {
     
     // If already at this section, don't scroll again - just update URL if needed
     if (Math.abs(currentScrollPosition - targetScrollPosition) < 50) {
-      console.log(`📍 Already at ${sectionId} section, skipping scroll`);
       // Still update URL if not already set
       const targetUrl = `${prefix}${href}`;
       if (window.location.pathname !== targetUrl) {
@@ -824,7 +822,6 @@ export default function NavbarClient({ links, ctas }: Props) {
       duration: 800, // 800ms for smooth feel
       easing: 'easeInOutCubic', // Butter smooth easing
     }).then(() => {
-      console.log(`✅ Smoothly scrolled to ${sectionId} section`);
     });
   };
 
@@ -998,7 +995,31 @@ export default function NavbarClient({ links, ctas }: Props) {
       <div className={styles.navInner}>
         {/* Left Section: Logo */}
         <div className={styles.navLeft}>
-          <Link href={isCanadaContext ? "/en-ca" : "/"} className={styles.navLogoText}>
+          <Link 
+            href={isCanadaContext ? "/en-ca" : "/"} 
+            className={styles.navLogoText}
+            onClick={(e) => {
+              // If already on home page, scroll to top
+              const currentPath = pathname;
+              const isOnHomePage = currentPath === "/" || currentPath === "/en-ca" || currentPath === prefix + "/";
+              
+              if (isOnHomePage) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              } else {
+                // If navigating to home, scroll to top after navigation
+                const handleScrollToTop = () => {
+                  window.scrollTo({ top: 0, behavior: "instant" });
+                  // Remove listener after scrolling
+                  window.removeEventListener("focus", handleScrollToTop);
+                };
+                // Scroll after navigation completes
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: "instant" });
+                }, 100);
+              }
+            }}
+          >
             FLASHFIRE
           </Link>
         </div>

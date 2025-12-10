@@ -55,22 +55,17 @@ export const captureUTMParams = (): void => {
 
   if (utmSource) {
     localStorage.setItem("utm_source", utmSource);
-    console.log("Stored utm_source:", utmSource);
   }
   if (utmMedium) {
     localStorage.setItem("utm_medium", utmMedium);
-    console.log("Stored utm_medium:", utmMedium);
   }
   if (utmCampaign) {
     localStorage.setItem("utm_campaign", utmCampaign);
-    console.log("Stored utm_campaign:", utmCampaign);
   }
   if (utmContent) {
     localStorage.setItem("utm_content", utmContent);
-    console.log("Stored utm_content:", utmContent);
   }
   if (utmTerm) {
     localStorage.setItem("utm_term", utmTerm);
-    console.log("Stored utm_term:", utmTerm);
   }
 };

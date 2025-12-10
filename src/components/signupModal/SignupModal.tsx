@@ -108,22 +108,16 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
           result = JSON.parse(responseText);
         } catch {
           // If not JSON, that's okay - we'll use status code
-          console.log("Response is not JSON, using status code");
         }
       }
-      
-      console.log("Response from server:", result);
-      console.log("Response status:", response.status);
-      console.log("Response text:", responseText);
 
       // Always proceed to Calendly, regardless of response
       // Backend will handle Discord notifications for both success and duplicate cases
       if (response.ok && (response.status === 200 || response.status === 201)) {
-        console.log("✅ Form submitted successfully");
+        // Form submitted successfully
       } else {
-        // Log error but don't show in UI - Discord notification is sufficient
+        // Error logged - Discord notification sent
         const errorMessage = result?.message || "Unknown error";
-        console.log("ℹ️ Backend response:", errorMessage, "(Discord notification sent)");
       }
       
       // Always return true to proceed to Calendly
@@ -131,7 +125,6 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
     } catch (error) {
       // Log error but don't show in UI - still proceed to Calendly
       console.error("Error saving to DB:", error);
-      console.log("ℹ️ Proceeding to Calendly anyway");
       // Still return true to open Calendly
       return true;
     }

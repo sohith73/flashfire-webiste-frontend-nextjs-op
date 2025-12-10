@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import styles from "./homePageResultStats.module.css";
 import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking";
 import { GTagUTM } from "@/src/utils/GTagUTM";
@@ -9,6 +9,7 @@ import { useGeoBypass } from "@/src/utils/useGeoBypass";
 
 export default function HomePageResultStats() {
   const router = useRouter();
+  const pathname = usePathname();
   const { isHolding, holdProgress, getButtonProps } = useGeoBypass({
     onBypass: () => {
       // Bypass will be handled by the event listener
@@ -95,10 +96,18 @@ export default function HomePageResultStats() {
             
             // Navigate to /get-me-interview WITHOUT exposing UTM params in the URL
             const targetPath = '/get-me-interview';
+            const currentPath = pathname;
+            const isAlreadyOnGetMeInterview = currentPath === '/get-me-interview' || currentPath === '/en-ca/get-me-interview';
             
             // Dispatch custom event to force show modal (even if already on the route)
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+            }
+            
+            // If already on the route, prevent navigation to avoid scroll-to-top
+            if (isAlreadyOnGetMeInterview) {
+              // Just trigger the modal, don't navigate or scroll
+              return;
             }
             
             router.push(targetPath);

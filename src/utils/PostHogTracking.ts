@@ -66,7 +66,7 @@ const safeCapture = (
         timestamp: new Date().toISOString(),
         ...properties,
       });
-      console.log(`PostHog tracked: ${eventName}`, properties);
+      // PostHog event tracked
     } else {
       console.warn("PostHog not initialized");
     }

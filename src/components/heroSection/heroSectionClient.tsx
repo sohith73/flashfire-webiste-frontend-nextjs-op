@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { HeroSectionData } from "@/src/types/heroSectionData";
 import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking";
@@ -14,6 +14,7 @@ type Props = {
 
 export default function HeroSectionClient({ data }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
   const { isHolding, holdProgress, getButtonProps } = useGeoBypass({
     onBypass: () => {
       // Bypass will be handled by the event listener
@@ -21,7 +22,7 @@ export default function HeroSectionClient({ data }: Props) {
   });
 
   return (
-    <section className="bg-[#f9e8e0] text-center p-8 pb-16 font-['Space_Grotesk',sans-serif] overflow-x-hidden w-full max-w-full box-border max-[768px]:p-6 max-[768px]:px-4 max-[768px]:pb-12 max-[480px]:p-4 max-[480px]:px-3 max-[480px]:pb-8">
+    <section className="bg-[#f9e8e0] text-center p-8 pb-16 pt-8 font-['Space_Grotesk',sans-serif] overflow-x-hidden w-full max-w-full box-border max-[768px]:p-6 max-[768px]:px-4 max-[768px]:pb-12 max-[768px]:pt-6 max-[480px]:p-4 max-[480px]:px-3 max-[480px]:pb-8 max-[480px]:pt-4">
       {/* === Top Badges === */}
       <div className="flex justify-center gap-2.5 flex-wrap mb-8 mt-8 max-[768px]:flex-row">
         {data.badges.map((badge) => (
@@ -83,10 +84,18 @@ export default function HeroSectionClient({ data }: Props) {
 
           // Navigate to /get-me-interview WITHOUT exposing UTM params in the URL
           const targetPath = '/get-me-interview';
+          const currentPath = pathname;
+          const isAlreadyOnGetMeInterview = currentPath === '/get-me-interview' || currentPath === '/en-ca/get-me-interview';
           
           // Dispatch custom event to force show modal (even if already on the route)
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+          }
+          
+          // If already on the route, prevent navigation to avoid scroll-to-top
+          if (isAlreadyOnGetMeInterview) {
+            // Just trigger the modal, don't navigate or scroll
+            return;
           }
           
           router.push(targetPath);
