@@ -175,7 +175,7 @@ export default function PricingCard({
           }}
           className="bg-[#ff4c00] text-white border-none py-2 px-4 font-semibold text-sm rounded-[0.5rem] w-full cursor-pointer transition-all duration-300 hover:bg-[#e24300] mb-4"
         >
-          {addOn && hasUpgradeOptions ? "View Options" : addOn ? "Booster Add-On" : "Upgrade Plan"}
+          {addOn && hasUpgradeOptions ? "View Options" : addOn && title === "EXECUTIVE" ? "View Options" : addOn ? "Booster Add-On" : "Upgrade Plan"}
         </button>
       ) : (
         <div className="mb-4 h-[2.5rem]"></div>

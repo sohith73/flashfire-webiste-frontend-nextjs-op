@@ -43,20 +43,33 @@ export default function HomePagePricingPlans() {
     if (shouldScrollBoosterRef.current && boosterSectionRef.current) {
       const scrollToBooster = () => {
         if (boosterSectionRef.current) {
-          const elementTop = boosterSectionRef.current.getBoundingClientRect().top;
-          const offsetPosition = elementTop + window.pageYOffset - 100; // 100px offset from top
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
+          // Wait for layout to fully update
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              // Dynamically calculate navbar height
+              const stickyNavbar = document.querySelector('.sticky.top-0') || 
+                                  document.querySelector('nav') ||
+                                  document.querySelector('[class*="nav"]');
+              const navbarHeight = stickyNavbar ? stickyNavbar.getBoundingClientRect().height : 0;
+              
+              const elementTop = boosterSectionRef.current?.getBoundingClientRect().top;
+              if (elementTop !== undefined) {
+                // Add navbar height + extra padding (30px) to ensure content is fully visible
+                const offset = navbarHeight + 30;
+                const offsetPosition = elementTop + window.pageYOffset - offset;
+                window.scrollTo({
+                  top: Math.max(0, offsetPosition),
+                  behavior: "smooth"
+                });
+              }
+              shouldScrollBoosterRef.current = false;
+            });
           });
-          shouldScrollBoosterRef.current = false;
         }
       };
       
-      // Use requestAnimationFrame to ensure DOM is updated
-      requestAnimationFrame(() => {
-        setTimeout(scrollToBooster, 150);
-      });
+      // Increased delay to ensure DOM is fully updated and layout recalculated
+      setTimeout(scrollToBooster, 300);
     }
   }, [selectedPlanForBooster, selectedBoosterPlanIndex]);
 
@@ -65,20 +78,33 @@ export default function HomePagePricingPlans() {
     if (shouldScrollUpgradeRef.current && upgradeSectionRef.current) {
       const scrollToUpgrade = () => {
         if (upgradeSectionRef.current) {
-          const elementTop = upgradeSectionRef.current.getBoundingClientRect().top;
-          const offsetPosition = elementTop + window.pageYOffset - 100; // 100px offset from top
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
+          // Wait for layout to fully update
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              // Dynamically calculate navbar height
+              const stickyNavbar = document.querySelector('.sticky.top-0') || 
+                                  document.querySelector('nav') ||
+                                  document.querySelector('[class*="nav"]');
+              const navbarHeight = stickyNavbar ? stickyNavbar.getBoundingClientRect().height : 0;
+              
+              const elementTop = upgradeSectionRef.current?.getBoundingClientRect().top;
+              if (elementTop !== undefined) {
+                // Add navbar height + extra padding (30px) to ensure content is fully visible
+                const offset = navbarHeight + 30;
+                const offsetPosition = elementTop + window.pageYOffset - offset;
+                window.scrollTo({
+                  top: Math.max(0, offsetPosition),
+                  behavior: "smooth"
+                });
+              }
+              shouldScrollUpgradeRef.current = false;
+            });
           });
-          shouldScrollUpgradeRef.current = false;
         }
       };
       
-      // Use requestAnimationFrame to ensure DOM is updated
-      requestAnimationFrame(() => {
-        setTimeout(scrollToUpgrade, 150);
-      });
+      // Increased delay to ensure DOM is fully updated and layout recalculated
+      setTimeout(scrollToUpgrade, 300);
     }
   }, [selectedPlanForUpgrade, selectedPlanIndex]);
 
@@ -246,7 +272,7 @@ export default function HomePagePricingPlans() {
   return (
     <section
       id="pricing"
-      className="bg-white py-16 px-8 font-['Space_Grotesk',sans-serif] text-center max-[768px]:py-4 max-[768px]:px-6 overflow-x-hidden"
+      className="bg-white py-16 pb-24 px-8 font-['Space_Grotesk',sans-serif] text-center max-[768px]:py-4 max-[768px]:pb-16 max-[768px]:px-6 overflow-x-hidden min-h-fit"
     >
       <div className="mx-auto mb-12 max-[768px]:w-full max-[768px]:mb-8">
         <h2 className="text-[3rem] font-bold mb-4 text-black max-[1024px]:text-[2.4rem] max-[768px]:text-[2rem] max-[768px]:leading-[1.3] max-[480px]:text-[1.7rem]">
@@ -287,7 +313,7 @@ export default function HomePagePricingPlans() {
       {/* === Options Sections - Below Cards === */}
       {((selectedPlanForBooster !== null && selectedBoosterPlanIndex !== null && boosterOptions.length > 0) || 
         (selectedPlanForUpgrade !== null && selectedPlanIndex !== null && upgradeOptions.length > 0)) && (
-        <div className="mb-16 max-[768px]:mb-12">
+        <div className="mb-24 mt-6 max-[768px]:mb-20 max-[768px]:mt-4">
           {(() => {
             const boosterPlanIndex = selectedBoosterPlanIndex;
             const upgradePlanIndex = selectedPlanIndex;
@@ -546,8 +572,8 @@ export default function HomePagePricingPlans() {
       )}
 
       {/* === Risk-Free Section === */}
-      <div className="bg-[rgba(251,240,235,1)] w-full max-w-[1280px] mx-auto  border border-[#ff4c00] mt-8 max-[1320px]:w-[95%] max-[768px]:w-full max-[768px]:px-4">
-        <div className="bg-white  ml-2 mr-2 mb-2 mt-2 mx-auto flex justify-between items-center p-8 max-[1320px]:w-[95%] max-[768px]:flex-col max-[768px]:text-center max-[768px]:h-auto max-[768px]:gap-5 max-[768px]:p-6 max-[768px]:w-full max-[768px]:ml-0 max-[768px]:mr-0">
+      <div className="bg-[rgba(251,240,235,1)] w-full max-w-[1280px] mx-auto border border-[#ff4c00] mt-16 mb-8 max-[1320px]:w-[95%] max-[768px]:w-full max-[768px]:px-4 max-[768px]:mt-12 max-[768px]:mb-6">
+        <div className="bg-white ml-2 mr-2 mb-2 mt-2 mx-auto flex justify-between items-center p-8 pb-10 max-[1320px]:w-[95%] max-[768px]:flex-col max-[768px]:text-center max-[768px]:h-auto max-[768px]:gap-5 max-[768px]:p-6 max-[768px]:pb-8 max-[768px]:w-full max-[768px]:ml-0 max-[768px]:mr-0">
           {/* Left Section */}
           <div className="flex items-center gap-4 flex-1">
             {/* Pixel Art Mascot - on the left */}

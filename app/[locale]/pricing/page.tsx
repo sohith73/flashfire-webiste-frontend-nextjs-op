@@ -43,17 +43,10 @@ export async function generateMetadata({ params }: LocalePricingPageProps): Prom
   };
 }
 
+import PricingPageClient from "./PricingPageClient";
+
 export default async function LocalePricingPage({ params }: LocalePricingPageProps) {
   await params; // Await params even if not used
-  return (
-    <>
-      <Navbar />
-      <HomePagePricingPlans />
-      <HomePageHappyUsers />
-      <HomePageFoundersNote />
-      <HomePageFAQ />
-      <Footer />
-    </>
-  );
+  return <PricingPageClient />;
 }
 

@@ -1,10 +1,5 @@
 import { Metadata } from "next";
-import Navbar from "@/src/components/navbar/navbar";
-import Footer from "@/src/components/footer/footer";
-import HomePagePricingPlans from "@/src/components/homePagePricingPlans/homePagePricingPlans";
-import HomePageHappyUsers from "@/src/components/homePageHappyUsers/homePageHappyUsers";
-import HomePageFoundersNote from "@/src/components/homePageFoundersNote/homePageFoundersNote";
-import HomePageFAQ from "@/src/components/homePageFAQ/homePageFAQ";
+import PricingPageClient from "./PricingPageClient";
 
 export const metadata: Metadata = {
   title: "Pricing - Affordable Job Search Automation Plans | Flashfire",
@@ -27,15 +22,6 @@ export const metadata: Metadata = {
 };
 
 export default function PricingPage() {
-  return (
-    <>
-      <Navbar />
-      <HomePagePricingPlans />
-      <HomePageHappyUsers />
-      <HomePageFoundersNote />
-      <HomePageFAQ />
-      <Footer />
-    </>
-  );
+  return <PricingPageClient />;
 }
 
