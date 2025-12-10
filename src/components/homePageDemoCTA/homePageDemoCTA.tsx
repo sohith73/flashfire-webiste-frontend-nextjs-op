@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
@@ -11,6 +11,7 @@ import { useGeoBypass } from "@/src/utils/useGeoBypass";
 
 export default function HomePageDemoCTA() {
   const router = useRouter();
+  const pathname = usePathname();
   const [emailCopied, setEmailCopied] = useState(false);
   const { isHolding, holdProgress, getButtonProps } = useGeoBypass({
     onBypass: () => {
@@ -94,17 +95,25 @@ export default function HomePageDemoCTA() {
               target_url: "/book-my-demo-call"
             });
             
-            // Save current scroll position to sessionStorage before navigation
-            if (typeof window !== 'undefined') {
-              sessionStorage.setItem('preserveScrollPosition', window.scrollY.toString());
-            }
-            
             // Navigate to /book-my-demo-call WITHOUT exposing UTM params in the URL
             const targetPath = '/book-my-demo-call';
+            const currentPath = pathname;
+            const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
             
             // Dispatch custom event to force show modal (even if already on the route)
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+            }
+            
+            // If already on the route, prevent navigation to avoid showing homepage
+            if (isAlreadyOnBookMyDemoCall) {
+              // Just trigger the modal, don't navigate
+              return;
+            }
+            
+            // Save current scroll position to sessionStorage before navigation
+            if (typeof window !== 'undefined') {
+              sessionStorage.setItem('preserveScrollPosition', window.scrollY.toString());
             }
             
             router.push(targetPath);
@@ -165,17 +174,25 @@ export default function HomePageDemoCTA() {
               target_url: "/book-my-demo-call"
             });
             
-            // Save current scroll position to sessionStorage before navigation
-            if (typeof window !== 'undefined') {
-              sessionStorage.setItem('preserveScrollPosition', window.scrollY.toString());
-            }
-            
             // Navigate to /book-my-demo-call WITHOUT exposing UTM params in the URL
             const targetPath = '/book-my-demo-call';
+            const currentPath = pathname;
+            const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
             
             // Dispatch custom event to force show modal (even if already on the route)
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+            }
+            
+            // If already on the route, prevent navigation to avoid showing homepage
+            if (isAlreadyOnBookMyDemoCall) {
+              // Just trigger the modal, don't navigate
+              return;
+            }
+            
+            // Save current scroll position to sessionStorage before navigation
+            if (typeof window !== 'undefined') {
+              sessionStorage.setItem('preserveScrollPosition', window.scrollY.toString());
             }
             
             router.push(targetPath);
