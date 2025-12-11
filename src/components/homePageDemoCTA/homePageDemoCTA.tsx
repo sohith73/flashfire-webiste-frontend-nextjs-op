@@ -64,59 +64,84 @@ export default function HomePageDemoCTA() {
             cursor: 'pointer',
           }}
           className={styles.demoHeading}
-          onClick={() => {
-            const utmSource = typeof window !== "undefined" 
-              ? localStorage.getItem("utm_source") || "WEBSITE"
-              : "WEBSITE";
-            const utmMedium = typeof window !== "undefined"
-              ? localStorage.getItem("utm_medium") || "Demo_CTA_Section"
-              : "Demo_CTA_Section";
+          onClick={(e) => {
+            try {
+              e.preventDefault();
+              e.stopPropagation();
+            } catch (err) {
+              // Ignore cross-origin errors on event methods
+            }
+            try {
+              const utmSource = typeof window !== "undefined" && window.localStorage
+                ? localStorage.getItem("utm_source") || "WEBSITE"
+                : "WEBSITE";
+              const utmMedium = typeof window !== "undefined" && window.localStorage
+                ? localStorage.getItem("utm_medium") || "Demo_CTA_Section"
+                : "Demo_CTA_Section";
+              
+              try {
+                GTagUTM({
+                  eventName: "sign_up_click",
+                  label: "Demo_CTA_Heading_Button",
+                  utmParams: {
+                    utm_source: utmSource,
+                    utm_medium: utmMedium,
+                    utm_campaign: typeof window !== "undefined" && window.localStorage
+                      ? localStorage.getItem("utm_campaign") || "Website"
+                      : "Website",
+                  },
+                });
+              } catch (gtagError) {
+                console.warn('GTagUTM error:', gtagError);
+              }
+              
+              try {
+                trackButtonClick("BOOK A DEMO CALL", "demo_cta", "cta", {
+                  button_location: "demo_cta_heading",
+                  section: "demo_cta",
+                  target_url: "/book-my-demo-call"
+                });
+                trackSignupIntent("demo_cta", {
+                  signup_source: "demo_cta_heading",
+                  funnel_stage: "signup_intent",
+                  target_url: "/book-my-demo-call"
+                });
+              } catch (trackError) {
+                console.warn('Tracking error:', trackError);
+              }
+            } catch (error) {
+              console.warn('Error in heading click handler:', error);
+            }
             
-            GTagUTM({
-              eventName: "sign_up_click",
-              label: "Demo_CTA_Heading_Button",
-              utmParams: {
-                utm_source: utmSource,
-                utm_medium: utmMedium,
-                utm_campaign: typeof window !== "undefined"
-                  ? localStorage.getItem("utm_campaign") || "Website"
-                  : "Website",
-              },
-            });
-            
-            trackButtonClick("BOOK A DEMO CALL", "demo_cta", "cta", {
-              button_location: "demo_cta_heading",
-              section: "demo_cta",
-              target_url: "/book-my-demo-call"
-            });
-            trackSignupIntent("demo_cta", {
-              signup_source: "demo_cta_heading",
-              funnel_stage: "signup_intent",
-              target_url: "/book-my-demo-call"
-            });
-            
-            // Navigate to /book-my-demo-call WITHOUT exposing UTM params in the URL
-            const targetPath = '/book-my-demo-call';
-            const currentPath = pathname;
-            const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
-            const isOnHomePage = currentPath === '/' || currentPath === '/en-ca';
-            
-            // Dispatch custom event to force show modal (even if already on the route)
+            // Dispatch custom event to force show modal
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
             }
             
-            // If already on the route, prevent navigation to avoid showing homepage
+            // Check current path
+            const currentPath = pathname;
+            const isImageTestimonialsPage = currentPath === '/testimonials' || currentPath === '/en-ca/testimonials' || currentPath === '/image-testimonials' || currentPath === '/en-ca/image-testimonials';
+            const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
+            
+            // If on image-testimonials page, change URL but keep page content visible
+            if (isImageTestimonialsPage) {
+              // Change URL to /book-my-demo-call without navigating (keep testimonials page visible)
+              const targetPath = currentPath.startsWith('/en-ca') ? '/en-ca/book-my-demo-call' : '/book-my-demo-call';
+              if (typeof window !== 'undefined') {
+                window.history.pushState({}, '', targetPath);
+              }
+              // Just trigger the modal, don't navigate
+              return;
+            }
+            
+            // If already on book-my-demo-call route, just show modal
             if (isAlreadyOnBookMyDemoCall) {
               // Just trigger the modal, don't navigate
               return;
             }
             
-            // If not on homepage (e.g., /image-testimonials), show modal without navigating
-            if (!isOnHomePage) {
-              // Just trigger the modal, don't navigate - stay on current page
-              return;
-            }
+            // Navigate to /book-my-demo-call for other pages
+            const targetPath = '/book-my-demo-call';
             
             // Save current scroll position to sessionStorage before navigation
             if (typeof window !== 'undefined') {
@@ -150,73 +175,88 @@ export default function HomePageDemoCTA() {
         <button 
           {...getButtonProps()}
           className={styles.demoButton}
-          type="button"
           onClick={(e) => {
-            // Ensure click event is not prevented
-            e.preventDefault();
-            e.stopPropagation();
+            try {
+              e.preventDefault();
+              e.stopPropagation();
+            } catch (err) {
+              // Ignore cross-origin errors on event methods
+            }
+            try {
+              const utmSource = typeof window !== "undefined" && window.localStorage
+                ? localStorage.getItem("utm_source") || "WEBSITE"
+                : "WEBSITE";
+              const utmMedium = typeof window !== "undefined" && window.localStorage
+                ? localStorage.getItem("utm_medium") || "Demo_CTA_Section"
+                : "Demo_CTA_Section";
+              
+              try {
+                GTagUTM({
+                  eventName: "sign_up_click",
+                  label: "Demo_CTA_Button",
+                  utmParams: {
+                    utm_source: utmSource,
+                    utm_medium: utmMedium,
+                    utm_campaign: typeof window !== "undefined" && window.localStorage
+                      ? localStorage.getItem("utm_campaign") || "Website"
+                      : "Website",
+                  },
+                });
+              } catch (gtagError) {
+                console.warn('GTagUTM error:', gtagError);
+              }
+              
+              try {
+                trackButtonClick("Book My Demo Call", "demo_cta", "cta", {
+                  button_location: "demo_cta_button",
+                  section: "demo_cta",
+                  target_url: "/book-my-demo-call"
+                });
+                trackSignupIntent("demo_cta", {
+                  signup_source: "demo_cta_button",
+                  funnel_stage: "signup_intent",
+                  target_url: "/book-my-demo-call"
+                });
+              } catch (trackError) {
+                console.warn('Tracking error:', trackError);
+              }
+            } catch (error) {
+              console.warn('Error in button click handler:', error);
+            }
             
-            console.log('Demo button clicked on path:', pathname);
+            // Dispatch custom event to force show modal
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+            }
             
-            const utmSource = typeof window !== "undefined" 
-              ? localStorage.getItem("utm_source") || "WEBSITE"
-              : "WEBSITE";
-            const utmMedium = typeof window !== "undefined"
-              ? localStorage.getItem("utm_medium") || "Demo_CTA_Section"
-              : "Demo_CTA_Section";
-            
-            GTagUTM({
-              eventName: "sign_up_click",
-              label: "Demo_CTA_Button",
-              utmParams: {
-                utm_source: utmSource,
-                utm_medium: utmMedium,
-                utm_campaign: typeof window !== "undefined"
-                  ? localStorage.getItem("utm_campaign") || "Website"
-                  : "Website",
-              },
-            });
-            
-            trackButtonClick("Book My Demo Call", "demo_cta", "cta", {
-              button_location: "demo_cta_button",
-              section: "demo_cta",
-              target_url: "/book-my-demo-call"
-            });
-            trackSignupIntent("demo_cta", {
-              signup_source: "demo_cta_button",
-              funnel_stage: "signup_intent",
-              target_url: "/book-my-demo-call"
-            });
-            
-            // Navigate to /book-my-demo-call WITHOUT exposing UTM params in the URL
-            const targetPath = '/book-my-demo-call';
+            // Check current path
             const currentPath = pathname;
+            const isImageTestimonialsPage = currentPath === '/testimonials' || currentPath === '/en-ca/testimonials' || currentPath === '/image-testimonials' || currentPath === '/en-ca/image-testimonials';
             const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
             const isOnHomePage = currentPath === '/' || currentPath === '/en-ca';
             
             console.log('Button clicked - currentPath:', currentPath, 'isOnHomePage:', isOnHomePage);
             
-            // Dispatch custom event to force show modal (even if already on the route)
-            if (typeof window !== 'undefined') {
-              console.log('Dispatching showGetMeInterviewModal event');
-              window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+            // If on image-testimonials page, change URL but keep page content visible
+            if (isImageTestimonialsPage) {
+              // Change URL to /book-my-demo-call without navigating (keep testimonials page visible)
+              const targetPath = currentPath.startsWith('/en-ca') ? '/en-ca/book-my-demo-call' : '/book-my-demo-call';
+              if (typeof window !== 'undefined') {
+                window.history.pushState({}, '', targetPath);
+              }
+              // Just trigger the modal, don't navigate
+              return;
             }
             
-            // If already on the route, prevent navigation to avoid showing homepage
+            // If already on book-my-demo-call route, just show modal
             if (isAlreadyOnBookMyDemoCall) {
               console.log('Already on book-my-demo-call route, showing modal only');
               // Just trigger the modal, don't navigate
               return;
             }
             
-            // If not on homepage (e.g., /image-testimonials), show modal without navigating
-            if (!isOnHomePage) {
-              console.log('Not on homepage, showing modal without navigation');
-              // Just trigger the modal, don't navigate - stay on current page
-              return;
-            }
-            
-            console.log('On homepage, navigating to:', targetPath);
+            // Navigate to /book-my-demo-call for other pages
+            const targetPath = '/book-my-demo-call';
             
             // Save current scroll position to sessionStorage before navigation
             if (typeof window !== 'undefined') {
