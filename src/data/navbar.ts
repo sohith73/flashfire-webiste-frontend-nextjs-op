@@ -9,5 +9,7 @@ export const navbarLinks: NavLink[] = [
 
 export const navbarCTAs: NavbarCTA = {
   primary: { label: "Talk to an Expert →", href: "/talk-to-an-expert" },
-  secondary: { label: "How It Works", href: "/how-it-works" },
+  // When clicked, this should take the user to the "How it works" video
+  // section on the homepage (handled via smooth scrolling in NavbarClient).
+  secondary: { label: "How It Works", href: "/" },
 };
