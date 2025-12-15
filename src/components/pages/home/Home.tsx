@@ -52,9 +52,9 @@ const Home = () => {
     <>
       <Navbar />
       <HeroSection /> {/* using useState, so client */}
-      <HomePageBeforeAfter />
-      <HomePageCareerCTA />
       
+      <HomePageCareerCTA />
+      <HomePageBeforeAfter />
       <HomePageResultStats />
       <HomePageStatsCards />
       <HomePageOfferLetters />
