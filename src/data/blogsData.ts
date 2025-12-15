@@ -7814,8 +7814,8 @@ export const blogPosts = [
     readTime: "12 min",
     category: "Finance & Admissions",
     author: {
-      name: "Flashfire Team",
-      bio: "Flashfire helps international students align education, finances, and careers for better long-term outcomes.",
+      name: "Riya Menon",
+      bio: "Higher education strategist helping international students make smarter admission and funding decisions for U.S. universities.",
     },
     image:
       "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Screenshot%202025-12-16%20at%201.28.32%E2%80%AFAM.png",
@@ -7895,8 +7895,8 @@ export const blogPosts = [
     readTime: "14 min",
     category: "Job Search Strategy",
     author: {
-      name: "Flashfire Team",
-      bio: "Flashfire applies to 1,200+ verified U.S. roles every month and coaches candidates through offers and salary negotiations.",
+      name: "Karthik Rao",
+      bio: "Career coach and compensation strategist guiding STEM graduates on offers, negotiations, and long-term earning growth in the U.S.",
     },
     image:
       "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Screenshot%202025-12-16%20at%201.29.47%E2%80%AFAM.png",
