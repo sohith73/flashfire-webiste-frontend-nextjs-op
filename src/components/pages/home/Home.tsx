@@ -19,6 +19,7 @@ import HomePageVideo from "@/src/components/homePageVideo/homePageVideo";
 import HomePageWhyChooseFF from "@/src/components/homePageWhyChooseFF/homePageWhyChooseFF";
 import Navbar from "@/src/components/navbar/navbar";
 import SalesPopUp from "@/src/components/SalesPopUp";
+import HomePageBeforeAfter from "../../homePageBeforeAfter/homePageBeforeAfter";
 
 const Home = () => {
   const pathname = usePathname();
@@ -52,6 +53,7 @@ const Home = () => {
       <Navbar />
       <HeroSection /> {/* using useState, so client */}
       <HomePageCareerCTA />
+      <HomePageBeforeAfter />
       <HomePageResultStats />
       <HomePageStatsCards />
       <HomePageOfferLetters />

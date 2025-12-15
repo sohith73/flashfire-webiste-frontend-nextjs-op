@@ -1048,21 +1048,39 @@ export default function NavbarClient({ links, ctas }: Props) {
                 href={ctas.secondary.href}
                 className={styles.navLinkText}
                 onClick={(e) => {
-                  // Check if already on the how-it-works page
-                  const isOnHowItWorksPage = pathname === '/how-it-works' || pathname === '/en-ca/how-it-works' || pathname === prefix + '/how-it-works';
-                  
-                  if (isOnHowItWorksPage) {
-                    // Prevent navigation and scroll to top
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // Just track the click, don't navigate or scroll
-                    trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
-                      button_location: "navbar_desktop",
-                      navigation_type: "secondary_cta"
+                  // Always take user to the "How it works" video section on the homepage
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  const isOnHomePage =
+                    pathname === "/" ||
+                    pathname === "/en-ca" ||
+                    pathname === prefix + "/";
+
+                  const scrollToVideo = () => {
+                    const section = document.getElementById("demo");
+                    if (section) {
+                      smoothScrollToElement("demo", {
+                        duration: 800,
+                        easing: "easeInOutCubic",
+                      });
+                    } else {
+                      // Wait for the section to mount if it's not in the DOM yet
+                      setTimeout(scrollToVideo, 100);
+                    }
+                  };
+
+                  if (!isOnHomePage) {
+                    // Navigate to homepage first, then scroll to video section
+                    router.push(prefix + "/");
+                    requestAnimationFrame(() => {
+                      setTimeout(scrollToVideo, 300);
                     });
-                    return;
+                  } else {
+                    // Already on homepage, just scroll to video section
+                    scrollToVideo();
                   }
-                  
+
                   trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
                     button_location: "navbar_desktop",
                     navigation_type: "secondary_cta"
@@ -1264,23 +1282,40 @@ export default function NavbarClient({ links, ctas }: Props) {
                   href={ctas.secondary.href}
                   className={styles.navMobileLink}
                   onClick={(e) => {
-                    // Check if already on the how-it-works page
-                    const isOnHowItWorksPage = pathname === '/how-it-works' || pathname === '/en-ca/how-it-works' || pathname === prefix + '/how-it-works';
-                    
-                    if (isOnHowItWorksPage) {
-                      // Prevent navigation and scroll to top
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsMenuOpen(false);
-                      // Just track the click, don't navigate or scroll
-                      trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
-                        button_location: "navbar_mobile",
-                        navigation_type: "secondary_cta"
-                      });
-                      return;
-                    }
-                    
+                    // Always take user to the "How it works" video section on the homepage
+                    e.preventDefault();
+                    e.stopPropagation();
                     setIsMenuOpen(false);
+
+                    const isOnHomePage =
+                      pathname === "/" ||
+                      pathname === "/en-ca" ||
+                      pathname === prefix + "/";
+
+                    const scrollToVideo = () => {
+                      const section = document.getElementById("demo");
+                      if (section) {
+                        smoothScrollToElement("demo", {
+                          duration: 800,
+                          easing: "easeInOutCubic",
+                        });
+                      } else {
+                        // Wait for the section to mount if it's not in the DOM yet
+                        setTimeout(scrollToVideo, 100);
+                      }
+                    };
+
+                    if (!isOnHomePage) {
+                      // Navigate to homepage first, then scroll to video section
+                      router.push(prefix + "/");
+                      requestAnimationFrame(() => {
+                        setTimeout(scrollToVideo, 300);
+                      });
+                    } else {
+                      // Already on homepage, just scroll to video section
+                      scrollToVideo();
+                    }
+
                     trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
                       button_location: "navbar_mobile",
                       navigation_type: "secondary_cta"
