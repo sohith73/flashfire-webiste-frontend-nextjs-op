@@ -104,7 +104,16 @@ export default function BeforeAfterComparison() {
                 ))}
               </tbody>
             </table>
+          
           </div>
+          <div className="mt-12 text-center max-w-3xl mx-auto px-4">
+  <p className="text-base sm:text-lg text-gray-600">
+    Stop applying blindly.
+    <span className="font-semibold text-gray-900">
+      {" "}Start getting interviews strategically.
+    </span>
+  </p>
+</div>
         </div>
 
         {/* ============= */}
@@ -143,6 +152,14 @@ export default function BeforeAfterComparison() {
               </div>
             </div>
           ))}
+          <div className="mt-12 text-center max-w-3xl mx-auto px-4">
+  <p className="text-base sm:text-lg text-gray-600">
+    Stop applying blindly.
+    <span className="font-semibold text-gray-900">
+      {" "}Start getting interviews strategically.
+    </span>
+  </p>
+</div>
         </div>
       </div>
     </section>
