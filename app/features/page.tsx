@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Navbar from "@/src/components/navbar/navbar";
 import Footer from "@/src/components/footer/footer";
-import HomePageWhyChooseFF from "@/src/components/homePageWhyChooseFF/homePageWhyChooseFF";
+import Features from "@/src/components/pages/features/Features";
 
 export const metadata: Metadata = {
   title: "Features - Why Choose Flashfire",
@@ -14,7 +14,7 @@ export default function FeaturesPage() {
     <div className="bg-white text-black min-h-screen">
       <Navbar />
       <main className="mt-0">
-        <HomePageWhyChooseFF />
+        <Features />
       </main>
       <Footer />
     </div>
