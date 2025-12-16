@@ -762,7 +762,7 @@ export default function NavbarClient({ links, ctas }: Props) {
   
   const isExternalHref = (href: string) => href.startsWith("http");
   const primaryIsExternal = isExternalHref(ctas.primary.href);
-  const secondaryIsExternal = isExternalHref(ctas.secondary.href);
+  const secondaryIsExternal = ctas.secondary ? isExternalHref(ctas.secondary.href) : false;
   
   const getHref = (href: string) => {
     if (isExternalHref(href) || href.startsWith("#")) {
@@ -1026,38 +1026,6 @@ export default function NavbarClient({ links, ctas }: Props) {
 
         {/* Center Section: Links (Desktop) */}
         <ul className={styles.navLinks}>
-          {/* How It Works Link - First in the list */}
-          <li className={styles.navLinkItem}>
-            {secondaryIsExternal ? (
-              <a
-                href={ctas.secondary.href}
-                className={styles.navLinkText}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => {
-                  trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
-                    button_location: "navbar_desktop",
-                    navigation_type: "secondary_cta"
-                  });
-                }}
-              >
-                {ctas.secondary.label}
-              </a>
-            ) : (
-              <Link
-                href={getHref(ctas.secondary.href)}
-                className={styles.navLinkText}
-                onClick={() => {
-                  trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
-                    button_location: "navbar_desktop",
-                    navigation_type: "secondary_cta"
-                  });
-                }}
-              >
-                {ctas.secondary.label}
-              </Link>
-            )}
-          </li>
           {links.map((link) => {
             const sectionLinks: string[] = []; // No section links anymore
             const isSectionLink = sectionLinks.includes(link.href);
@@ -1226,40 +1194,6 @@ export default function NavbarClient({ links, ctas }: Props) {
       {isMenuOpen && (
         <div className={styles.navMobileMenu}>
           <ul className={styles.navMobileLinks}>
-            {/* How It Works Link - First in mobile menu */}
-            <li>
-              {secondaryIsExternal ? (
-                <a
-                  href={ctas.secondary.href}
-                  className={styles.navMobileLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
-                      button_location: "navbar_mobile",
-                      navigation_type: "secondary_cta"
-                    });
-                  }}
-                >
-                  {ctas.secondary.label}
-                </a>
-              ) : (
-                <Link
-                  href={getHref(ctas.secondary.href)}
-                  className={styles.navMobileLink}
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
-                      button_location: "navbar_mobile",
-                      navigation_type: "secondary_cta"
-                    });
-                  }}
-                >
-                  {ctas.secondary.label}
-                </Link>
-              )}
-            </li>
             {links.map((link) => {
               const sectionLinks: string[] = []; // No section links anymore
               const isSectionLink = sectionLinks.includes(link.href);
