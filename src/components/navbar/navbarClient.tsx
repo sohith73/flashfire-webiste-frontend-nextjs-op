@@ -1045,42 +1045,9 @@ export default function NavbarClient({ links, ctas }: Props) {
               </a>
             ) : (
               <Link
-                href={ctas.secondary.href}
+                href={getHref(ctas.secondary.href)}
                 className={styles.navLinkText}
-                onClick={(e) => {
-                  // Always take user to the "How it works" video section on the homepage
-                  e.preventDefault();
-                  e.stopPropagation();
-
-                  const isOnHomePage =
-                    pathname === "/" ||
-                    pathname === "/en-ca" ||
-                    pathname === prefix + "/";
-
-                  const scrollToVideo = () => {
-                    const section = document.getElementById("demo");
-                    if (section) {
-                      smoothScrollToElement("demo", {
-                        duration: 800,
-                        easing: "easeInOutCubic",
-                      });
-                    } else {
-                      // Wait for the section to mount if it's not in the DOM yet
-                      setTimeout(scrollToVideo, 100);
-                    }
-                  };
-
-                  if (!isOnHomePage) {
-                    // Navigate to homepage first, then scroll to video section
-                    router.push(prefix + "/");
-                    requestAnimationFrame(() => {
-                      setTimeout(scrollToVideo, 300);
-                    });
-                  } else {
-                    // Already on homepage, just scroll to video section
-                    scrollToVideo();
-                  }
-
+                onClick={() => {
                   trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
                     button_location: "navbar_desktop",
                     navigation_type: "secondary_cta"
@@ -1279,43 +1246,10 @@ export default function NavbarClient({ links, ctas }: Props) {
                 </a>
               ) : (
                 <Link
-                  href={ctas.secondary.href}
+                  href={getHref(ctas.secondary.href)}
                   className={styles.navMobileLink}
-                  onClick={(e) => {
-                    // Always take user to the "How it works" video section on the homepage
-                    e.preventDefault();
-                    e.stopPropagation();
+                  onClick={() => {
                     setIsMenuOpen(false);
-
-                    const isOnHomePage =
-                      pathname === "/" ||
-                      pathname === "/en-ca" ||
-                      pathname === prefix + "/";
-
-                    const scrollToVideo = () => {
-                      const section = document.getElementById("demo");
-                      if (section) {
-                        smoothScrollToElement("demo", {
-                          duration: 800,
-                          easing: "easeInOutCubic",
-                        });
-                      } else {
-                        // Wait for the section to mount if it's not in the DOM yet
-                        setTimeout(scrollToVideo, 100);
-                      }
-                    };
-
-                    if (!isOnHomePage) {
-                      // Navigate to homepage first, then scroll to video section
-                      router.push(prefix + "/");
-                      requestAnimationFrame(() => {
-                        setTimeout(scrollToVideo, 300);
-                      });
-                    } else {
-                      // Already on homepage, just scroll to video section
-                      scrollToVideo();
-                    }
-
                     trackButtonClick(ctas.secondary.label, "navigation", "secondary", {
                       button_location: "navbar_mobile",
                       navigation_type: "secondary_cta"
