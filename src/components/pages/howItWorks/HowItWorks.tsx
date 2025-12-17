@@ -123,6 +123,8 @@ export default function HowItWorks() {
   const lastScrollTimeRef = useRef(0);
   const stepsWheelRef = useRef<HTMLDivElement | null>(null);
   const currentStepRef = useRef(0);
+  const wheelAccumRef = useRef(0);
+  const wheelDirRef = useRef<1 | -1 | 0>(0);
 
   useEffect(() => {
     currentStepRef.current = currentStep;
@@ -144,25 +146,49 @@ export default function HowItWorks() {
 
   const handleWheel = (event: WheelEvent | React.WheelEvent<HTMLDivElement>) => {
     const now = Date.now();
-    if (now - lastScrollTimeRef.current < 320) return; // throttle quick scrolls
+    const deltaY = event.deltaY;
+    if (!deltaY) return;
 
-    // Only "consume" the scroll when we can actually change steps.
-    // At the boundaries, allow the page to scroll normally.
-    if (event.deltaY > 10) {
-      // scrolling down -> next step
-      if (currentStepRef.current >= steps.length - 1) return;
-      event.preventDefault();
-      event.stopPropagation();
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
-    } else if (event.deltaY < -10) {
-      // scrolling up -> previous step
-      if (currentStepRef.current <= 0) return;
-      event.preventDefault();
-      event.stopPropagation();
-      setCurrentStep((prev) => Math.max(prev - 1, 0));
-    } else {
+    const dir: 1 | -1 = deltaY > 0 ? 1 : -1; // 1 = down, -1 = up
+    const atLastStep = currentStepRef.current >= steps.length - 1;
+    const atFirstStep = currentStepRef.current <= 0;
+
+    // If user is trying to scroll past the boundaries, release to normal page scrolling.
+    if ((dir === 1 && atLastStep) || (dir === -1 && atFirstStep)) {
+      wheelAccumRef.current = 0;
+      wheelDirRef.current = 0;
       return;
     }
+
+    // Otherwise, keep the page "still" while navigating steps (even for tiny trackpad deltas).
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Reset accumulation if the user changes direction mid-gesture.
+    if (wheelDirRef.current !== dir) {
+      wheelDirRef.current = dir;
+      wheelAccumRef.current = 0;
+    }
+
+    // Accumulate delta until we pass a threshold, then advance one step.
+    wheelAccumRef.current += deltaY;
+    // Clamp to avoid huge inertia spikes creating multiple step jumps.
+    wheelAccumRef.current = Math.max(-240, Math.min(240, wheelAccumRef.current));
+
+    // Cooldown between step changes (but we still preventDefault during cooldown).
+    if (now - lastScrollTimeRef.current < 320) return;
+
+    const STEP_THRESHOLD = 70;
+    if (Math.abs(wheelAccumRef.current) < STEP_THRESHOLD) return;
+
+    setCurrentStep((prev) => {
+      const next =
+        dir === 1 ? Math.min(prev + 1, steps.length - 1) : Math.max(prev - 1, 0);
+      currentStepRef.current = next; // keep ref in sync immediately
+      return next;
+    });
+
+    wheelAccumRef.current = 0;
     lastScrollTimeRef.current = now;
   };
 
