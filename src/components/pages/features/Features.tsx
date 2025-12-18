@@ -32,9 +32,7 @@ export default function Features() {
       <div className="pointer-events-none absolute bottom-20 right-10 h-96 w-96 bg-orange-300/20 blur-3xl" />
 
       <header className="relative z-10 mx-auto mb-16 max-w-3xl text-center md:mb-20">
-        <p className="mx-auto mb-3 inline-flex items-center justify-center bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-orange-700 ring-1 ring-orange-100">
-          Why Flashfire
-        </p>
+        
         <h2 className="font-['Satoshi',sans-serif] text-4xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl">
           Why Choose Flashfire?
         </h2>
