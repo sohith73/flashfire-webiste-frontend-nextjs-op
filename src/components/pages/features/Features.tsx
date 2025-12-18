@@ -32,9 +32,7 @@ export default function Features() {
       <div className="pointer-events-none absolute bottom-20 right-10 h-96 w-96 bg-orange-300/20 blur-3xl" />
 
       <header className="relative z-10 mx-auto mb-16 max-w-3xl text-center md:mb-20">
-        <p className="mx-auto mb-3 inline-flex items-center justify-center bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-orange-700 ring-1 ring-orange-100">
-          Why Flashfire
-        </p>
+        
         <h2 className="font-['Satoshi',sans-serif] text-4xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl">
           Why Choose Flashfire?
         </h2>
@@ -240,64 +238,65 @@ export default function Features() {
         </div>
       </section>
 
-      <footer className="flex justify-center relative z-10">
-        <div className="flex flex-col lg:flex-row gap-8 max-w-7xl w-full">
-          {/* WhatsApp CTA - Circular design */}
-          <div className="flex-1 bg-white p-12 text-center shadow-2xl border border-gray-100 relative overflow-hidden max-[768px]:p-8">
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-orange-100"></div>
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-50"></div>
-            <div className="relative z-10">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center bg-orange-600 shadow-lg shadow-orange-200">
-                <FaWhatsapp className="text-4xl text-white" />
-              </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4 max-[480px]:text-2xl">Still Confused?</h3>
-              <p className="text-gray-700 text-lg font-semibold leading-relaxed mb-8 max-[480px]:text-base">
-                Feel free to post your queries over our WhatsApp Support.
-              </p>
-              <button
-                type="button"
-                className="bg-orange-600 text-white border-0 py-4 px-10 font-bold text-lg cursor-pointer transition-all duration-200 shadow-lg hover:bg-orange-700 hover:shadow-xl hover:-translate-y-1 active:translate-y-0"
-                onClick={handleWhatsAppClick}
-              >
-                Connect on WhatsApp
-              </button>
+      <footer className="mt-16 flex justify-center relative z-10">
+        <div className="flex justify-between items-stretch gap-4 bg-[rgba(251,240,235,1)] border border-[#f1e4df] p-3 max-w-[80rem] w-full mx-auto overflow-hidden relative max-[1024px]:flex-col max-[1024px]:items-center max-[1024px]:p-8 max-[768px]:p-6 max-[480px]:p-5">
+          <div className="flex-1 text-left bg-white p-8 flex flex-col justify-center relative overflow-hidden max-[1024px]:text-center max-[1024px]:p-6 max-[768px]:p-5">
+            <h3 className="text-[1.6rem] font-bold text-[#111] mb-3 max-[480px]:text-[1.2rem]">
+              Still Confused?
+            </h3>
+            <p className="text-[#333] text-[1rem] font-bold leading-[1.5] mb-5 max-[480px]:text-[0.9rem]">
+              Feel free to post your queries <br /> over our WhatsApp Support.
+            </p>
+            <button
+              type="button"
+              className="bg-[#ff4c00] text-white border-0 border-b-[3px] border-b-black py-[0.9rem] px-[1.6rem] font-semibold rounded-[0.5rem] cursor-pointer transition-all duration-300 w-fit z-10 relative shadow-[0_0.2rem_0_#000] hover:bg-[#e24300] hover:border-b-[5px] max-[1024px]:mx-auto"
+              onClick={handleWhatsAppClick}
+            >
+              Connect on WhatsApp
+            </button>
+            <div className="pointer-events-none absolute right-[-8rem] top-1/2 -translate-y-1/2 text-[18rem] text-[rgba(251,240,235,1)] opacity-90 max-[1024px]:hidden">
+              <FaWhatsapp />
             </div>
           </div>
 
-          {/* Testimonial - Card with rounded image */}
-          <div className="flex-[1.4] bg-black p-10 shadow-2xl relative overflow-hidden max-[768px]:p-8">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 blur-3xl"></div>
-            <div className="flex flex-col lg:flex-row gap-8 items-center relative z-10">
-              <div className="flex-1 text-left max-[1024px]:text-center">
-                <div className="inline-block px-4 py-2 bg-orange-600/20 mb-6">
-                  <p className="text-orange-400 text-xs font-bold tracking-wider uppercase">Helping 100+ Job Seekers</p>
+          <div className="flex-[1.3] bg-black p-8  flex flex-row justify-between items-start relative overflow-hidden max-[1024px]:w-full max-[1024px]:mt-6 max-[1024px]:text-center max-[768px]:flex-col max-[768px]:items-center max-[768px]:p-6">
+            <div className="w-1/2 flex flex-col items-start justify-start text-left max-[1024px]:w-full max-[1024px]:items-center max-[1024px]:text-center">
+              <p className="text-[#fffaf8] text-[0.75rem] font-semibold mb-3">
+                HELPING 100+ JOB SEEKERS
+              </p>
+              <blockquote className="text-[1.6rem] font-bold italic text-[#eee] mb-4 leading-tight max-[1024px]:text-[1.2rem] max-[768px]:text-[1rem]">
+                "I've seen brilliant people lose hope. Flashfire exists so they
+                don't have to."
+              </blockquote>
+              <div className="flex justify-start items-center gap-4 text-left max-[1024px]:justify-center max-[1024px]:text-center">
+                <div>
+                  <p className="text-[0.95rem] font-semibold">Adit Jain</p>
+                  <p className="text-[0.8rem] text-[#aaa]">Partner</p>
                 </div>
-                <blockquote className="text-2xl font-bold italic text-white mb-8 leading-tight max-[768px]:text-xl">
-                  "I've seen brilliant people lose hope. Flashfire exists so they don't have to."
-                </blockquote>
-                <div className="flex items-center gap-4 max-[1024px]:justify-center">
-                  <div className="text-left">
-                    <p className="text-base font-bold text-white">Adit Jain</p>
-                    <p className="text-sm text-gray-400">Partner</p>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <FlashfireLogo
+                      variant="white"
+                      width={24}
+                      height={24}
+                      className="brightness-100"
+                    />
                   </div>
-                  <div className="h-8 w-px bg-gray-700"></div>
-                  <div className="flex items-center gap-2">
-                    <FlashfireLogo variant="white" width={24} height={24} />
-                    <p className="font-bold text-white">Flashfire</p>
-                  </div>
+                  <p className="font-semibold">Flashfire</p>
                 </div>
               </div>
+            </div>
 
-              <div className="relative w-full lg:w-2/5 h-72 lg:h-80 overflow-hidden shadow-2xl border-4 border-orange-600/20">
-                <Image
-                  src="https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/adit-jain.png"
-                  alt="Adit Jain"
-                  width={300}
-                  height={400}
-                  className="w-full h-full object-cover object-top"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
-              </div>
+            <div className="relative flex-1 max-w-[60%] h-[13rem] overflow-hidden rounded-[0.5rem] max-[1024px]:static max-[1024px]:w-full max-[1024px]:h-[220px] max-[1024px]:mt-4 max-[1024px]:max-w-full max-[768px]:flex max-[768px]:justify-center max-[768px]:items-center max-[480px]:h-[180px]">
+              <Image
+                src="https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/adit-jain.png"
+                alt="Adit Jain"
+                width={260}
+                height={480}
+                className="absolute top-[-70%] right-[-9%] h-[300%] w-auto object-contain brightness-100 contrast-105 max-[1024px]:static max-[1024px]:h-full max-[1024px]:w-full max-[1024px]:object-contain max-[1024px]:top-0 max-[1024px]:right-0 max-[768px]:object-cover max-[768px]:scale-110 max-[480px]:object-top"
+                unoptimized
+              />
+              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 via-black/30 to-transparent pointer-events-none" />
             </div>
           </div>
         </div>
