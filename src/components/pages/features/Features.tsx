@@ -1,6 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
+import { FaPlus, FaTimes, FaWhatsapp } from "react-icons/fa"
+import { questionsData } from "@/src/data/questionsData"
+import faqStyles from "@/src/components/homePageFAQ/homePageFAQ.module.css"
+import FlashfireLogo from "@/src/components/FlashfireLogo"
 
 const features = [
   {
@@ -75,6 +80,21 @@ const steps = [
 ]
 
 export default function Features() {
+  const [activeFaq, setActiveFaq] = useState<number | null>(null)
+
+  const handleFaqToggle = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index)
+  }
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "919817349846"
+    const message = encodeURIComponent(
+      "Hi! I'm interested in Flashfire's AI-powered job search automation. Can you help me get started?",
+    )
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
+    window.open(whatsappUrl, "_blank")
+  }
+
   const handleGetStarted = () => {
     // You can add navigation or modal trigger here
     if (typeof window !== "undefined") {
@@ -305,11 +325,106 @@ export default function Features() {
       </div>
         </section>
 
+        {/* FAQ Section */}
+        <section id="faq" className={`${faqStyles.faqSection} relative z-10 py-16`}>
+          <div id="faq-header" className={faqStyles.header}>
+            <h2>Question? We Got You Answers.</h2>
+            <p>
+              We get it, AI job search can sound complex. Here&apos;s everything explained, plain and simple.
+            </p>
+          </div>
+
+          <div className={`${faqStyles.faqContainer} text-left !rounded-none`}>
+            {questionsData.slice(0, 6).map((faq, index) => (
+              <div
+                key={faq.question}
+                className={`${faqStyles.faqItem} ${activeFaq === index ? faqStyles.active : ""}`}
+              >
+                <button className={faqStyles.faqQuestion} onClick={() => handleFaqToggle(index)}>
+                  <span>{faq.question}</span>
+                  <span className={faqStyles.icon}>{activeFaq === index ? <FaTimes /> : <FaPlus />}</span>
+                </button>
+
+                {activeFaq === index && (
+                  <div className={`${faqStyles.faqAnswer} text-left`}>
+                    <p>{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer Section */}
+        <section className=" mb-20 flex justify-center py-16 px-4 sm:px-6 lg:px-8">
+      <div className="flex justify-between items-stretch gap-4 bg-[rgba(251,240,235,1)] border border-[#f1e4df] p-3 max-w-[80rem] w-full mx-auto overflow-hidden relative max-[1024px]:flex-col max-[1024px]:items-center max-[1024px]:p-8 max-[768px]:p-6 max-[480px]:p-5">
+        <div className="flex-1 text-left bg-white p-8 flex flex-col justify-center relative overflow-hidden max-[1024px]:text-center max-[1024px]:p-6 max-[768px]:p-5">
+          <h3 className="text-[1.6rem] font-bold text-[#111] mb-3 max-[480px]:text-[1.2rem]">
+            Still Confused?
+          </h3>
+          <p className="text-[#333] text-[1rem] font-bold leading-[1.5] mb-5 max-[480px]:text-[0.9rem]">
+            Feel free to post your queries <br /> over our WhatsApp Support.
+          </p>
+          <button
+            type="button"
+            className="bg-[#ff4c00] text-white border-0 border-b-[3px] border-b-black py-[0.9rem] px-[1.6rem] font-semibold rounded-[0.5rem] cursor-pointer transition-all duration-300 w-fit z-10 relative shadow-[0_0.2rem_0_#000] hover:bg-[#e24300] hover:border-b-[5px] max-[1024px]:mx-auto"
+            onClick={handleWhatsAppClick}
+          >
+            Connect on WhatsApp
+          </button>
+          <div className="pointer-events-none absolute right-[-8rem] top-1/2 -translate-y-1/2 text-[18rem] text-[rgba(251,240,235,1)] opacity-90 max-[1024px]:hidden">
+            <FaWhatsapp />
+          </div>
+        </div>
+
+        <div className="flex-[1.3] bg-black p-8  flex flex-row justify-between items-start relative overflow-hidden max-[1024px]:w-full max-[1024px]:mt-6 max-[1024px]:text-center max-[768px]:flex-col max-[768px]:items-center max-[768px]:p-6">
+          <div className="w-1/2 flex flex-col items-start justify-start text-left max-[1024px]:w-full max-[1024px]:items-center max-[1024px]:text-center">
+            <p className="text-[#fffaf8] text-[0.75rem] font-semibold mb-3">
+              HELPING 100+ JOB SEEKERS
+            </p>
+            <blockquote className="text-[1.6rem] font-bold italic text-[#eee] mb-4 leading-tight max-[1024px]:text-[1.2rem] max-[768px]:text-[1rem]">
+              "I've seen brilliant people lose hope. Flashfire exists so they
+              don't have to."
+            </blockquote>
+            <div className="flex justify-start items-center gap-4 text-left max-[1024px]:justify-center max-[1024px]:text-center">
+              <div>
+                <p className="text-[0.95rem] font-semibold">Adit Jain</p>
+                <p className="text-[0.8rem] text-[#aaa]">Partner</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div>
+                  <FlashfireLogo
+                    variant="white"
+                    width={24}
+                    height={24}
+                    className="brightness-100"
+                  />
+                </div>
+                <p className="font-semibold">Flashfire</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative flex-1 max-w-[60%] h-[13rem] overflow-hidden rounded-[0.5rem] max-[1024px]:static max-[1024px]:w-full max-[1024px]:h-[220px] max-[1024px]:mt-4 max-[1024px]:max-w-full max-[768px]:flex max-[768px]:justify-center max-[768px]:items-center max-[480px]:h-[180px]">
+            <Image
+              src="https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/adit-jain.png"
+              alt="Adit Jain"
+              width={260}
+              height={480}
+              className="absolute top-[-70%] right-[-9%] h-[300%] w-auto object-contain brightness-100 contrast-105 max-[1024px]:static max-[1024px]:h-full max-[1024px]:w-full max-[1024px]:object-contain max-[1024px]:top-0 max-[1024px]:right-0 max-[768px]:object-cover max-[768px]:scale-110 max-[480px]:object-top"
+              unoptimized
+            />
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 via-black/30 to-transparent pointer-events-none" />
+          </div>
+        </div>
+      </div>
+    </section>
+
         {/* CTA Footer */}
-        <div className="relative overflow-visible">
+        <div className="relative mt-16 overflow-visible">
           {/* Orange gradient circles at bottom - left and right */}
-          <div className="pointer-events-none absolute -bottom-40 -left-40 h-[40rem] w-[40rem] bg-gradient-to-tr from-orange-700/40 via-orange-600/30 to-orange-500/20 blur-3xl rounded-full" />
-          <div className="pointer-events-none absolute -bottom-40 -right-40 h-[40rem] w-[40rem] bg-gradient-to-br from-orange-700/40 via-orange-600/30 to-orange-500/20 blur-3xl rounded-full" />
+          <div className="pointer-events-none absolute -bottom-60 -left-40 h-[40rem] w-[40rem] bg-gradient-to-tr from-orange-700/40 via-orange-600/30 to-orange-500/20 blur-3xl rounded-full" />
+          <div className="pointer-events-none absolute -bottom-60 -right-40 h-[40rem] w-[40rem] bg-gradient-to-br from-orange-700/40 via-orange-600/30 to-orange-500/20 blur-3xl rounded-full" />
           
           <div className="mx-auto max-w-4xl mt-16 text-center relative z-10">
             <h2 className="text-4xl font-bold text-[#ff4c00] mb-4 md:text-5xl">
