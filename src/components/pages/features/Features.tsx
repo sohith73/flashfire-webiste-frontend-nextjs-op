@@ -103,7 +103,7 @@ export default function Features() {
   }
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#fff6f4] min-h-screen">
       {/* Orange Header Bar */}
      
 

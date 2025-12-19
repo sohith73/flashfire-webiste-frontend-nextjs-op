@@ -1,12 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./footer.module.css";
 import { FaLinkedinIn, FaInstagram, FaYoutube } from "react-icons/fa";
 import Link from "next/link";
+import { smoothScrollToElement } from "@/src/utils/smoothScroll";
 
 export default function Footer() {
   const pathname = usePathname();
+  const router = useRouter();
   const isCanadaContext = pathname.startsWith("/en-ca");
   const prefix = isCanadaContext ? "/en-ca" : "";
   
@@ -15,6 +17,42 @@ export default function Footer() {
       return href;
     }
     return `${prefix}${href}`;
+  };
+
+  const handleFAQClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const isHomePage = pathname === "/" || pathname === "/en-ca" || pathname === prefix + "/";
+    
+    if (isHomePage) {
+      // Already on home page, just scroll to FAQ section
+      setTimeout(() => {
+        const faqSection = document.getElementById("faq");
+        if (faqSection) {
+          smoothScrollToElement("faq", {
+            duration: 800,
+            easing: 'easeInOutCubic',
+          });
+        }
+      }, 100);
+    } else {
+      // Navigate to home page first, then scroll to FAQ
+      router.push(getHref("/"));
+      // Wait for page to load, then scroll to FAQ
+      setTimeout(() => {
+        const attemptScroll = (attempt = 1, maxAttempts = 10) => {
+          const faqSection = document.getElementById("faq");
+          if (faqSection) {
+            smoothScrollToElement("faq", {
+              duration: 800,
+              easing: 'easeInOutCubic',
+            });
+          } else if (attempt < maxAttempts) {
+            setTimeout(() => attemptScroll(attempt + 1, maxAttempts), 200);
+          }
+        };
+        attemptScroll();
+      }, 300);
+    }
   };
 
   return (
@@ -40,10 +78,10 @@ export default function Footer() {
           <div className={styles.linkRow}>
             <h4>QUICK ACCESS</h4>
             <div className={styles.linkItems}>
-              <Link href={getHref("/feature")} className={styles.footerLink}>Features</Link>
+              <Link href={getHref("/features")} className={styles.footerLink}>Features</Link>
               <Link href={getHref("/testimonials")} className={styles.footerLink}>Testimonials</Link>
               <Link href={getHref("/pricing")} className={styles.footerLink}>Pricing</Link>
-              <Link href={getHref("/faq")} className={styles.footerLink}>FAQ</Link>
+              <Link href={getHref("/faq")} className={styles.footerLink} onClick={handleFAQClick}>FAQ</Link>
               <Link href={getHref("/blogs")} className={styles.footerLink}>Blog</Link>
             </div>
           </div>

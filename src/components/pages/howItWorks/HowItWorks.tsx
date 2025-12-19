@@ -190,7 +190,7 @@ export default function HowItWorks() {
   };
 
   return (
-    <div className="bg-[#fff6f4] text-black min-h-screen">
+    <div className="bg-[#fff6f4] text-black min-h-screen"> 
       <Navbar />
 
       <main className="mx-auto max-w-6xl px-4 py-12 lg:py-16">
