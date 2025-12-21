@@ -37,6 +37,18 @@ export async function generateMetadata({ params }: LocaleBlogsPageProps): Promis
         ? "https://www.flashfirejobs.com/en-ca/blogs"
         : "https://www.flashfirejobs.com/blogs",
       type: "website",
+      images: [
+        {
+          url: "https://www.flashfirejobs.com/favicon.svg",
+          width: 803,
+          height: 781,
+          alt: "FLASHFIRE Logo",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: ["https://www.flashfirejobs.com/favicon.svg"],
     },
   };
 }
