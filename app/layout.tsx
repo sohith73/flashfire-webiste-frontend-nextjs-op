@@ -69,6 +69,8 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "FLASHFIRE - AI-Powered Job Search Automation",
+        secureUrl: "https://www.flashfirejobs.com/images/flashfire-logo.png",
+        type: "image/png",
       },
     ],
     locale: "en_US",
