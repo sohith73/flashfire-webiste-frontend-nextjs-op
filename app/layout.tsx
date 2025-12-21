@@ -65,9 +65,9 @@ export const metadata: Metadata = {
     siteName: "FLASHFIRE",
     images: [
       {
-        url: "https://www.flashfirejobs.com/favicon.svg",
-        width: 803,
-        height: 781,
+        url: "https://www.flashfirejobs.com/images/flashfire-logo.png",
+        width: 1200,
+        height: 630,
         alt: "FLASHFIRE - AI-Powered Job Search Automation",
       },
     ],
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     title: "FLASHFIRE - AI-Powered Job Search Automation",
     description:
       "We apply to 1000+ jobs on your behalf with tailored resumes for every role. Save 150+ hours, skip the grunt work, and stay in control with real-time updates.",
-    images: ["https://www.flashfirejobs.com/favicon.svg"],
+    images: ["https://www.flashfirejobs.com/images/flashfire-logo.png"],
     creator: "@flashfire",
   },
   robots: {
