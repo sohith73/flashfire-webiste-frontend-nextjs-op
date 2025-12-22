@@ -44,7 +44,7 @@ export default function BeforeAfterComparison() {
         <div className="text-center mb-14 space-y-6 max-w-4xl mx-auto">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
             Transform Your Job Search
-            <span className="block mt-2 bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+            <span className="block mt-2 text-[#ff4c00]">
               With Intelligent Automation
             </span>
           </h1>
@@ -64,7 +64,7 @@ export default function BeforeAfterComparison() {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="py-5 px-6 text-left text-sm font-medium text-gray-600" />
-                  <th className="py-5 px-6 text-center text-lg font-semibold text-orange-500 border-l border-gray-200">
+                  <th className="py-5 px-6 text-center text-lg font-semibold text-[#ff4c00] border-l border-gray-200">
                     Before FLASHFIRE
                   </th>
                   <th className="py-5 px-6 text-center text-lg font-semibold text-green-600 border-l border-gray-200">
@@ -91,7 +91,7 @@ export default function BeforeAfterComparison() {
 
                     {/* Before */}
                     <td className="py-5 px-6 text-center border-l border-gray-200">
-                      <FaTimes className="text-orange-500 text-xl mx-auto" />
+                      <FaTimes className="text-[#ff4c00] text-xl mx-auto" />
                     </td>
 
                     {/* After */}
@@ -132,7 +132,7 @@ export default function BeforeAfterComparison() {
 
               <div className="flex items-center justify-between pt-2">
                 <div className="flex items-center gap-2 text-xs text-gray-600">
-                  <FaTimes className="text-orange-500 text-sm" />
+                  <FaTimes className="text-[#ff4c00] text-sm" />
                   <span className="uppercase tracking-wide">
                     Before FLASHFIRE
                   </span>

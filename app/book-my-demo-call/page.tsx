@@ -1,39 +1,61 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { Metadata } from "next";
 import HomePage from "@/src/components/pages/home/Home";
+import AboutUs from "@/src/components/pages/aboutUs/AboutUs";
+import Navbar from "@/src/components/navbar/navbar";
+import Footer from "@/src/components/footer/footer";
 
 
 export default function BookMyDemoCallPage() {
-    useEffect(() => {
-        // Immediately prevent scroll to top
+    const [previousPage, setPreviousPage] = useState<string | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useLayoutEffect(() => {
+        setIsMounted(true);
+        
+        const savedPreviousPage = sessionStorage.getItem('previousPageBeforeBookMyDemoCall');
+        if (savedPreviousPage) {
+            setPreviousPage(savedPreviousPage);
+        }
+        
         const savedScrollY = sessionStorage.getItem('preserveScrollPosition');
         if (savedScrollY) {
             const scrollY = parseInt(savedScrollY, 10);
             
-            // Prevent scroll immediately
             window.scrollTo({ top: scrollY, behavior: 'instant' });
             
-            // Also restore after a short delay to catch any late scrolls
             const restoreScroll = () => {
                 window.scrollTo({ top: scrollY, behavior: 'instant' });
             };
             
-            // Try multiple times to ensure it sticks
             requestAnimationFrame(() => {
                 restoreScroll();
                 requestAnimationFrame(() => {
                     restoreScroll();
                     setTimeout(() => {
                         restoreScroll();
-                        // Clear the saved position after restoring
                         sessionStorage.removeItem('preserveScrollPosition');
                     }, 100);
                 });
             });
         }
     }, []);
+
+    if (!isMounted) {
+        return <HomePage />;
+    }
+
+    if (previousPage === '/about-us' || previousPage === '/en-ca/about-us') {
+        return (
+            <>
+                <Navbar />
+                <AboutUs />
+                <Footer />
+            </>
+        );
+    }
 
     return <HomePage />;
 }
