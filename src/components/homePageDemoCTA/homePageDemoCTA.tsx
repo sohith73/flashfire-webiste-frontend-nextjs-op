@@ -135,10 +135,32 @@ export default function HomePageDemoCTA() {
               return;
             }
             
-            // If on about-us page, just show modal without changing URL or navigating
+            // If on about-us page, change URL but keep page content visible
             if (isAboutUsPage) {
+              // Save the previous page path to sessionStorage
+              if (typeof window !== 'undefined') {
+                sessionStorage.setItem('previousPageBeforeBookMyDemoCall', currentPath);
+              }
+              
               // Save current scroll position before modal opens
               const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+              if (typeof window !== 'undefined') {
+                sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+              }
+              
+              // Change URL to /book-my-demo-call using pushState
+              const targetPath = currentPath.startsWith('/en-ca') ? '/en-ca/book-my-demo-call' : '/book-my-demo-call';
+              if (typeof window !== 'undefined') {
+                window.history.pushState({}, '', targetPath);
+              }
+              
+              // Dispatch custom event to force show modal FIRST
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+              }
+              
+              // Use router.replace to update Next.js state
+              router.replace(targetPath);
               
               // Restore scroll position immediately after modal opens
               requestAnimationFrame(() => {
@@ -151,7 +173,6 @@ export default function HomePageDemoCTA() {
                 });
               });
               
-              // Just trigger the modal, don't navigate or change URL
               return;
             }
             
@@ -270,10 +291,32 @@ export default function HomePageDemoCTA() {
               return;
             }
             
-            // If on about-us page, just show modal without changing URL or navigating
+            // If on about-us page, change URL but keep page content visible
             if (isAboutUsPage) {
+              // Save the previous page path to sessionStorage
+              if (typeof window !== 'undefined') {
+                sessionStorage.setItem('previousPageBeforeBookMyDemoCall', currentPath);
+              }
+              
               // Save current scroll position before modal opens
               const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+              if (typeof window !== 'undefined') {
+                sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+              }
+              
+              // Change URL to /book-my-demo-call using pushState
+              const targetPath = currentPath.startsWith('/en-ca') ? '/en-ca/book-my-demo-call' : '/book-my-demo-call';
+              if (typeof window !== 'undefined') {
+                window.history.pushState({}, '', targetPath);
+              }
+              
+              // Dispatch custom event to force show modal FIRST
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+              }
+              
+              // Use router.replace to update Next.js state
+              router.replace(targetPath);
               
               // Restore scroll position immediately after modal opens
               requestAnimationFrame(() => {
@@ -286,7 +329,6 @@ export default function HomePageDemoCTA() {
                 });
               });
               
-              // Just trigger the modal, don't navigate or change URL
               return;
             }
             

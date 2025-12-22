@@ -17,21 +17,21 @@ export default function AboutUs() {
     },
   });
   return (
-    <div className="bg-[#fff6f4] min-h-screen font-['Space_Grotesk',sans-serif] relative overflow-hidden">
+    <div className="bg-[#f9e8e0] min-h-screen font-['Space_Grotesk',sans-serif] relative overflow-hidden">
       {/* === HERO SECTION === */}
      
         {/* Orange top bar */}
        
         
         {/* Gradient background */}
-        <div className="bg-[#fff6f4] py-16 px-4 sm:px-6 lg:px-8 relative">
+        <div className="bg-[#f9e8e0] py-16 px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-6xl mx-auto">
             {/* Achievement Badges */}
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="border-2 border-black px-4 py-2 bg-white">
+              <div className="border-2 border-black px-4 py-2 bg-[#f9e8e0]">
                 <p className="text-[#F55D1D] font-bold text-sm uppercase">LAND INTERVIEW IN 1 WEEK</p>
               </div>
-              <div className="border-2 border-black px-4 py-2 bg-white">
+              <div className="border-2 border-black px-4 py-2 bg-[#f9e8e0]">
                 <p className="text-[#F55D1D] font-bold text-sm uppercase">50 USERS LANDED JOB</p>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function AboutUs() {
             <div className="flex justify-center px-2">
               <button 
                 {...getButtonProps()}
-                className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#fff6f4] transition-colors rounded-lg w-full sm:w-auto max-w-xs sm:max-w-none" 
+                className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#f9e8e0] transition-colors rounded-lg w-full sm:w-auto max-w-xs sm:max-w-none" 
                 style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}
                 onClick={() => {
                   const utmSource = typeof window !== "undefined"
@@ -140,15 +140,32 @@ export default function AboutUs() {
                     return;
                   }
 
-                  // If on about-us page, just show modal without changing URL or navigating
+                  // If on about-us page, change URL but keep page content visible
                   if (isAboutUsPage) {
+                    // Save the previous page path to sessionStorage
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem('previousPageBeforeGetMeInterview', normalizedPath);
+                    }
+                    
                     // Save current scroll position before modal opens
                     const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+                    }
+
+                    // Change URL to /get-me-interview using pushState
+                    const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview';
+                    if (typeof window !== 'undefined') {
+                      window.history.pushState({}, '', targetPath);
+                    }
 
                     // Dispatch custom event to force show modal FIRST
                     if (typeof window !== 'undefined') {
                       window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
                     }
+
+                    // Use router.replace to update Next.js state
+                    router.replace(targetPath);
 
                     // Restore scroll position immediately after modal opens
                     requestAnimationFrame(() => {
@@ -161,7 +178,6 @@ export default function AboutUs() {
                       });
                     });
 
-                    // Just trigger the modal, don't navigate or change URL
                     return;
                   }
 
@@ -227,7 +243,7 @@ export default function AboutUs() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 max-w-3xl mx-auto">
             {/* Pranjal Tripathi Card */}
             <div className="bg-white rounded-xl p-4 sm:p-6 border-4 sm:border-6 border-[#F55D1D] transform rotate-[-2deg] hover:rotate-0 transition-transform duration-300 h-full flex flex-col mb-6 sm:mb-8" style={{ boxShadow: '0 0 20px 5px rgba(0, 0, 0, 0.3), 0 0 40px 10px rgba(0, 0, 0, 0.15)' }}>
-              <div className="mb-4 overflow-hidden rounded-lg border-2 border-[#F55D1D] h-48 sm:h-60 md:h-72 flex-shrink-0 bg-[#fff6f4] p-1">
+              <div className="mb-4 overflow-hidden rounded-lg border-2 border-[#F55D1D] h-48 sm:h-60 md:h-72 flex-shrink-0 bg-[#f9e8e0] p-1">
                 <Image
                   src="https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/pranjal_cto.png"
                   alt="Pranjal Tripathi"
@@ -249,7 +265,7 @@ export default function AboutUs() {
 
             {/* Adit Jain Card */}
             <div className="bg-white rounded-xl p-4 sm:p-6 border-4 sm:border-6 border-[#F55D1D] transform rotate-[2deg] hover:rotate-0 transition-transform duration-300 h-full flex flex-col mt-6 sm:mt-8 mb-6 sm:mb-8" style={{ boxShadow: '0 0 20px 5px rgba(0, 0, 0, 0.3), 0 0 40px 10px rgba(0, 0, 0, 0.15)' }}>
-              <div className="mb-4 overflow-hidden rounded-lg border-2 border-[#F55D1D] h-48 sm:h-60 md:h-72 flex-shrink-0 bg-[#fff6f4] p-1">
+              <div className="mb-4 overflow-hidden rounded-lg border-2 border-[#F55D1D] h-48 sm:h-60 md:h-72 flex-shrink-0 bg-[#f9e8e0] p-1">
                 <Image
                   src="/images/adit-jain-2.png"
                   alt="Adit Jain"
@@ -273,7 +289,7 @@ export default function AboutUs() {
       </section>
 
       {/* === THE STORY SECTION === */}
-      <section className="bg-[#fff6f4] border-t-2 border-b-2 border-black relative overflow-hidden z-10">
+      <section className="bg-[#f9e8e0] border-t-2 border-b-2 border-black relative overflow-hidden z-10">
         <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-0 items-stretch relative z-10">
           {/* Left Side - Text */}
           <div className="text-gray-900 border-r-0 lg:border-r-2 border-b-2 lg:border-b-0 border-black pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 py-6 sm:py-8 flex flex-col">
@@ -318,7 +334,7 @@ export default function AboutUs() {
       </section>
 
       {/* === OUR MISSION & VISION SECTION === */}
-      <section className="bg-[#fff6f4] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
+      <section className="bg-[#f9e8e0] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="bg-white rounded-xl border-2 border-black overflow-hidden mt-4 ml-4" style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}>
             <div className="grid grid-cols-1 md:grid-cols-2">
@@ -343,7 +359,7 @@ export default function AboutUs() {
       </section>
 
       {/* === HOW FLASHFIRE WORKS FOR YOU SECTION === */}
-      <section className="bg-[#fff6f4] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
+      <section className="bg-[#f9e8e0] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto relative z-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4 sm:mb-6 text-[#F55D1D] px-2">
             How Flashfire Works for You
@@ -380,7 +396,7 @@ export default function AboutUs() {
       </section>
 
       {/* === THE FLASHFIRE STORY TIMELINE SECTION === */}
-      <section className="bg-[#fff6f4] pt-8 pb-16 relative border-t-4 border-black overflow-hidden z-10">
+      <section className="bg-[#f9e8e0] pt-8 pb-16 relative border-t-4 border-black overflow-hidden z-10">
         <div className="w-full relative z-10">
           {/* Title and Text Content with Logo */}
           <div className="flex flex-col md:flex-row items-start gap-4 md:gap-8 px-4 sm:px-8 md:px-16 lg:px-24">

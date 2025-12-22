@@ -126,13 +126,13 @@ export default function Features() {
   }
 
   return (
-    <div className="bg-[#fff6f4] min-h-screen">
+    <div className="bg-[#f9e8e0] min-h-screen">
       {/* Orange Header Bar */}
      
 
     <section
       id="feature"
-        className="relative overflow-hidden bg-[#fff6f4] py-16 px-4 font-['Space_Grotesk',sans-serif] sm:px-6 lg:px-8 md:py-24"
+        className="relative overflow-hidden bg-[#f9e8e0] py-16 px-4 font-['Space_Grotesk',sans-serif] sm:px-6 lg:px-8 md:py-24"
       >
         {/* Why Choose Flashfire Section */}
         <header className="relative z-10 mx-auto mb-16 max-w-4xl text-center md:mb-20">
@@ -345,7 +345,7 @@ export default function Features() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className={`${faqStyles.faqSection} relative z-10 py-16`}>
+        <section id="faq" className={`${faqStyles.faqSection} relative z-10 py-16 bg-[#f9e8e0]`}>
           <div id="faq-header" className={faqStyles.header}>
             <h2>Question? We Got You Answers.</h2>
             <p>
