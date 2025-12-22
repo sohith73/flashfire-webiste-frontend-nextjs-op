@@ -121,6 +121,7 @@ export default function HomePageDemoCTA() {
             // Check current path
             const currentPath = pathname;
             const isImageTestimonialsPage = currentPath === '/testimonials' || currentPath === '/en-ca/testimonials' || currentPath === '/image-testimonials' || currentPath === '/en-ca/image-testimonials';
+            const isAboutUsPage = currentPath === '/about-us' || currentPath === '/en-ca/about-us';
             const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
             
             // If on image-testimonials page, change URL but keep page content visible
@@ -131,6 +132,26 @@ export default function HomePageDemoCTA() {
                 window.history.pushState({}, '', targetPath);
               }
               // Just trigger the modal, don't navigate
+              return;
+            }
+            
+            // If on about-us page, just show modal without changing URL or navigating
+            if (isAboutUsPage) {
+              // Save current scroll position before modal opens
+              const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+              
+              // Restore scroll position immediately after modal opens
+              requestAnimationFrame(() => {
+                window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                requestAnimationFrame(() => {
+                  window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                  setTimeout(() => {
+                    window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                  }, 50);
+                });
+              });
+              
+              // Just trigger the modal, don't navigate or change URL
               return;
             }
             
@@ -232,6 +253,7 @@ export default function HomePageDemoCTA() {
             // Check current path
             const currentPath = pathname;
             const isImageTestimonialsPage = currentPath === '/testimonials' || currentPath === '/en-ca/testimonials' || currentPath === '/image-testimonials' || currentPath === '/en-ca/image-testimonials';
+            const isAboutUsPage = currentPath === '/about-us' || currentPath === '/en-ca/about-us';
             const isAlreadyOnBookMyDemoCall = currentPath === '/book-my-demo-call' || currentPath === '/en-ca/book-my-demo-call';
             const isOnHomePage = currentPath === '/' || currentPath === '/en-ca';
             
@@ -245,6 +267,26 @@ export default function HomePageDemoCTA() {
                 window.history.pushState({}, '', targetPath);
               }
               // Just trigger the modal, don't navigate
+              return;
+            }
+            
+            // If on about-us page, just show modal without changing URL or navigating
+            if (isAboutUsPage) {
+              // Save current scroll position before modal opens
+              const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+              
+              // Restore scroll position immediately after modal opens
+              requestAnimationFrame(() => {
+                window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                requestAnimationFrame(() => {
+                  window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                  setTimeout(() => {
+                    window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                  }, 50);
+                });
+              });
+              
+              // Just trigger the modal, don't navigate or change URL
               return;
             }
             

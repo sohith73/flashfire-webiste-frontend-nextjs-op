@@ -2,32 +2,29 @@
 
 import React from "react";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 import HomePageDemoCTA from "@/src/components/homePageDemoCTA/homePageDemoCTA";
+import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking";
+import { GTagUTM } from "@/src/utils/GTagUTM";
+import { useGeoBypass } from "@/src/utils/useGeoBypass";
 
 export default function AboutUs() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { getButtonProps } = useGeoBypass({
+    onBypass: () => {
+      // Bypass will be handled by the event listener
+    },
+  });
   return (
-    <div className="bg-white min-h-screen font-['Space_Grotesk',sans-serif] relative overflow-hidden">
-      {/* Large random gradient orange shapes in background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-15 blur-[100px] transform -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-[#F55D1D] to-[#ff8c5a] rounded-full opacity-12 blur-[120px] transform translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-1/3 w-[700px] h-[400px] bg-gradient-to-tr from-[#d44a0f] to-[#F55D1D] rounded-full opacity-10 blur-[150px] transform translate-y-1/2"></div>
-        <div className="absolute top-2/3 right-1/4 w-[550px] h-[550px] bg-gradient-to-tl from-[#F55D1D] to-[#ff8c5a] rounded-full opacity-12 blur-[130px]"></div>
-        <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-gradient-to-br from-[#d44a0f] to-[#ff8c5a] rounded-full opacity-15 blur-[110px] transform -translate-x-1/4"></div>
-        <div className="absolute top-1/2 right-0 w-[600px] h-[300px] bg-gradient-to-bl from-[#F55D1D] to-[#d44a0f] rounded-full opacity-10 blur-[140px] transform translate-x-1/2"></div>
-      </div>
+    <div className="bg-[#fff6f4] min-h-screen font-['Space_Grotesk',sans-serif] relative overflow-hidden">
       {/* === HERO SECTION === */}
      
         {/* Orange top bar */}
        
         
         {/* Gradient background */}
-        <div className="bg-gradient-to-r from-[#fff6f4] via-white to-[#fff6f4] py-16 px-4 sm:px-6 lg:px-8 relative">
-          {/* Left gradient orange circle */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-60 blur-3xl"></div>
-          
-          {/* Right gradient orange circle */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-gradient-to-bl from-[#d44a0f] to-[#F55D1D] rounded-full opacity-60 blur-3xl"></div>
+        <div className="bg-[#fff6f4] py-16 px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-6xl mx-auto">
             {/* Achievement Badges */}
             <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -70,7 +67,120 @@ export default function AboutUs() {
 
             {/* Call-to-Action Button */}
             <div className="flex justify-center px-2">
-              <button className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#fff6f4] transition-colors rounded-lg w-full sm:w-auto max-w-xs sm:max-w-none" style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}>
+              <button 
+                {...getButtonProps()}
+                className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#fff6f4] transition-colors rounded-lg w-full sm:w-auto max-w-xs sm:max-w-none" 
+                style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}
+                onClick={() => {
+                  const utmSource = typeof window !== "undefined"
+                    ? localStorage.getItem("utm_source") || "WEBSITE"
+                    : "WEBSITE";
+                  const utmMedium = typeof window !== "undefined"
+                    ? localStorage.getItem("utm_medium") || "About_Us_Page"
+                    : "About_Us_Page";
+
+                  try {
+                    GTagUTM({
+                      eventName: "sign_up_click",
+                      label: "About_Us_Get_Me_Interview_Button",
+                      utmParams: {
+                        utm_source: utmSource,
+                        utm_medium: utmMedium,
+                        utm_campaign: typeof window !== "undefined"
+                          ? localStorage.getItem("utm_campaign") || "Website"
+                          : "Website",
+                      },
+                    });
+                  } catch (gtagError) {
+                    console.warn('GTagUTM error:', gtagError);
+                  }
+
+                  try {
+                    trackButtonClick("Get Me Interview", "about_us_cta", "cta", {
+                      button_location: "about_us_hero_section",
+                      section: "about_us_hero"
+                    });
+                    trackSignupIntent("about_us_cta", {
+                      signup_source: "about_us_hero_button",
+                      funnel_stage: "signup_intent"
+                    });
+                  } catch (trackError) {
+                    console.warn('Tracking error:', trackError);
+                  }
+
+                  // Check current path first
+                  const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
+                  const normalizedPath = currentPath.split('?')[0]; // Remove query params
+                  const isAboutUsPage = normalizedPath === '/about-us' || normalizedPath === '/en-ca/about-us';
+                  const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
+                    normalizedPath === '/en-ca/get-me-interview';
+
+                  // If already on the route, save scroll position and prevent navigation
+                  if (isAlreadyOnGetMeInterview) {
+                    // Save current scroll position before modal opens
+                    const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
+                    // Dispatch custom event to force show modal
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+                    }
+
+                    // Restore scroll position immediately after modal opens
+                    requestAnimationFrame(() => {
+                      window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                      requestAnimationFrame(() => {
+                        window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                        setTimeout(() => {
+                          window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                        }, 50);
+                      });
+                    });
+
+                    // Just trigger the modal, don't navigate or scroll
+                    return;
+                  }
+
+                  // If on about-us page, just show modal without changing URL or navigating
+                  if (isAboutUsPage) {
+                    // Save current scroll position before modal opens
+                    const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
+                    // Dispatch custom event to force show modal FIRST
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+                    }
+
+                    // Restore scroll position immediately after modal opens
+                    requestAnimationFrame(() => {
+                      window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                      requestAnimationFrame(() => {
+                        window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                        setTimeout(() => {
+                          window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                        }, 50);
+                      });
+                    });
+
+                    // Just trigger the modal, don't navigate or change URL
+                    return;
+                  }
+
+                  // Dispatch custom event to force show modal FIRST
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+                  }
+
+                  // Save current scroll position before navigation to preserve it
+                  if (typeof window !== 'undefined') {
+                    const currentScrollY = window.scrollY;
+                    sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+                  }
+
+                  // Only navigate if NOT already on the page
+                  const targetPath = '/get-me-interview';
+                  router.push(targetPath);
+                }}
+              >
                 Get Me Interview
               </button>
             </div>
@@ -80,9 +190,6 @@ export default function AboutUs() {
 
       {/* === OUR FOUNDERS SECTION === */}
       <section className="bg-[#F55D1D] py-8 sm:py-10 mb-8 sm:mb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden rounded-xl sm:rounded-2xl max-w-5xl mx-auto my-4 sm:my-8 border-2 sm:border-4 border-[#F55D1D] z-10">
-        {/* Random gradient circles */}
-        <div className="absolute top-10 right-10 w-32 h-32 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-30 blur-2xl"></div>
-        <div className="absolute bottom-20 left-20 w-48 h-48 bg-gradient-to-bl from-[#d44a0f] to-[#F55D1D] rounded-full opacity-25 blur-3xl"></div>
         {/* Wavy dotted lines background - diagonal */}
         <div className="absolute inset-0 opacity-20 rounded-2xl">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -166,10 +273,7 @@ export default function AboutUs() {
       </section>
 
       {/* === THE STORY SECTION === */}
-      <section className="border-t-2 border-b-2 border-black relative overflow-hidden z-10">
-        {/* Random gradient circles */}
-        <div className="absolute top-1/4 right-10 w-40 h-40 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-5 w-56 h-56 bg-gradient-to-bl from-[#d44a0f] to-[#F55D1D] rounded-full opacity-25 blur-3xl"></div>
+      <section className="bg-[#fff6f4] border-t-2 border-b-2 border-black relative overflow-hidden z-10">
         <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-0 items-stretch relative z-10">
           {/* Left Side - Text */}
           <div className="text-gray-900 border-r-0 lg:border-r-2 border-b-2 lg:border-b-0 border-black pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8 py-6 sm:py-8 flex flex-col">
@@ -215,24 +319,21 @@ export default function AboutUs() {
 
       {/* === OUR MISSION & VISION SECTION === */}
       <section className="bg-[#fff6f4] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
-        {/* Random gradient circles */}
-        <div className="absolute top-10 left-10 w-36 h-36 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-10 right-20 w-44 h-44 bg-gradient-to-bl from-[#d44a0f] to-[#F55D1D] rounded-full opacity-25 blur-3xl"></div>
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="bg-white rounded-xl border-2 border-black overflow-hidden" style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}>
+          <div className="bg-white rounded-xl border-2 border-black overflow-hidden mt-4 ml-4" style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}>
             <div className="grid grid-cols-1 md:grid-cols-2">
               {/* Mission Section */}
               <div className="p-6 sm:p-8 border-r-0 md:border-r-2 border-b-2 md:border-b-0 border-black">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#F55D1D] mb-3 sm:mb-4 uppercase" style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 1), 1.5px 1.5px 0px rgba(0, 0, 0, 1)' }}>OUR MISSION</h3>
-                <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F55D1D] mb-3 sm:mb-4 uppercase" style={{ textShadow: '2px 2px 0px rgba(0, 0, 0, 1)' }}>OUR MISSION</h3>
+                <p className="text-black leading-relaxed text-base sm:text-lg">
                   To help job seekers land more interviews by automating applications and optimizing visibility using AI.
                 </p>
               </div>
 
               {/* Vision Section */}
               <div className="p-6 sm:p-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#F55D1D] mb-3 sm:mb-4 uppercase" style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 1), 1.5px 1.5px 0px rgba(0, 0, 0, 1)' }}>OUR VISION</h3>
-                <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F55D1D] mb-3 sm:mb-4 uppercase" style={{ textShadow: '2px 2px 0px rgba(0, 0, 0, 1)' }}>OUR VISION</h3>
+                <p className="text-black leading-relaxed text-base sm:text-lg">
                   To make job searching faster, smarter, and stress-free through automation.
                 </p>
               </div>
@@ -243,9 +344,6 @@ export default function AboutUs() {
 
       {/* === HOW FLASHFIRE WORKS FOR YOU SECTION === */}
       <section className="bg-[#fff6f4] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden z-10">
-        {/* Random gradient circles */}
-        <div className="absolute top-1/3 left-5 w-52 h-52 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-10 w-40 h-40 bg-gradient-to-bl from-[#d44a0f] to-[#F55D1D] rounded-full opacity-25 blur-3xl"></div>
         <div className="max-w-6xl mx-auto relative z-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4 sm:mb-6 text-[#F55D1D] px-2">
             How Flashfire Works for You
@@ -254,7 +352,7 @@ export default function AboutUs() {
             We don&apos;t just apply, <span className="font-bold">we make you get noticed.</span> Flashfire combines <span className="text-[#F55D1D] font-bold">AI precision</span> with <span className="text-[#F55D1D] font-bold">human insight</span> to get you interviews that actually convert.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
             {/* Feature items with lightning bolt icons */}
             {[
               "AI-Powered Matching",
@@ -264,8 +362,8 @@ export default function AboutUs() {
               "Precision Targeting",
               "Dashboard & Analytics"
             ].map((feature, index) => (
-              <div key={index} className="flex items-start gap-2 sm:gap-3">
-                <div className="flex-shrink-0">
+              <div key={index} className={`flex items-center gap-0 ${index % 2 === 0 ? 'md:ml-4' : ''}`}>
+                <div className="flex-shrink-0 flex items-center">
                   <Image
                     src="/images/flashfire-logo.png"
                     alt="Flashfire Logo"
@@ -282,38 +380,40 @@ export default function AboutUs() {
       </section>
 
       {/* === THE FLASHFIRE STORY TIMELINE SECTION === */}
-      <section className="bg-[#fff6f4] py-16 relative border-t-4 border-black overflow-hidden z-10">
-        {/* Random gradient circles */}
-        <div className="absolute top-20 left-20 w-48 h-48 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute bottom-40 right-30 w-60 h-60 bg-gradient-to-bl from-[#d44a0f] to-[#F55D1D] rounded-full opacity-25 blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/4 w-36 h-36 bg-gradient-to-br from-[#d44a0f] to-[#F55D1D] rounded-full opacity-15 blur-2xl"></div>
+      <section className="bg-[#fff6f4] pt-8 pb-16 relative border-t-4 border-black overflow-hidden z-10">
         <div className="w-full relative z-10">
-          {/* Logo at top right */}
-          <div className="absolute -top-20 sm:-top-24 md:-top-29 right-1 sm:right-4 md:right-8 lg:right-16 z-20">
-            <Image
-              src="/images/flashfire-logo.png"
-              alt="Flashfire Logo"
-              width={250}
-              height={250}
-              className="object-contain w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-60 lg:h-60"
-              style={{ filter: 'drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.3))' }}
-              priority
-              unoptimized
-            />
-          </div>
+          {/* Title and Text Content with Logo */}
+          <div className="flex flex-col md:flex-row items-start gap-4 md:gap-8 px-4 sm:px-8 md:px-16 lg:px-24">
+            {/* Text Content */}
+            <div className="flex-1">
+              {/* Title */}
+              <div className="mb-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F55D1D] uppercase" style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 1), 1.5px 1.5px 0px rgba(0, 0, 0, 1)' }}>
+                  THE FLASHFIRE STORY
+                </h2>
+              </div>
 
-          {/* Title */}
-          <div className="mb-6 px-4 sm:px-8 md:px-16 lg:px-24">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F55D1D] uppercase" style={{ textShadow: '3px 3px 0px rgba(0, 0, 0, 1), 1.5px 1.5px 0px rgba(0, 0, 0, 1)' }}>
-              THE FLASHFIRE STORY
-            </h2>
-          </div>
+              {/* Introductory Paragraph */}
+              <div>
+                <p className="text-sm sm:text-base text-black mb-12 leading-relaxed">
+                  Flashfire began in April 2024 with a simple insight: most candidates lose opportunities before they&apos;re even seen. Built to match the speed and precision of modern hiring, Flashfire helps candidates apply at scale across U.S. and Canadian job markets with ATS-optimized applications.
+                </p>
+              </div>
+            </div>
 
-          {/* Introductory Paragraph */}
-          <div className="px-4 sm:px-8 md:px-16 lg:px-24">
-            <p className="text-sm sm:text-base text-black mb-12 leading-relaxed">
-              Flashfire began in April 2024 with a simple insight: most candidates lose opportunities before they&apos;re even seen. Built to match the speed and precision of modern hiring, Flashfire helps candidates apply at scale across U.S. and Canadian job markets with ATS-optimized applications.
-            </p>
+            {/* Logo positioned on the right */}
+            <div className="flex-shrink-0 -mt-8 sm:-mt-12 md:-mt-16">
+              <Image
+                src="/images/flashfire-logo.png"
+                alt="Flashfire Logo"
+                width={400}
+                height={400}
+                className="object-contain w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80"
+                style={{ filter: 'drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.3))' }}
+                priority
+                unoptimized
+              />
+            </div>
           </div>
 
           {/* Timeline - Zigzag Layout */}

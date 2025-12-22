@@ -153,7 +153,7 @@ export default function Features() {
             {features.map((feature, index) => (
               <article
                 key={index}
-                className="bg-white border border-orange-200 border-b-4 border-b-orange-500 rounded-lg p-6 text-left shadow-sm"
+                className="bg-white border border-[#ff4c00]/50 border-b-4 border-b-[#ff4c00] rounded-lg p-6 text-left shadow-sm"
               >
                 <h3 className="mb-3 text-xl font-bold text-[#ff4c00] md:text-2xl">
                   {feature.title}
