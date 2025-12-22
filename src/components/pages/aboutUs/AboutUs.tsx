@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import HomePageDemoCTA from "@/src/components/homePageDemoCTA/homePageDemoCTA";
@@ -11,11 +11,40 @@ import { useGeoBypass } from "@/src/utils/useGeoBypass";
 export default function AboutUs() {
   const router = useRouter();
   const pathname = usePathname();
+  const hasScrolledRef = useRef(false);
   const { getButtonProps } = useGeoBypass({
     onBypass: () => {
       // Bypass will be handled by the event listener
     },
   });
+
+  // Scroll to top when navigating to about-us page (same pattern as pricing page)
+  useEffect(() => {
+    // Only scroll to top on initial mount (when navigating TO about-us page from another page)
+    // Re-clicks are handled by navbar which prevents navigation
+    if (!hasScrolledRef.current) {
+      hasScrolledRef.current = true;
+      
+      // Scroll to top when navigating to about-us page
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        
+        // Also scroll after a short delay to catch any late scrolls from browser restoration
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "instant" });
+        }, 50);
+        
+        // One more check after layout
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }, 100);
+        });
+      });
+    }
+  }, []);
+
   return (
     <div className="bg-[#f9e8e0] min-h-screen font-['Space_Grotesk',sans-serif] relative overflow-hidden">
       {/* === HERO SECTION === */}
