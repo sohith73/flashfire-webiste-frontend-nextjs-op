@@ -379,7 +379,7 @@ export default function AboutUs() {
               <div className="p-6 sm:p-8">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F55D1D] mb-3 sm:mb-4 uppercase" style={{ textShadow: '2px 2px 0px rgba(0, 0, 0, 1)' }}>OUR VISION</h3>
                 <p className="text-black leading-relaxed text-base sm:text-lg">
-                  To make job searching faster, smarter, and stress-free through automation.
+                  To become the world's fastest and most intelligent job application engine, enabling anyone to apply to over 1,200 targeted roles and land interviews ten times faster  all without wasting time or effort. 
                 </p>
               </div>
             </div>
