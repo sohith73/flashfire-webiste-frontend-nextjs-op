@@ -20,7 +20,6 @@ import HomePageWhyChooseFF from "@/src/components/homePageWhyChooseFF/homePageWh
 import Navbar from "@/src/components/navbar/navbar";
 import SalesPopUp from "@/src/components/SalesPopUp";
 import HomePageBeforeAfter from "../../homePageBeforeAfter/homePageBeforeAfter";
-import HomePagePreloader from "@/src/components/HomePagePreloader";
 
 const Home = () => {
   const pathname = usePathname();
@@ -51,7 +50,6 @@ const Home = () => {
 
   return (
     <>
-      <HomePagePreloader />
       <Navbar />
       <HeroSection /> {/* using useState, so client */}
       <HomePageCareerCTA />
