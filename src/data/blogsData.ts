@@ -1,7 +1,7 @@
 export const blogPosts = [
   {
     id: 1,
-    slug: "how-to-write-a-resume-that-gets-interviews-in-the-us-2025-job-market-edition",
+    slug: "how-to-write-a-good-resume",
     title:
       "How to Write a Resume That Gets Interviews in the U.S. (2025 Job Market Edition)",
     excerpt:
@@ -133,7 +133,7 @@ export const blogPosts = [
   },
   {
     id: 2,
-    slug: "why-finding-a-job-in-the-us-as-a-new-graduate-feels-impossible",
+    slug: "why-is-it-so-hard-to-find-a-job-in-us",
     title: "Why Finding a Job in the U.S. as a New Graduate Feels Impossible",
     excerpt:
       "If you're a recent graduate trying to land your first job in the United States, you're probably overwhelmed and frustrated. Learn why the system isn't built for new grads and how to overcome it.",
@@ -305,7 +305,7 @@ export const blogPosts = [
   },
   {
     id: 3,
-    slug: "from-0-to-offer-a-step-by-step-guide-to-landing-your-first-us-job-with-flashfire",
+    slug: "how-to-land-your-first-job",
     title:
       "From 0 to Offer: A Step-by-Step Guide to Landing Your First U.S. Job with Flashfire",
     excerpt:
@@ -474,7 +474,7 @@ export const blogPosts = [
   },
   {
     id: 4,
-    slug: "from-cpt-to-h1b-a-simple-game-plan-for-navigating-job-search-as-an-international-student",
+    slug: "from-cpt-to-h1b-job-search-roadmap",
     title:
       "From CPT to H-1B: A Simple Game Plan for Navigating Job Search as an International Student",
     excerpt:
@@ -589,7 +589,7 @@ export const blogPosts = [
   },
   {
     id: 5,
-    slug: "how-i-got-10-offers-in-6-weeks-using-only-flashfirejobs-product-manager-edition",
+    slug: "flashfirejobs-product-manager-edition",
     title:
       "How I Got 10 Offers in 6 Weeks Using Only flashfirejobs.com (Product Manager Edition)",
     excerpt:
@@ -757,7 +757,7 @@ export const blogPosts = [
   },
   {
     id: 6,
-    slug: "how-to-land-your-first-job-in-the-us-with-zero-referrals-proven-strategy-for-international-students",
+    slug: "how-to-get-your-first-job-in-the-us",
     title:
       "How to Land Your First Job in the U.S. with Zero Referrals — A Proven Strategy for International Students",
     excerpt:
@@ -940,7 +940,7 @@ export const blogPosts = [
   },
   {
     id: 8,
-    slug: "the-7-best-job-portals-for-international-students-applying-in-the-us-and-which-one-actually-works",
+    slug: "best-us-job-portals-for-international-students",
     title:
       "The 7 Best Job Portals for International Students Applying in the U.S. (And Which One Actually Works)",
     excerpt:
@@ -1017,7 +1017,7 @@ export const blogPosts = [
   },
   {
     id: 9,
-    slug: "the-ultimate-job-search-strategy-for-opt-students-in-the-us-what-no-one-tells-you",
+    slug: "best-job-search-strategies-opt-students",
     title:
       "The Ultimate Job Search Strategy for OPT Students in the U.S. — What No One Tells You",
     excerpt:
@@ -1089,7 +1089,7 @@ export const blogPosts = [
   },
   {
     id: 10,
-    slug: "how-to-land-a-us-internship-after-2-semesters",
+    slug: "how-to-land-an-us-internship",
     title: "How to Land a U.S. Internship After 2 Semesters",
     excerpt:
       "No U.S. experience? No referrals? No problem. Here's a step-by-step game plan for international students to land their first internship after just two semesters.",
@@ -1158,7 +1158,7 @@ export const blogPosts = [
   },
   {
     id: 11,
-    slug: "top-job-search-strategies-for-international-students-in-the-us-what-really-works",
+    slug: "best-job-search-strategies-for-international-students",
     title:
       "Top Job Search Strategies for International Students in the U.S.: What Really Works",
     excerpt:
@@ -1347,7 +1347,7 @@ export const blogPosts = [
   },
   {
     id: 12,
-    slug: "i-applied-to-1000-us-jobs-in-45-days-heres-what-actually-worked-and-what-didnt",
+    slug: "job-applications-ghosted-in-us",
     title:
       "I Applied to 1,000 U.S. Jobs in 45 Days — Here's What Actually Worked (And What Didn't)",
     excerpt:
@@ -1462,7 +1462,7 @@ export const blogPosts = [
   },
   {
     id: 13,
-    slug: "why-your-job-applications-in-the-us-are-getting-ghosted-and-how-to-finally-break-the-silence",
+    slug: "how-to-get-interview-calls-from-top-companies",
     title:
       "Why Your Job Applications in the U.S. Are Getting Ghosted — And How to Finally Break the Silence",
     excerpt:
@@ -1622,7 +1622,7 @@ export const blogPosts = [
   },
   {
     id: 14,
-    slug: "i-had-no-referrals-no-experience-and-no-us-connections-but-i-still-got-interviews-at-top-companies",
+    slug: "effective-job-hunting-strategies",
     title:
       "I Had No Referrals, No Experience, and No U.S. Connections — But I Still Got Interviews at Top Companies. Here's How.",
     excerpt:
@@ -1776,7 +1776,7 @@ export const blogPosts = [
   },
   {
     id: 15,
-    slug: "the-job-hunt-nearly-broke-me-until-i-discovered-this-one-strategy-that-changed-everything",
+    slug: "how-to-get-interview-calls-with-flashfire",
     title:
       "The Job Hunt Nearly Broke Me — Until I Discovered This One Strategy That Changed Everything",
     excerpt:
@@ -1941,7 +1941,7 @@ export const blogPosts = [
 
   {
     id: 16,
-    slug: "how-i-got-15-interview-calls-with-flashfire-the-ai-powered-job-hunt-that-applies-to-1000-us-jobs-for-you",
+    slug: "are-you-legally-authorized-to-work-in-us",
     title:
       "How I Got 15+ Interview Calls with FLASHFIRE — The AI-Powered Job Hunt That Applies to 1,000+ U.S. Jobs for You",
     excerpt:
@@ -2148,7 +2148,7 @@ export const blogPosts = [
   },
   {
     id: 17,
-    slug: "the-work-authorization-question-how-to-navigate-it-like-a-pro-when-applying-for-us-jobs",
+    slug: "how-will-the-job-market-be-2026",
     title:
       "The Work Authorization Question: How to Navigate It Like a Pro When Applying for U.S. Jobs",
     excerpt:
@@ -2303,7 +2303,7 @@ export const blogPosts = [
   },
   {
     id: 18,
-    slug: "yes-the-job-market-in-2025-is-brutal-but-heres-why-you-cant-give-up",
+    slug: "how-to-cracked-job-interview-us",
     title:
       "Yes, the Job Market in 2025 is Brutal. But Here's Why You Can't Give Up",
     excerpt:
@@ -2512,7 +2512,7 @@ export const blogPosts = [
   },
   {
     id: 19,
-    slug: "how-i-got-15-interview-calls-with-flashfire-ai-powered-job-hunt-duplicate",
+    slug: "list-of-us-companies-sponsoring-h1b-visas",
     title:
       "How I Got 15+ Interview Calls with FLASHFIRE — The AI-Powered Job Hunt That Applies to 1,000+ U.S. Jobs for You",
     excerpt:
@@ -2701,7 +2701,7 @@ export const blogPosts = [
   },
   {
     id: 20,
-    slug: "3000-applications-3-weeks-12-offers-how-i-finally-cracked-the-us-job-market-with-flashfire",
+    slug: "how-to-find-opt-job-in-usa",
     title:
       "3000 Applications, 3 Weeks, 12 Offers: How I Finally Cracked the U.S. Job Market with Flashfire",
     excerpt:
@@ -2921,7 +2921,7 @@ export const blogPosts = [
   },
   {
     id: 22,
-    slug: "top-20-companies-sponsoring-h1b-in-2025-and-how-to-apply-as-an-international-student",
+    slug: "list-of-us-companies-sponsoring-h1b-visas",
     title:
       "Top 20 Companies Sponsoring H-1B in 2025 (And How to Apply as an International Student)",
     excerpt:
@@ -3105,7 +3105,7 @@ export const blogPosts = [
   },
   {
     id: 21,
-    slug: "how-to-find-a-job-in-the-us-on-opt-without-referrals",
+    slug: "how-to-find-opt-job-in-usa",
     title: "How to Find a Job in the U.S. on OPT Without Referrals",
     excerpt:
       "Landing a job in the U.S. on OPT can feel overwhelming—especially if you don't have personal referrals. Learn step-by-step strategies, real-life examples, and actionable tips to secure interviews and land offers without connections.",
@@ -3321,7 +3321,7 @@ export const blogPosts = [
   },
   {
     id: 23,
-    slug: "the-most-in-demand-skills-for-international-students-in-2025",
+    slug: "demand-skills-for-international-students-2026",
     title: "The Most In-Demand Skills for International Students in 2025",
     excerpt:
       "Landing a job in the U.S. can feel like an uphill battle. We analyzed over 10,000 U.S. job listings to pinpoint exactly what employers want in 2025.",
@@ -3447,7 +3447,7 @@ export const blogPosts = [
   },
   {
     id: 24,
-    slug: "when-is-the-right-time-to-come-to-the-us",
+    slug: "best-time-to-visit-us-for-students",
     title: "When Is the Right Time to Come to the U.S.?",
     excerpt:
       "A strategic guide for students and professionals dreaming of America. Learn the perfect window of opportunity to transform uncertainty into strategy.",
@@ -3627,7 +3627,7 @@ export const blogPosts = [
   },
   {
     id: 25,
-    slug: "the-h1b-lottery-system-explained-what-to-expect-in-2026",
+    slug: "h1b-lottery-system-explained-2026",
     title: "The H-1B Lottery System Explained — What to Expect in 2026",
     excerpt:
       "A complete guide for international students navigating their U.S. career ambitions. Understand the lottery system, new policies, and strategic pathways beyond chance.",
@@ -4125,7 +4125,7 @@ export const blogPosts = [
   },
   {
     id: 28,
-    slug: "is-taking-a-student-loan-for-a-us-degree-worth-the-long-term-payoff",
+    slug: "are-student-loan-worth-it",
     title:
       "Is Taking a Student Loan for a U.S. Degree Worth the Long-Term Payoff?",
     excerpt:
@@ -4391,7 +4391,7 @@ export const blogPosts = [
   },
   {
     id: 29,
-    slug: "do-career-fairs-still-work-in-2025-a-reality-check-for-job-seekers",
+    slug: "career-fairs-2026",
     title:
       "Do Career Fairs Still Work in 2025? A Reality Check for Job Seekers",
     excerpt:
@@ -4986,7 +4986,7 @@ export const blogPosts = [
   },
   {
     id: 33,
-    slug: "the-power-of-referrals-how-85-percent-of-us-jobs-are-filled-and-how-you-can-access-them-without-connections",
+    slug: "power-of-referrals-us-jobs",
     title:
       "The Power of Referrals: How 85% of U.S. Jobs Are Filled — and How You Can Access Them Without Connections",
     excerpt:
@@ -5172,7 +5172,7 @@ export const blogPosts = [
   },
   {
     id: 34,
-    slug: "top-10-high-growth-us-careers-for-2025-2030-and-how-to-pivot-fast",
+    slug: "high-growth-us-careers",
     title:
       "Top 10 High-Growth U.S. Careers for 2025–2030 (and How to Pivot Fast)",
     excerpt:
@@ -5388,7 +5388,7 @@ export const blogPosts = [
   },
   {
     id: 35,
-    slug: "new-100000-h1b-fee-what-every-f1-student-should-know",
+    slug: "new-100000-h1b-visa-fee",
     title: "New $100,000 H-1B Fee: What Every F-1 Student Should Know",
     excerpt:
       "You're in the U.S. on an F-1 visa: lectures, coding sessions, team projects, maybe a late-night snack break. You're dreaming ahead—OPT, maybe STEM extension, and eventually — the coveted H-1B. But as of September 2025, the hiring landscape just shifted.",
@@ -5468,7 +5468,7 @@ export const blogPosts = [
   },
   {
     id: 36,
-    slug: "top-10-us-universities-best-job-placement-rates-international-students-2025",
+    slug: "top-job-placements-universities-2026",
     title:
       "Top 10 U.S. Universities with the Best Job Placement Rates for International Students (2025 Edition)",
     excerpt:
@@ -5603,7 +5603,7 @@ export const blogPosts = [
   },
   {
     id: 37,
-    slug: "top-5-affordable-us-cities-international-students-start-career-2025",
+    slug: "best-cities-for-career-us",
     title:
       "Top 5 Affordable U.S. Cities for International Students to Start Their Career (2025 Edition)",
     excerpt:
@@ -5804,7 +5804,7 @@ export const blogPosts = [
   },
   {
     id: 38,
-    slug: "networking-101-building-connections-international-student-us",
+    slug: "how-to-connect-with-international-students",
     title:
       "Networking 101: Building Connections as an International Student in the U.S.",
     excerpt:
@@ -5940,7 +5940,7 @@ export const blogPosts = [
   },
   {
     id: 39,
-    slug: "how-write-ats-friendly-resume-international-student-2025",
+    slug: "how-write-ats-friendly-resume-2026",
     title:
       "How to Write an ATS-Friendly Resume as an International Student in 2025",
     excerpt:
@@ -6139,7 +6139,7 @@ export const blogPosts = [
   },
   {
     id: 40,
-    slug: "from-resumes-to-algorithms-how-ai-rewriting-rules-hiring",
+    slug: "ai-hiring-rewriting-rules",
     title:
       "From Resumes to Algorithms: How AI Is Rewriting the Rules of Hiring",
     excerpt:
@@ -6471,7 +6471,7 @@ export const blogPosts = [
   },
   {
     id: 42,
-    slug: "future-opt-h1b-jobs-2026-changes-international-students",
+    slug: "opt-h1b-jobs-future",
     title:
       "The Future of OPT and H-1B Jobs: What 2026 Changes Mean for International Students",
     excerpt:
@@ -6614,7 +6614,7 @@ export const blogPosts = [
   },
   {
     id: 43,
-    slug: "best-job-search-websites-for-opt-cpt-students-and-how-to-actually-get-results",
+    slug: "opt-cpt-job-portals-usa",
     title:
       "Best Job Search Websites for OPT/CPT Students (and How to Actually Get Results)",
     excerpt:
@@ -6772,7 +6772,7 @@ export const blogPosts = [
   },
   {
     id: 45,
-    slug: "canada-or-usa-which-country-offers-better-career-growth-for-international-students",
+    slug: "best-countries-for-career-growth",
     title:
       "Canada or USA: Which Country Offers Better Career Growth for International Students?",
     excerpt:
@@ -7153,7 +7153,7 @@ export const blogPosts = [
   },
   {
     id: 48,
-    slug: "how-to-convince-us-companies-to-sponsor-your-visa",
+    slug: "us-companies-sponsor-work-visas",
     title: "How to Convince U.S. Companies to Sponsor Your Visa",
     excerpt:
       "Learn how to position yourself as a candidate worth sponsoring. Discover practical strategies, real data, and proven approaches to secure visa sponsorship from U.S. employers.",
@@ -7379,7 +7379,7 @@ export const blogPosts = [
   },
   {
     id: 49,
-    slug: "top-companies-paying-six-figure-salaries-to-fresh-graduates",
+    slug: "six-figure-salary-jobs",
     title: "Top Companies Paying Six-Figure Salaries to Fresh Graduates",
     excerpt:
       "Discover which companies offer six-figure starting salaries to fresh graduates and learn the strategies to join them. Real data, actionable steps, and proven approaches.",
@@ -7665,7 +7665,7 @@ export const blogPosts = [
   },
   {
     id: 50,
-    slug: "usa-vs-united-kingdom-which-country-gives-international-graduates-a-faster-path-to-career-success",
+    slug: "career-path-international-graduates",
     title:
       "USA vs United Kingdom: Which Country Gives International Graduates a Faster Path to Career Success?",
     excerpt:
