@@ -8,35 +8,68 @@ import HomePageOfferLetters from "@/src/components/homePageOfferLetters/homePage
 import HomePageMilestones from "@/src/components/homePageMilestones/homePageMilestones";
 import HomePageDemoCTA from "@/src/components/homePageDemoCTA/homePageDemoCTA";
 
+// Helper function to optimize Cloudinary URLs for fast loading (no compression for testimonials)
+const optimizeCloudinaryUrl = (url: string, width: number = 1200) => {
+  // For testimonials page: f_auto = auto format, q_auto:best = best quality (no compression)
+  // w_1200 = width constraint, c_limit = maintain aspect ratio, dpr_auto = device pixel ratio
+  if (url.includes('res.cloudinary.com')) {
+    const parts = url.split('/upload/');
+    if (parts.length === 2) {
+      return `${parts[0]}/upload/f_auto,q_auto:best,w_${width},c_limit,dpr_auto/${parts[1]}`;
+    }
+  }
+  return url;
+};
+
+const videos = [
+  {
+    videoUrl: "https://www.youtube.com/embed/p41OvikonKo",
+    name: "Anjali Shah",
+    company: "Skyworks Solutions, Inc.",
+    linkedinUrl: "https://www.linkedin.com/in/anjalishah6198/",
+    profileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Website/website%20thumbnails-19.jpg",
+    smallProfileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/anjali.jpeg",
+  },
+  {
+    videoUrl: "https://www.youtube.com/embed/nYEO8K0q38c",
+    name: "Rijul Jain",
+    company: "Wise",
+    linkedinUrl: "https://www.linkedin.com/in/-rijuljain-/",
+    profileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Website/website%20thumbnails-20.jpg",
+    smallProfileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/rijul.jpg",
+  },
+  {
+    videoUrl: "https://www.youtube.com/embed/p9kzhLHjJuI",
+    name: "Aryan Gupta",
+    company: "IBM",
+    linkedinUrl: "#",
+    profileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Website/website%20thumbnails-18.jpg",
+    smallProfileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/aryan.jpg",
+  },
+];
+
 export default function HappyUsersGalleryPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [imageLoading, setImageLoading] = useState<boolean>(false);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const preloadedImages = useRef<Set<string>>(new Set());
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const videos = [
-    {
-      videoUrl: "https://www.youtube.com/embed/p41OvikonKo",
-      name: "Anjali Shah",
-      company: "Skyworks Solutions, Inc.",
-      linkedinUrl: "https://www.linkedin.com/in/anjalishah6198/",
-      profileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Website/website%20thumbnails-19.jpg",
-    },
-    {
-      videoUrl: "https://www.youtube.com/embed/nYEO8K0q38c",
-      name: "Rijul Jain",
-      company: "Wise",
-      linkedinUrl: "https://www.linkedin.com/in/-rijuljain-/",
-      profileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Website/website%20thumbnails-20.jpg",
-    },
-    {
-      videoUrl: "https://www.youtube.com/embed/p9kzhLHjJuI",
-      name: "Aryan Gupta",
-      company: "IBM",
-      linkedinUrl: "#",
-      profileImage: "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/Website/website%20thumbnails-18.jpg",
-    },
-  ];
+  // Preload video thumbnail images on mount
+  useEffect(() => {
+    videos.forEach((video) => {
+      // Preload main profile image
+      const img1 = new window.Image();
+      img1.src = video.profileImage;
+      
+      // Preload small profile image
+      if (video.smallProfileImage) {
+        const img2 = new window.Image();
+        img2.src = video.smallProfileImage;
+      }
+    });
+  }, []);
 
   const handlePlay = (index: number) => {
     setPlayingIndex(index);
@@ -52,13 +85,100 @@ export default function HappyUsersGalleryPage() {
     setImageLoading(false);
   };
 
+  // Preload ALL images immediately on mount for instant display - no lag!
+  useEffect(() => {
+    const preloadAllImages = () => {
+      // Load all images in batches to avoid blocking the main thread
+      const batchSize = 6; // Load 6 images at a time
+      let currentBatch = 0;
+
+      const loadBatch = () => {
+        const start = currentBatch * batchSize;
+        const end = Math.min(start + batchSize, ALL_REVIEW_IMAGES.length);
+        
+        for (let i = start; i < end; i++) {
+          const url = ALL_REVIEW_IMAGES[i];
+          const img = new window.Image();
+          img.src = optimizeCloudinaryUrl(url, 1200);
+          img.onload = () => {
+            setLoadedImages(prev => {
+              const newSet = new Set(prev);
+              newSet.add(i);
+              return newSet;
+            });
+          };
+          img.onerror = () => {
+            // Still mark as loaded to avoid infinite loading state
+            setLoadedImages(prev => {
+              const newSet = new Set(prev);
+              newSet.add(i);
+              return newSet;
+            });
+          };
+        }
+
+        currentBatch++;
+        
+        // Continue loading next batch after a short delay to keep UI responsive
+        if (end < ALL_REVIEW_IMAGES.length) {
+          setTimeout(loadBatch, 50); // 50ms delay between batches
+        }
+      };
+
+      // Start loading immediately
+      loadBatch();
+    };
+
+    preloadAllImages();
+  }, []);
+
+  // Intersection Observer for fallback loading (in case preload missed any)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0');
+            // Only load if not already loaded (fallback safety)
+            if (!loadedImages.has(index)) {
+              const img = new window.Image();
+              img.src = optimizeCloudinaryUrl(ALL_REVIEW_IMAGES[index], 1200);
+              img.onload = () => {
+                setLoadedImages(prev => {
+                  const newSet = new Set(prev);
+                  newSet.add(index);
+                  return newSet;
+                });
+              };
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: '500px', // Start loading 500px before image enters viewport for smoother experience
+        threshold: 0.01
+      }
+    );
+
+    imageRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      imageRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, [loadedImages]);
+
   // Preload image on hover for faster modal opening
-  const handleImageHover = (imageSrc: string) => {
+  const handleImageHover = (imageSrc: string, index: number) => {
     if (typeof window === 'undefined' || preloadedImages.current.has(imageSrc)) return;
     
     preloadedImages.current.add(imageSrc);
     const img = new window.Image();
-    img.src = imageSrc;
+    img.src = optimizeCloudinaryUrl(imageSrc, 1200);
   };
 
   // Close modal on ESC key press
@@ -96,25 +216,41 @@ export default function HappyUsersGalleryPage() {
           </p>
 
           <div className="columns-4 gap-4 max-w-[1100px] mx-auto max-[1200px]:columns-4 max-[900px]:columns-3 max-[600px]:columns-2 max-[400px]:columns-1">
-            {ALL_REVIEW_IMAGES.map((imageSrc, i) => (
-              <div
-                key={i}
-                className="inline-block w-full mb-4 [break-inside:avoid] rounded-[0.6rem] overflow-hidden bg-[#fffaf8] shadow-[0_3px_10px_rgba(0,0,0,0.25)] cursor-pointer hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] transition-all duration-300"
-                onClick={() => handleImageClick(i)}
-                onMouseEnter={() => handleImageHover(imageSrc)}
-              >
-                <Image
-                  src={imageSrc}
-                  alt={`Flashfire user review ${i + 1}`}
-                  width={400}
-                  height={600}
-                  className="w-full h-auto object-contain block rounded-[0.4rem]"
-                  loading={i < 8 ? "eager" : "lazy"}
-                  quality={85}
-                  unoptimized
-                />
-              </div>
-            ))}
+            {ALL_REVIEW_IMAGES.map((imageSrc, i) => {
+              const optimizedUrl = optimizeCloudinaryUrl(imageSrc, 1200);
+              const isLoaded = loadedImages.has(i);
+              const isEager = i < 20; // First 20 images are critical (above the fold)
+              
+              return (
+                <div
+                  key={i}
+                  ref={(el) => {
+                    imageRefs.current[i] = el;
+                  }}
+                  data-index={i}
+                  className="inline-block w-full mb-4 [break-inside:avoid] rounded-[0.6rem] overflow-hidden bg-[#fffaf8] shadow-[0_3px_10px_rgba(0,0,0,0.25)] cursor-pointer hover:shadow-[0_5px_15px_rgba(0,0,0,0.35)] transition-all duration-300"
+                  onClick={() => handleImageClick(i)}
+                  onMouseEnter={() => handleImageHover(imageSrc, i)}
+                >
+                  {isLoaded || isEager ? (
+                    <Image
+                      src={optimizedUrl}
+                      alt={`Flashfire user review ${i + 1}`}
+                      width={400}
+                      height={600}
+                      className="w-full h-auto object-contain block rounded-[0.4rem] transition-opacity duration-300"
+                      loading={isEager ? "eager" : "lazy"}
+                      priority={isEager}
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="w-full aspect-[2/3] bg-slate-200 animate-pulse rounded-[0.4rem] flex items-center justify-center">
+                      <div className="w-8 h-8 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -142,7 +278,7 @@ export default function HappyUsersGalleryPage() {
               </div>
             )}
             <Image
-              src={ALL_REVIEW_IMAGES[selectedImageIndex]}
+              src={optimizeCloudinaryUrl(ALL_REVIEW_IMAGES[selectedImageIndex], 1600)}
               alt={`Flashfire user review ${selectedImageIndex + 1}`}
               width={1200}
               height={1800}
@@ -151,7 +287,6 @@ export default function HappyUsersGalleryPage() {
               }`}
               style={{ width: "auto", height: "auto" }}
               priority
-              quality={90}
               onLoad={() => setImageLoading(false)}
               unoptimized
             />
@@ -219,7 +354,7 @@ export default function HappyUsersGalleryPage() {
                   <div className="flex items-center gap-3 w-full h-full">
                     <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/50">
                       <Image
-                        src={video.profileImage}
+                        src={(video as any).smallProfileImage || video.profileImage}
                         alt={video.name}
                         width={40}
                         height={40}
