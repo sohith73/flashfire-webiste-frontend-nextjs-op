@@ -48,6 +48,7 @@
 .navLinkItem {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .navLinkText {
@@ -60,6 +61,128 @@
 
 .navLinkText:hover {
   color: #ff4c00;
+}
+
+.featureToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.featureToggle:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.caret {
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+  color: #0f172a;
+}
+
+.caretOpen {
+  transform: rotate(180deg);
+}
+
+.featureDropdown {
+  position: absolute;
+  top: calc(100% + 0.8rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #ffd7c4;
+  box-shadow: 0 16px 40px rgba(255, 76, 0, 0.14);
+  border-radius: 22px;
+  padding: 16px;
+  min-width: 340px;
+  z-index: 50;
+}
+
+.featureDropdownGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.featureDropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #ffe1d3;
+  border-radius: 16px;
+  background: #fff7f2;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 8px 22px rgba(255, 76, 0, 0.08);
+}
+
+.featureDropdownItem:hover {
+  transform: translateY(-1px);
+  border-color: #ffb692;
+  box-shadow: 0 12px 28px rgba(255, 76, 0, 0.12);
+}
+
+.featureBadge {
+  min-width: 46px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #ff4c00;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.78rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.featureTexts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.featureTitle {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.featureSub {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.35;
+}
+
+.featureDropdownFooter {
+  display: block;
+  margin-top: 12px;
+  padding: 12px 14px;
+  text-align: center;
+  background: #ff4c00;
+  color: #fff;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 10px 24px rgba(255, 76, 0, 0.18);
+}
+
+.featureDropdownFooter:hover {
+  background: #e24400;
+  transform: translateY(-1px);
 }
 
 /* === Right: CTAs (Desktop) === */

@@ -720,7 +720,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "./navbar.module.css";
@@ -741,6 +741,21 @@ type Props = {
 export default function NavbarClient({ links, ctas }: Props) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFeatureOpen, setIsFeatureOpen] = useState(false);
+  const featureCloseTimer = useRef<NodeJS.Timeout | null>(null);
+  const cancelFeatureClose = () => {
+    if (featureCloseTimer.current) {
+      clearTimeout(featureCloseTimer.current);
+      featureCloseTimer.current = null;
+    }
+  };
+
+  const scheduleFeatureClose = () => {
+    cancelFeatureClose();
+    featureCloseTimer.current = setTimeout(() => {
+      setIsFeatureOpen(false);
+    }, 400); // slightly longer delay so users can move into the dropdown
+  };
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -1120,9 +1135,107 @@ export default function NavbarClient({ links, ctas }: Props) {
             const isOnSectionPage = pathname === getHref(link.href) || pathname === link.href || pathname === prefix + link.href;
             const isExternal = isExternalHref(link.href) || link.target === "_blank";
             
+            const isFeaturesLink = link.name.toLowerCase() === "features";
+
             return (
-              <li key={link.href} className={styles.navLinkItem}>
-                {isSectionLink ? (
+              <li
+                key={link.href}
+                className={styles.navLinkItem}
+                onMouseEnter={() => {
+                  if (isFeaturesLink) {
+                    cancelFeatureClose();
+                    setIsFeatureOpen(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (isFeaturesLink) {
+                    scheduleFeatureClose();
+                  }
+                }}
+              >
+                {isFeaturesLink ? (
+                  <>
+                    <button
+                      type="button"
+                      className={`${styles.navLinkText} ${styles.featureToggle}`}
+                      onClick={() => setIsFeatureOpen((prev) => !prev)}
+                    >
+                      {link.name}
+                      <span
+                        className={`${styles.caret} ${
+                          isFeatureOpen ? styles.caretOpen : ""
+                        }`}
+                      >
+                        ▾
+                      </span>
+                    </button>
+
+                    {isFeatureOpen && (
+                      <div
+                        className={styles.featureDropdown}
+                        onMouseEnter={cancelFeatureClose}
+                        onMouseLeave={scheduleFeatureClose}
+                      >
+                        <div className={styles.featureDropdownGrid}>
+                          <Link
+                            href={getHref("/ats-optimized-resume-checker")}
+                            className={styles.featureDropdownItem}
+                          >
+                            <span className={styles.featureBadge}>ATS</span>
+                            <div className={styles.featureTexts}>
+                              <span className={styles.featureTitle}>
+                                ATS Checker
+                              </span>
+                              <span className={styles.featureSub}>
+                                Resume score for ATS
+                              </span>
+                            </div>
+                          </Link>
+
+                          <Link
+                            href={getHref(
+                              "/linkedin-profile-optimization-services"
+                            )}
+                            className={styles.featureDropdownItem}
+                          >
+                            <span className={styles.featureBadge}>IN</span>
+                            <div className={styles.featureTexts}>
+                              <span className={styles.featureTitle}>
+                                LinkedIn Opt.
+                              </span>
+                              <span className={styles.featureSub}>
+                                Optimize LinkedIn profile
+                              </span>
+                            </div>
+                          </Link>
+
+                          <Link
+                            href={getHref("/job-application-automation")}
+                            className={styles.featureDropdownItem}
+                          >
+                            <span className={styles.featureBadge}>AUTO</span>
+                            <div className={styles.featureTexts}>
+                              <span className={styles.featureTitle}>
+                                Job Automation
+                              </span>
+                              <span className={styles.featureSub}>
+                                Auto apply to roles
+                              </span>
+                            </div>
+                          </Link>
+                        </div>
+
+                        <Link
+                          href={getHref(link.href)}
+                          className={styles.featureDropdownFooter}
+                          onClick={() => setIsFeatureOpen(false)}
+                        >
+                          All Features →
+                        </Link>
+                      </div>
+                    )}
+                  </>
+                ) : isSectionLink ? (
                   <a 
                     href={`#${link.href.replace('/', '')}`}
                     className={styles.navLinkText}
