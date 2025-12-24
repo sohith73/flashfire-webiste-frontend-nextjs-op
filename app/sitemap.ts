@@ -1,125 +1,135 @@
 import { MetadataRoute } from 'next'
 import { blogPosts } from '@/src/data/blogsData'
 
-type SitemapEntry = {
-  url: string
-  lastModified: Date | string
-  changeFrequency?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
-  priority?: number
-}
-
-export default function sitemap(): SitemapEntry[] {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.flashfirejobs.com'
   
-  const blogUrls = blogPosts
-    .filter((post): post is typeof post & { slug: string; lastUpdated?: string; date?: string } => 
-      Boolean(post?.slug && post.slug.trim() !== '' && post.slug !== 'undefined')
-    )
-    .map((post): SitemapEntry => {
+  // Filter and map blog posts to sitemap entries
+  const blogUrls: MetadataRoute.Sitemap = blogPosts
+    .filter((post) => {
+      // Ensure post has a valid slug
+      return post?.slug && 
+             typeof post.slug === 'string' && 
+             post.slug.trim() !== '' && 
+             post.slug !== 'undefined'
+    })
+    .map((post) => {
       const lastUpdated = post.lastUpdated || post.date || new Date().toISOString().split('T')[0]
+      // Parse date safely - handle various formats
+      let lastModified: Date
+      try {
+        lastModified = new Date(lastUpdated)
+        // If date is invalid, use current date
+        if (isNaN(lastModified.getTime())) {
+          lastModified = new Date()
+        }
+      } catch {
+        lastModified = new Date()
+      }
+      
       return {
         url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: new Date(lastUpdated),
-        changeFrequency: 'weekly',
+        lastModified,
+        changeFrequency: 'weekly' as const,
         priority: 0.8,
       }
     })
 
-  const staticRoutes: SitemapEntry[] = [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'daily' as const,
       priority: 1,
     },
     {
       url: `${baseUrl}/pricing`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/blogs`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'daily' as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/faq`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/feature`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/testimonials`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/image-testimonials`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/employers`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
     {
       url: `${baseUrl}/contact-us`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
     {
       url: `${baseUrl}/talk-to-an-expert`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/see-flashfire-in-action`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/book-my-demo-call`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
     {
       url: `${baseUrl}/how-it-works`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
     {
       url: `${baseUrl}/privacy-policy`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms-of-service`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
       url: `${baseUrl}/refund-policy`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'yearly' as const,
       priority: 0.3,
     }
   ]
