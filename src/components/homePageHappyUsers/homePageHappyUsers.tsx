@@ -66,30 +66,24 @@ export default function HomePageHappyUsers() {
       name: "Anjali Shah",
       company: "Skyworks Solutions, Inc.",
       linkedinUrl: "https://www.linkedin.com/in/anjalishah6198/",
-      profileImage:
-        "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/website_thumbnails-19.jpg",
-      smallProfileImage:
-        "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/anjali.jpeg",
+      profileImage: "https://res.cloudinary.com/drcka8x04/image/upload/f_auto,q_auto:good,w_800,c_limit,dpr_auto/v1766552896/website_thumbnails-19_imnzdt.jpg",
+      smallProfileImage: "https://res.cloudinary.com/drcka8x04/image/upload/c_thumb,g_face,w_100,h_100,f_auto,q_auto:good/v1766552896/website_thumbnails-19_imnzdt.jpg"
     },
     {
       videoUrl: "https://www.youtube.com/embed/nYEO8K0q38c",
       name: "Rijul Jain",
       company: "Wise",
       linkedinUrl: "https://www.linkedin.com/in/-rijuljain-/",
-      profileImage:
-        "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/website_thumbnails-20.jpg",
-      smallProfileImage:
-        "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/rijul.jpg",
+      profileImage: "https://res.cloudinary.com/drcka8x04/image/upload/f_auto,q_auto:good,w_800,c_limit,dpr_auto/v1766552897/website_thumbnails-20_bxnl2z.jpg",
+      smallProfileImage: "https://res.cloudinary.com/drcka8x04/image/upload/c_thumb,g_face,w_100,h_100,f_auto,q_auto:good/v1766552897/website_thumbnails-20_bxnl2z.jpg"
     },
     {
       videoUrl: "https://www.youtube.com/embed/p9kzhLHjJuI",
       name: "Aryan Gupta",
       company: "IBM",
       linkedinUrl: "#",
-      profileImage:
-        "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/website_thumbnails-18.jpg",
-      smallProfileImage:
-        "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/aryan.jpg",
+      profileImage: "https://res.cloudinary.com/drcka8x04/image/upload/f_auto,q_auto:good,w_800,c_limit,dpr_auto/v1766552895/website_thumbnails-18_j1ormv.jpg",
+      smallProfileImage: "https://res.cloudinary.com/drcka8x04/image/upload/c_thumb,g_face,w_100,h_100,f_auto,q_auto:good/v1766552895/website_thumbnails-18_j1ormv.jpg"
     },
   ];
   
@@ -98,108 +92,114 @@ export default function HomePageHappyUsers() {
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [loadedProfileImages, setLoadedProfileImages] = useState<Set<number>>(new Set());
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const profileImageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handlePlay = (index: number) => {
     // Close all other videos
     setPlayingIndex(index);
   };
 
-  // Preload ALL images and video thumbnails immediately on mount for instant display - no lag!
   useEffect(() => {
-    const preloadAllImages = () => {
-      const batchSize = 8;
-      let currentBatch = 0;
-
-      const loadBatch = () => {
-        const start = currentBatch * batchSize;
-        const end = Math.min(start + batchSize, reviewImages.length);
-
-        for (let i = start; i < end; i++) {
-          const url = reviewImages[i];
-          const optimizedUrl = optimizeCloudinaryUrl(url, 800);
+    const preloadImages = async () => {
+      const firstBatch = reviewImages.slice(0, 8);
+      firstBatch.forEach((url, index) => {
+        if (!loadedImages.has(index)) {
           const img = new window.Image();
-          img.src = optimizedUrl;
-          img.loading = 'eager';
+          img.src = optimizeCloudinaryUrl(url, 800);
           img.onload = () => {
-            setLoadedImages(prev => new Set(prev).add(i));
+            setLoadedImages(prev => new Set(prev).add(index));
           };
-          img.onerror = () => {
-            // Still mark as loaded to avoid infinite loading state
-            setLoadedImages(prev => new Set(prev).add(i));
+        }
+      });
+
+      videos.forEach((video, index) => {
+        if (!loadedProfileImages.has(index * 2)) {
+          const profileImg = new window.Image();
+          // Add cache-busting parameter if needed
+          profileImg.src = `${video.profileImage}${video.profileImage.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
+          profileImg.onload = () => {
+            setLoadedProfileImages(prev => new Set(prev).add(index * 2));
+          };
+          profileImg.onerror = () => {
+            profileImg.src = video.profileImage.replace('f_auto', 'f_jpg');
           };
         }
 
-        currentBatch++;
-        
-        // Continue loading next batch
-        if (end < reviewImages.length) {
-          setTimeout(loadBatch, 30); // Small delay to avoid blocking
-        }
-      };
-
-      // Start loading immediately
-      loadBatch();
-    };
-
-    const preloadVideoThumbnails = () => {
-      videos.forEach((video) => {
-        // Preload main profile image
-        const img1 = new window.Image();
-        img1.src = video.profileImage;
-        img1.loading = 'eager';
-        
-        // Preload small profile image
-        if (video.smallProfileImage) {
-          const img2 = new window.Image();
-          img2.src = video.smallProfileImage;
-          img2.loading = 'eager';
+        if (!loadedProfileImages.has(index * 2 + 1)) {
+          const smallProfileImg = new window.Image();
+          smallProfileImg.src = `${video.smallProfileImage}${video.smallProfileImage.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
+          smallProfileImg.onload = () => {
+            setLoadedProfileImages(prev => new Set(prev).add(index * 2 + 1));
+          };
         }
       });
     };
+    if (loadedImages.size < 8 || loadedProfileImages.size < videos.length * 2) {
+      preloadImages();
+    }
+  }, [reviewImages, videos, loadedImages, loadedProfileImages]);
 
-    preloadAllImages();
-    preloadVideoThumbnails();
-  }, [reviewImages]);
-
+  // Intersection Observer for lazy loading remaining images
   useEffect(() => {
-    // Small delay to ensure preloading has started
-    const timer = setTimeout(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const index = parseInt(entry.target.getAttribute('data-index') || '0');
-              if (!loadedImages.has(index)) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0');
+            const isProfileImage = entry.target.hasAttribute('data-profile');
+            
+            if (isProfileImage) {
+              const videoIndex = Math.floor(index / 2);
+              const isSmallImage = index % 2 === 1;
+              
+              if (!loadedProfileImages.has(index)) {
+                const video = videos[videoIndex];
                 const img = new window.Image();
-                img.src = optimizeCloudinaryUrl(reviewImages[index], 800);
+                img.src = isSmallImage ? video.smallProfileImage : video.profileImage;
                 img.onload = () => {
-                  setLoadedImages(prev => new Set(prev).add(index));
+                  setLoadedProfileImages(prev => new Set(prev).add(index));
                 };
               }
+            } else if (!loadedImages.has(index) && index >= 8) {
+              // Handle review images
+              const img = new window.Image();
+              img.src = optimizeCloudinaryUrl(reviewImages[index], 800);
+              img.onload = () => {
+                setLoadedImages(prev => new Set(prev).add(index));
+              };
+            }
+            
+            if (!isProfileImage) {
               observer.unobserve(entry.target);
             }
-          });
-        },
-        {
-          rootMargin: '100px',
-          threshold: 0.01
-        }
-      );
-
-      imageRefs.current.forEach((ref) => {
-        if (ref) observer.observe(ref);
-      });
-
-      return () => {
-        imageRefs.current.forEach((ref) => {
-          if (ref) observer.unobserve(ref);
+          }
         });
-      };
-    }, 100);
+      },
+      {
+        rootMargin: '200px', // Start loading 200px before image enters viewport
+        threshold: 0.01
+      }
+    );
 
-    return () => clearTimeout(timer);
-  }, [reviewImages, loadedImages]);
+    imageRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    profileImageRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      imageRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+      profileImageRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, [reviewImages, loadedImages, loadedProfileImages, videos]);
 
   return (
     <section
@@ -231,7 +231,7 @@ export default function HomePageHappyUsers() {
           {reviewImages.map((imageSrc, i) => {
             const optimizedUrl = optimizeCloudinaryUrl(imageSrc, 800);
             const isLoaded = loadedImages.has(i);
-            const isEager = i < 24; // All images load eagerly now (first 24 get priority)
+            const isEager = i < 8; // First 8 images load eagerly
             
             return (
               <div
@@ -250,7 +250,7 @@ export default function HomePageHappyUsers() {
                     height={600}
                     className="w-full h-auto object-contain block rounded-[0.4rem] transition-opacity duration-300"
                     style={{ width: "100%", height: "auto" }}
-                    loading="eager"
+                    loading={isEager ? "eager" : "lazy"}
                     unoptimized
                     priority={isEager}
                   />
@@ -307,16 +307,28 @@ export default function HomePageHappyUsers() {
                 {/* Thumbnail Image Overlay - Show when video is not playing */}
                 {playingIndex !== index && (
                   <>
-                    <Image
-                      src={video.profileImage}
-                      alt={`${video.name} - Click to play video`}
-                      fill
-                      className="w-full h-full object-cover rounded-none"
-                      onClick={() => handlePlay(index)}
-                      priority
-                      loading="eager"
-                      unoptimized
-                    />
+                    <div 
+                      ref={(el) => {
+                        profileImageRefs.current[index * 2] = el;
+                      }}
+                      data-index={index * 2}
+                      data-profile="true"
+                      className="w-full h-full relative"
+                    >
+                      {loadedProfileImages.has(index * 2) ? (
+                        <Image
+                          src={video.profileImage}
+                          alt={`${video.name} - Click to play video`}
+                          fill
+                          className="object-cover rounded-none cursor-pointer"
+                          onClick={() => handlePlay(index)}
+                          loading="eager"
+                          priority
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200 animate-pulse" />
+                      )}
+                    </div>
                     {/* Play Button Overlay */}
                     <div
                       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70px] h-[70px] rounded-full bg-black/60 text-white text-[2rem] font-bold flex justify-center items-center cursor-pointer transition-all duration-250 backdrop-blur-[2px] hover:bg-black/75 hover:scale-105 z-10"
@@ -331,20 +343,32 @@ export default function HomePageHappyUsers() {
                 <div className="absolute bottom-2 left-2 right-2 h-[5.5rem] bg-black border border-[#ff4c00] text-white text-left py-3 px-4 flex items-center z-20">
                   <div className="flex items-center gap-3 w-full h-full">
                     <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/50">
-                      <Image
-                        src={(video as any).smallProfileImage || video.profileImage}
-                        alt={video.name}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover rounded-full"
-                        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                          const target = e.currentTarget;
-                          target.style.display = "none";
+                      <div 
+                        ref={(el) => {
+                          profileImageRefs.current[index * 2 + 1] = el;
                         }}
-                        priority
-                        loading="eager"
-                        unoptimized
-                      />
+                        data-index={index * 2 + 1}
+                        data-profile="true"
+                        className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/50"
+                      >
+                        {loadedProfileImages.has(index * 2 + 1) ? (
+                          <Image
+                            src={video.smallProfileImage}
+                            alt={video.name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                            loading="eager"
+                            priority
+                            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                              const target = e.currentTarget;
+                              target.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 animate-pulse rounded-full" />
+                        )}
+                      </div>
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                       <p className="text-xl font-semibold m-0 text-white leading-tight truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
