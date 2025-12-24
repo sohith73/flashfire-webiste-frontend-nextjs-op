@@ -95,41 +95,60 @@
 
 .featureDropdown {
   position: absolute;
-  top: calc(100% + 0.8rem);
+  top: calc(100% + 0.5rem);
   left: 50%;
   transform: translateX(-50%);
   background: #fff;
-  border: 1px solid #ffd7c4;
+  border: none;
   box-shadow: 0 16px 40px rgba(255, 76, 0, 0.14);
-  border-radius: 22px;
-  padding: 16px;
-  min-width: 340px;
+  border-radius: 16px;
+  padding: 12px;
+  min-width: 360px;
   z-index: 50;
 }
 
 .featureDropdownGrid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .featureDropdownItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border: 1px solid #ffe1d3;
+  gap: 14px;
+  padding: 16px;
+  border: none;
   border-radius: 16px;
-  background: #fff7f2;
+  background: #fff;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-  box-shadow: 0 8px 22px rgba(255, 76, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  
 }
 
 .featureDropdownItem:hover {
-  transform: translateY(-1px);
-  border-color: #ffb692;
-  box-shadow: 0 12px 28px rgba(255, 76, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 76, 0, 0.15);
+  background: #fff7f2;
+}
+
+.featureIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 12px;
+  background: #fff7f2;
+  border: none;
+  flex-shrink: 0;
+}
+
+.featureDropdownItem:hover .featureIcon {
+  background: #fff;
+  transform: scale(1.05);
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
 .featureBadge {
@@ -216,11 +235,11 @@
   margin-top: 0.75rem;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
-  padding: 1rem;
+  padding: 12px;
   background: #fff;
-  border: 1px solid #ffd7c4;
+  border: none;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(255, 76, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   pointer-events: auto;
   position: relative;
   z-index: 1;
@@ -229,20 +248,20 @@
 .featureDropdownGridMobile {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .featureDropdownItemMobile {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 16px;
-  border: 1px solid #ffe1d3;
+  padding: 16px;
+  border: none;
   border-radius: 14px;
-  background: #fff7f2;
+  background: #fff;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-  box-shadow: 0 4px 12px rgba(255, 76, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   width: 100%;
 }
@@ -250,21 +269,24 @@
 .featureDropdownItemMobile:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(255, 76, 0, 0.1);
-  border-color: #ffb692;
+  background: #fff7f2;
 }
 
-.featureDropdownItemMobile .featureBadge {
-  flex-shrink: 0;
-  min-width: 46px;
-  padding: 8px 10px;
+.featureDropdownItemMobile .featureIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
   border-radius: 12px;
-  background: #ff4c00;
-  color: #fff;
-  font-weight: 800;
-  font-size: 0.78rem;
-  text-align: center;
-  letter-spacing: 0.02em;
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  background: #fff7f2;
+  border: none;
+  flex-shrink: 0;
+}
+
+.featureDropdownItemMobile:active .featureIcon {
+  background: #fff;
 }
 
 .featureDropdownItemMobile .featureTexts {
