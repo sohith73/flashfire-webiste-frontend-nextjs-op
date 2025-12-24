@@ -207,30 +207,22 @@ export default function HeroSectionClient({ data }: Props) {
                     height={40}
                     className="object-contain w-auto max-w-[50px] h-8 max-h-8 flex-shrink-0 max-[768px]:max-w-[45px] max-[768px]:h-7 max-[480px]:max-w-[40px] max-[480px]:h-6"
                     unoptimized
+                    loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       let attempts = parseInt(target.getAttribute('data-attempts') || '0');
                       
-                      // Try Clearbit without size parameter if using mapped logo
-                      if (UNIVERSITY_LOGOS[uni.name] && attempts === 0) {
+                      // Fail fast - skip to Google favicons if Clearbit fails
+                      if (attempts === 0 && target.src.includes('clearbit.com')) {
                         target.setAttribute('data-attempts', '1');
-                        target.src = `https://logo.clearbit.com/${uni.domain}`;
-                        return;
-                      }
-                      // Try with size parameter
-                      if (attempts < 2 && !target.src.includes('?size=')) {
-                        target.setAttribute('data-attempts', '2');
-                        target.src = `https://logo.clearbit.com/${uni.domain}?size=128`;
-                        return;
-                      }
-                      // Try Google favicons as last resort
-                      if (attempts < 3) {
-                        target.setAttribute('data-attempts', '3');
                         target.src = `https://www.google.com/s2/favicons?domain=${uni.domain}&sz=128`;
                         return;
                       }
-                      // Keep logo visible even if it fails - show placeholder
-                      target.style.opacity = '0.3';
+                      // Hide logo if all attempts fail
+                      if (attempts >= 1) {
+                        target.style.opacity = '0.3';
+                        target.style.pointerEvents = 'none';
+                      }
                     }}
                   />
 

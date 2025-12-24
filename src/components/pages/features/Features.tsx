@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, memo, useMemo } from "react"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { FaPlus, FaTimes, FaWhatsapp } from "react-icons/fa"
 import { questionsData } from "@/src/data/questionsData"
 import faqStyles from "@/src/components/homePageFAQ/homePageFAQ.module.css"
 import FlashfireLogo from "@/src/components/FlashfireLogo"
+import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking"
 
 const features = [
   {
@@ -80,9 +81,13 @@ const steps = [
   },
 ]
 
-export default function Features() {
+function Features() {
   const pathname = usePathname()
+  const router = useRouter()
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
+  
+  // Memoize FAQ data to prevent re-computation
+  const faqData = useMemo(() => questionsData.slice(0, 6), [])
 
   const handleFaqToggle = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index)
@@ -98,31 +103,85 @@ export default function Features() {
   }
 
   const handleGetStarted = () => {
-    // Dispatch modal event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("showGetMeInterviewModal"))
+    // Track button click
+    try {
+      trackButtonClick("Get Started Today", "features_cta", "cta", {
+        button_location: "features_footer_section",
+        section: "features_footer"
+      })
+      trackSignupIntent("features_cta", {
+        signup_source: "features_footer_button",
+        funnel_stage: "signup_intent"
+      })
+    } catch (trackError) {
+      console.error('Tracking error:', trackError)
     }
 
-    // Check current path
+    // Check current path first
     const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '')
     const normalizedPath = currentPath.split('?')[0] // Remove query params
     const isOnFeatures = normalizedPath === '/feature' ||
       normalizedPath === '/features' ||
       normalizedPath === '/en-ca/feature' ||
       normalizedPath === '/en-ca/features'
+    const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
+      normalizedPath === '/en-ca/get-me-interview'
+
+    // If already on the route, save scroll position and prevent navigation
+    if (isAlreadyOnGetMeInterview) {
+      // Save current scroll position before modal opens
+      const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0
+
+      // Dispatch custom event to force show modal
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'))
+      }
+
+      // Restore scroll position immediately after modal opens
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+          setTimeout(() => {
+            window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+          }, 50)
+        })
+      })
+
+      // Just trigger the modal, don't navigate or scroll
+      return
+    }
+
+    // Dispatch custom event to force show modal FIRST
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'))
+    }
 
     // If on features page, change URL but keep page content visible
     if (isOnFeatures) {
-      const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-started-now' : '/get-started-now'
+      // Save current scroll position before navigation to preserve it
       if (typeof window !== 'undefined') {
-        window.history.pushState({}, '', targetPath)
+        const currentScrollY = window.scrollY
+        sessionStorage.setItem('previousPageBeforeGetMeInterview', '/features')
+        sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString())
       }
+
+      // Change URL to /get-me-interview without navigating (keep features page visible)
+      const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview'
+      router.replace(targetPath)
       // Just trigger the modal, don't navigate
       return
     }
 
-    // For other pages, navigate normally (if needed)
-    // Currently just showing modal, navigation can be added if required
+    // Save current scroll position before navigation to preserve it
+    if (typeof window !== 'undefined') {
+      const currentScrollY = window.scrollY
+      sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString())
+    }
+
+    // Only navigate if NOT already on the page
+    const targetPath = '/get-me-interview'
+    router.push(targetPath)
   }
 
   return (
@@ -292,6 +351,8 @@ export default function Features() {
                                 width={80}
                                 height={80}
                                 className="w-full h-full object-contain"
+                                loading={index === 0 ? "eager" : "lazy"}
+                                priority={index === 0}
                               />
             </div>
                             <h3 className="text-2xl font-bold md:text-3xl">
@@ -311,6 +372,7 @@ export default function Features() {
                                 width={80}
                                 height={80}
                                 className="w-full h-full object-contain"
+                                loading="lazy"
                               />
             </div>
                           </>
@@ -333,6 +395,9 @@ export default function Features() {
                           width={100}
                           height={100}
                           className="w-full h-full object-contain"
+                          style={{ width: 'auto', height: 'auto' }}
+                          loading={index === 0 ? "eager" : "lazy"}
+                          priority={index === 0}
                         />
               </div>
             </div>
@@ -354,7 +419,7 @@ export default function Features() {
           </div>
 
           <div className={`${faqStyles.faqContainer} text-left !rounded-none`}>
-            {questionsData.slice(0, 6).map((faq, index) => (
+            {faqData.map((faq, index) => (
               <div
                 key={faq.question}
                 className={`${faqStyles.faqItem} ${activeFaq === index ? faqStyles.active : ""}`}
@@ -431,6 +496,7 @@ export default function Features() {
               width={260}
               height={480}
               className="absolute top-[-70%] right-[-9%] h-[300%] w-auto object-contain brightness-100 contrast-105 max-[1024px]:static max-[1024px]:h-full max-[1024px]:w-full max-[1024px]:object-contain max-[1024px]:top-0 max-[1024px]:right-0 max-[768px]:object-cover max-[768px]:scale-110 max-[480px]:object-top"
+              loading="lazy"
               unoptimized
             />
             <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 via-black/30 to-transparent pointer-events-none" />
@@ -461,3 +527,5 @@ export default function Features() {
     </div>
   )
 }
+
+export default memo(Features)

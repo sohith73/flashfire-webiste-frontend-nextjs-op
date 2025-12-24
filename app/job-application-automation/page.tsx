@@ -1,215 +1,377 @@
 "use client";
 
+import { useRouter, usePathname } from "next/navigation";
 import Navbar from "@/src/components/navbar/navbar";
 import Footer from "@/src/components/footer/footer";
+import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking";
+import { GTagUTM } from "@/src/utils/GTagUTM";
+import { useGeoBypass } from "@/src/utils/useGeoBypass";
 
 export default function JobApplicationAutomationPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { getButtonProps } = useGeoBypass({
+    onBypass: () => {
+      // Bypass will be handled by the event listener
+    },
+  });
+
+  const handleGetMeInterview = () => {
+    try {
+      const utmSource = typeof window !== "undefined" && window.localStorage
+        ? localStorage.getItem("utm_source") || "WEBSITE"
+        : "WEBSITE";
+      const utmMedium = typeof window !== "undefined" && window.localStorage
+        ? localStorage.getItem("utm_medium") || "Job_Automation_Page"
+        : "Job_Automation_Page";
+
+      try {
+        GTagUTM({
+          eventName: "sign_up_click",
+          label: "Job_Automation_Get_Me_Interview_Button",
+          utmParams: {
+            utm_source: utmSource,
+            utm_medium: utmMedium,
+            utm_campaign: typeof window !== "undefined" && window.localStorage
+              ? localStorage.getItem("utm_campaign") || "Website"
+              : "Website",
+          },
+        });
+      } catch (gtagError) {
+        console.warn('GTagUTM error:', gtagError);
+      }
+
+      try {
+        trackButtonClick("Get Me Interview", "job_automation_cta", "cta", {
+          button_location: "job_automation_hero_section",
+          section: "job_automation_hero"
+        });
+        trackSignupIntent("job_automation_cta", {
+          signup_source: "job_automation_hero_button",
+          funnel_stage: "signup_intent"
+        });
+      } catch (trackError) {
+        console.warn('Tracking error:', trackError);
+      }
+
+      // Check current path first
+      const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
+      const normalizedPath = currentPath.split('?')[0];
+      const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
+        normalizedPath === '/en-ca/get-me-interview';
+      const isOnJobAutomationPage = normalizedPath === '/job-application-automation' ||
+        normalizedPath === '/en-ca/job-application-automation';
+
+      // If already on the route, save scroll position and prevent navigation
+      if (isAlreadyOnGetMeInterview) {
+        const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+        }
+
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+          requestAnimationFrame(() => {
+            window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+            setTimeout(() => {
+              window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+            }, 50);
+          });
+        });
+
+        return;
+      }
+
+      // Dispatch custom event to force show modal FIRST
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+      }
+
+      // If on job automation page, change URL but keep page content visible
+      if (isOnJobAutomationPage) {
+        if (typeof window !== 'undefined') {
+          const currentScrollY = window.scrollY;
+          sessionStorage.setItem('previousPageBeforeGetMeInterview', '/job-application-automation');
+          sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+        }
+
+        const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview';
+        router.replace(targetPath);
+        return;
+      }
+
+      // Save current scroll position before navigation to preserve it
+      if (typeof window !== 'undefined') {
+        const currentScrollY = window.scrollY;
+        sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+      }
+
+      // Only navigate if NOT already on the page
+      const targetPath = '/get-me-interview';
+      router.push(targetPath);
+    } catch (error) {
+      console.warn('Error in Get Me Interview handler:', error);
+    }
+  };
+
+  const handleHowItWorks = () => {
+    try {
+      trackButtonClick("How It Works", "job_automation_cta", "cta", {
+        button_location: "job_automation_hero_section",
+        section: "job_automation_hero",
+        action: "how_it_works"
+      });
+    } catch (trackError) {
+      console.warn('Tracking error:', trackError);
+    }
+
+    // Scroll to the "How It Works" section on the same page
+    if (typeof window !== 'undefined') {
+      const howItWorksSection = document.getElementById('how-it-works');
+      if (howItWorksSection) {
+        howItWorksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    }
+
+    // Fallback: Navigate to the How It Works page if section not found
+    const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
+    const normalizedPath = currentPath.split('?')[0];
+    const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/how-it-works' : '/how-it-works';
+    router.push(targetPath);
+  };
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-white text-[#0f172a] font-['Space_Grotesk',sans-serif]">
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#fff0e6] via-white to-[#fffaf7] px-4 sm:px-6 lg:px-8 py-14 sm:py-18">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,76,0,0.12),transparent_45%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(255,182,146,0.18),transparent_50%)]" />
-          <div className="relative max-w-6xl mx-auto text-center space-y-4">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/90 border border-[#ffd7c4] px-3 py-1 text-xs font-semibold text-[#ff4c00] shadow">
-              AI Job Hunter • Faster interviews
-            </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
-              Automate Your Job Applications
+        <section className="min-h-[100vh] flex items-center bg-[#fff6f4]">
+          <div className="mx-auto max-w-6xl px-6 text-center">
+
+            <h1 className="text-4xl md:text-5xl xl:text-6xl font-extrabold text-[#0b0b0b] leading-tight">
+              You’re not competing with people.
+              <br />
+              <span className="text-[#ff4c00]">You’re competing with AI.</span>
             </h1>
-            <p className="text-base sm:text-lg text-[#374151] max-w-3xl mx-auto">
-              Let AI submit tailored applications instantly, keep you first in line, and secure more interviews with less effort.
+
+            <p className="mt-6 text-lg text-[#6b7280] max-w-3xl mx-auto">
+              Roles get hundreds of applications in minutes.
+              AI applies first, tailors better, and never gets tired.
+              Your AI Job Hunter keeps you ahead.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <button className="px-5 py-3 rounded-full bg-[#ff4c00] text-white font-semibold shadow-[0_10px_28px_rgba(255,76,0,0.25)] hover:bg-[#e24400] transition">
-                Start automating now
+
+            <div className="mt-10 flex justify-center gap-4 flex-wrap">
+              <button
+                {...getButtonProps()}
+                onClick={handleGetMeInterview}
+                className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#f9e8e0] transition-colors rounded-lg inline-flex items-center justify-center"
+                style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}
+              >
+                Get Me Interview →
               </button>
-              <button className="px-5 py-3 rounded-full border border-[#ffd7c4] text-[#0f172a] bg-white hover:bg-[#fff6f0] transition shadow-sm">
-                See how it works
+              <button
+                onClick={handleHowItWorks}
+                className="border-2 border-[#ff4c00] text-[#ff4c00] bg-transparent hover:bg-[#fff2ea] px-6 sm:px-8 py-3 sm:py-4 font-semibold text-base sm:text-lg transition-colors rounded-lg inline-flex items-center justify-center"
+              >
+                How It Works
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6 max-w-4xl mx-auto text-center">
+
+            <div className="mt-14 grid md:grid-cols-3 gap-6">
               {[
-                { label: "Avg. apps/day", value: "45", sub: "Sent automatically" },
-                { label: "Interview lift", value: "2.3x", sub: "More callbacks" },
-                { label: "Time saved", value: "10+ hrs", sub: "Each week" },
-              ].map((stat) => (
+                "First to apply wins",
+                "ATS filters reject 75%",
+                "Speed beats volume",
+              ].map((item) => (
                 <div
-                  key={stat.label}
-                  className="rounded-2xl border border-[#ffd7c4] bg-white/90 shadow-[0_10px_22px_rgba(255,76,0,0.08)] px-4 py-3 space-y-1"
+                  key={item}
+                  className="bg-black border-2 border-white rounded-lg px-6 py-4 font-semibold text-white"
                 >
-                  <p className="text-xs font-semibold text-[#ff4c00]">{stat.label}</p>
-                  <p className="text-2xl font-extrabold text-[#0f172a]">{stat.value}</p>
-                  <p className="text-xs text-[#374151]">{stat.sub}</p>
+                  {item}
                 </div>
               ))}
             </div>
           </div>
         </section>
+
+        {/* ================= AI JOB HUNTER IN ACTION ================= */}
+        <section id="how-it-works" className="py-28 bg-[#fff6f4]">
+          <div className="mx-auto max-w-7xl px-6">
+
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-[#0b0b0b]">
+                Your AI Job Hunter,
+                <br />
+                <span className="text-[#ff4c00]">working 24/7 for you.</span>
+              </h2>
+              <p className="mt-4 text-lg text-[#6b7280] max-w-3xl mx-auto">
+                While others manually apply and wait, your AI scans, applies,
+                and optimizes continuously — without burnout.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  title: "Always First to Apply",
+                  desc: "Applies within minutes of a role going live, giving you a first-mover advantage.",
+                },
+                {
+                  title: "ATS-Optimized Applications",
+                  desc: "Each application is tailored with role-specific keywords to beat ATS filters.",
+                },
+                {
+                  title: "Consistent Weekly Momentum",
+                  desc: "Keeps applications flowing so interview chances compound every week.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="bg-white border border-[#ffd7c4] rounded-2xl p-8 shadow-sm hover:shadow-md transition"
+                >
+                  <div className="w-10 h-1.5 bg-[#ff4c00] rounded-full mb-4" />
+                  <h3 className="text-xl font-bold text-[#0b0b0b] mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-[#6b7280] leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
 
         {/* Get 10x more interviews */}
-        <section className="bg-white px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="space-y-2 text-center">
-              <h2 className="text-2xl sm:text-3xl font-extrabold">Get 10x More Interviews</h2>
-              <p className="text-sm sm:text-base text-[#374151]">
-                Your AI Job Hunter works nonstop: finds hidden roles, applies instantly, tailors each application, and keeps you first in line.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                {
-                  title: "Always First in Line",
-                  desc: "Applies within seconds so you’re first in, not lost in the pile.",
-                },
-                {
-                  title: "Smarter Resumes",
-                  desc: "Customizes each resume to beat ATS filters and boost visibility.",
-                },
-                {
-                  title: "Weekly Momentum",
-                  desc: "Secures at least one interview weekly to keep you moving forward.",
-                },
-                {
-                  title: "Clear Insights",
-                  desc: "Track every application, response, and interview in one place.",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-[#ffd7c4] bg-[#fffaf7] shadow-[0_10px_28px_rgba(255,76,0,0.08)] p-4 space-y-2"
-                >
-                  <div className="h-2 w-12 rounded-full bg-[#ffb692]" />
-                  <h3 className="text-base font-semibold">{item.title}</h3>
-                  <p className="text-sm text-[#374151] leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
+        {/* ================= MANUAL VS AI ================= */}
+        <section className="py-28 bg-white">
+          <div className="mx-auto max-w-6xl px-6">
 
-            <div className="pt-6 space-y-3 text-center">
-              <p className="text-xs font-semibold text-[#6b7280]">As seen in</p>
-              <div className="flex flex-wrap justify-center items-center gap-6 text-sm sm:text-base font-semibold text-[#1f2937] opacity-90">
-                {["Los Angeles Times", "SFGATE", "Entrepreneur", "Newsweek", "Forbes", "Yahoo! Finance"].map((brand) => (
-                  <span
-                    key={brand}
-                    className="px-3 py-1 rounded-md border border-[#ffe2d1] bg-[#fff8f4] shadow-[0_6px_16px_rgba(255,76,0,0.05)]"
-                  >
-                    {brand}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-16">
+              Manual job search
+              <br />
+              <span className="text-[#ff4c00]">vs your AI Job Hunter</span>
+            </h2>
 
-        {/* Competing with people using AI */}
-        <section className="px-4 sm:px-6 lg:px-8 py-12">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-start">
-            <div className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold">You’re Competing With People Using AI.</h2>
-              <p className="text-sm sm:text-base text-[#374151]">
-                Roles get hundreds of applicants in minutes. Let your AI Job Hunter apply 24/7 so you’re first in line,
-                not last to the party.
-              </p>
-              <div className="rounded-2xl border border-[#ffe2d1] bg-white shadow-[0_12px_30px_rgba(255,76,0,0.08)] p-5 space-y-3">
-                <p className="text-sm font-semibold">The New Job Market Reality</p>
-                <ul className="space-y-2 text-sm text-[#374151]">
-                  <li>✔ 5x more likely to get interviews using AI</li>
-                  <li>✔ 72% faster job search time on average</li>
-                  <li>✔ 18% higher compensation on secured roles</li>
+            <div className="grid md:grid-cols-2 gap-10">
+
+              {/* MANUAL */}
+              <div className="border border-[#e5e7eb] rounded-2xl p-8 bg-[#fafafa]">
+                <h3 className="text-lg font-bold mb-6 text-[#0b0b0b]">
+                  Traditional Job Search
+                </h3>
+                <ul className="space-y-4 text-[#6b7280]">
+                  <li>• 10–15 applications per week</li>
+                  <li>• Repetitive resume edits</li>
+                  <li>• Missed early job postings</li>
+                  <li>• No visibility into what works</li>
                 </ul>
               </div>
-            </div>
 
-            <div className="rounded-2xl border border-[#ffe2d1] bg-white shadow-[0_12px_30px_rgba(255,76,0,0.08)] p-5 space-y-4">
-              <p className="text-sm font-semibold text-[#374151]">Manual vs. Your AI Job Hunter</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                {[
-                  {
-                    label: "Time spent on applications",
-                    manual: "11+ hours per week",
-                    ai: "30 minutes for setup",
-                  },
-                  {
-                    label: "Application volume",
-                    manual: "5–10 per week",
-                    ai: "15–50 per week",
-                  },
-                  {
-                    label: "ATS optimization",
-                    manual: "Generic for all",
-                    ai: "Custom per role",
-                  },
-                ].map((row, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <p className="font-semibold text-[#0f172a]">{row.label}</p>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex justify-between items-center rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-3 py-2">
-                        <span className="text-[#b91c1c]">Manual</span>
-                        <span className="text-[#374151]">{row.manual}</span>
-                      </div>
-                      <div className="flex justify-between items-center rounded-lg border border-[#bbf7d0] bg-[#ecfdf3] px-3 py-2">
-                        <span className="text-[#15803d]">Your AI Job Hunter</span>
-                        <span className="text-[#374151]">{row.ai}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              {/* AI */}
+              <div className="border border-[#ffd7c4] rounded-2xl p-8 bg-[#fff6f4]">
+                <h3 className="text-lg font-bold mb-6 text-[#0b0b0b]">
+                  AI Job Hunter
+                </h3>
+                <ul className="space-y-4 text-[#374151] font-medium">
+                  <li>• 30–50 targeted applications per week</li>
+                  <li>• ATS-ready customization per role</li>
+                  <li>• Applies as soon as roles open</li>
+                  <li>• Continuous optimization loop</li>
+                </ul>
               </div>
+
             </div>
           </div>
         </section>
+        {/* ================= WHY JOB HUNTING BREAKS ================= */}
+      
+<section className="py-32 bg-[#fff6f4]">
+  <div className="mx-auto max-w-7xl px-6">
 
-        {/* Why job hunting fails + Why AI Job Hunter */}
-        <section className="bg-white px-4 sm:px-6 lg:px-8 py-14">
-          <div className="max-w-6xl mx-auto space-y-10">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6 items-start">
-              <div className="space-y-3">
-                <h2 className="text-2xl sm:text-3xl font-extrabold">Why Job Hunting Fails Today</h2>
-                <p className="text-sm sm:text-base text-[#374151]">
-                  Anxiety, time sink, and ATS rejections slow everyone down. Flip the script with automation that keeps
-                  you ahead.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[
-                    "Wasted time — 11+ hours/week applying.",
-                    "Rejected before you’re seen — ATS filters 75% of resumes.",
-                    "No response, no closure — stuck without feedback.",
-                    "Hundreds competing for one role — speed wins.",
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-xl border border-[#ffe2d1] bg-[#fff8f4] shadow-[0_8px_22px_rgba(255,76,0,0.06)] px-4 py-3 text-sm text-[#374151]"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
+    {/* SECTION HEADER */}
+    <div className="text-center mb-20">
+      <span className="inline-block mb-4 text-sm font-semibold tracking-wider text-[#ff4c00]">
+        THE PROBLEM WITH MODERN JOB SEARCH
+      </span>
 
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold">Why You Need AI Job Hunter</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[
-                    "First-mover advantage — be first to apply.",
-                    "Zero manual work — it applies for you.",
-                    "24/7 monitoring — never miss an opening.",
-                    "Instant insights — refine faster, interview sooner.",
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-xl border border-[#ffd7c4] bg-white shadow-[0_10px_26px_rgba(255,76,0,0.08)] px-4 py-3 text-sm text-[#374151]"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
+      <h2 className="text-3xl md:text-4xl font-extrabold text-[#0b0b0b]">
+        Why job hunting breaks down
+        <br />
+        <span className="text-[#ff4c00]">— and how AI fixes it</span>
+      </h2>
+
+      <p className="mt-6 max-w-3xl mx-auto text-lg text-[#6b7280]">
+        Effort alone no longer wins interviews.
+        The market now rewards speed, relevance, and scale.
+      </p>
+    </div>
+
+    {/* COMPARISON GRID */}
+    <div className="relative grid lg:grid-cols-2 gap-16 items-start">
+
+      {/* VERTICAL DIVIDER (desktop only) */}
+      <div className="hidden lg:block absolute left-1/2 top-0 h-full w-px bg-[#ffd7c4]" />
+
+      {/* LEFT — WHY IT FAILS */}
+      <div>
+        <h3 className="text-xl font-extrabold text-[#0b0b0b] mb-8">
+          Why traditional job hunting fails
+        </h3>
+
+        <div className="space-y-5">
+          {[
+            "Hundreds of candidates apply within hours of posting",
+            "ATS filters reject most resumes before humans see them",
+            "Manual applications can’t scale consistently",
+            "There’s no feedback loop to improve results",
+          ].map((item) => (
+            <div
+              key={item}
+              className="flex items-start gap-4 bg-white border border-[#e5e7eb] rounded-xl p-5"
+            >
+              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#9ca3af]" />
+              <p className="text-[#374151] font-medium leading-relaxed">
+                {item}
+              </p>
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </div>
+
+      {/* RIGHT — AI SOLUTION */}
+      <div>
+        <h3 className="text-xl font-extrabold text-[#0b0b0b] mb-8">
+          How AI changes the game
+        </h3>
+
+        <div className="space-y-5">
+          {[
+            "Applies instantly when roles go live",
+            "Optimizes each application for ATS + recruiter keywords",
+            "Scales applications without fatigue or burnout",
+            "Learns from outcomes and continuously improves",
+          ].map((item) => (
+            <div
+              key={item}
+              className="flex items-start gap-4 bg-white border border-[#ffd7c4] rounded-xl p-5"
+            >
+              <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#ff4c00]" />
+              <p className="text-[#374151] font-medium leading-relaxed">
+                {item}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
       </main>
       <Footer />
     </>

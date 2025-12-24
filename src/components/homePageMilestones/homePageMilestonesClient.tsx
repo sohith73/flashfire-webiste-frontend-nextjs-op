@@ -452,30 +452,22 @@ export default function HomePageMilestonesClient() {
                       height={32}
                       className={styles.companyLogo}
                       unoptimized
+                      loading="lazy"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         let attempts = parseInt(target.getAttribute('data-attempts') || '0');
                         
-                        // Try Clearbit if Simple Icons failed
-                        if (target.src.includes('simpleicons.org') && attempts === 0) {
+                        // Fail fast - skip to Google favicons if external services fail
+                        if (attempts === 0 && (target.src.includes('simpleicons.org') || target.src.includes('clearbit.com'))) {
                           target.setAttribute('data-attempts', '1');
-                          target.src = `https://logo.clearbit.com/${cleanDomain}?size=128`;
-                          return;
-                        }
-                        // Try Clearbit without size parameter
-                        if (target.src.includes('clearbit.com') && target.src.includes('?size=') && attempts < 2) {
-                          target.setAttribute('data-attempts', '2');
-                          target.src = `https://logo.clearbit.com/${cleanDomain}`;
-                          return;
-                        }
-                        // Try alternative logo service
-                        if (attempts < 3) {
-                          target.setAttribute('data-attempts', '3');
                           target.src = `https://www.google.com/s2/favicons?domain=${cleanDomain}&sz=128`;
                           return;
                         }
-                        // Keep logo visible even if it fails - show placeholder
-                        target.style.opacity = '0.3';
+                        // Hide logo if all attempts fail
+                        if (attempts >= 1) {
+                          target.style.opacity = '0.3';
+                          target.style.pointerEvents = 'none';
+                        }
                       }}
                     />
                   </div>
@@ -527,30 +519,22 @@ export default function HomePageMilestonesClient() {
                   height={24}
                   className={styles.footerLogo}
                   unoptimized
+                  loading="lazy"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     let attempts = parseInt(target.getAttribute('data-attempts') || '0');
                     
-                    // Try Clearbit if Simple Icons failed
-                    if (target.src.includes('simpleicons.org') && attempts === 0) {
+                    // Fail fast - skip to Google favicons if external services fail
+                    if (attempts === 0 && (target.src.includes('simpleicons.org') || target.src.includes('clearbit.com'))) {
                       target.setAttribute('data-attempts', '1');
-                      target.src = `https://logo.clearbit.com/${cleanDomain}?size=128`;
-                      return;
-                    }
-                    // Try Clearbit without size parameter
-                    if (target.src.includes('clearbit.com') && target.src.includes('?size=') && attempts < 2) {
-                      target.setAttribute('data-attempts', '2');
-                      target.src = `https://logo.clearbit.com/${cleanDomain}`;
-                      return;
-                    }
-                    // Try alternative logo service
-                    if (attempts < 3) {
-                      target.setAttribute('data-attempts', '3');
                       target.src = `https://www.google.com/s2/favicons?domain=${cleanDomain}&sz=128`;
                       return;
                     }
-                    // Keep logo visible even if it fails - show placeholder
-                    target.style.opacity = '0.3';
+                    // Hide logo if all attempts fail
+                    if (attempts >= 1) {
+                      target.style.opacity = '0.3';
+                      target.style.pointerEvents = 'none';
+                    }
                   }}
                 />
               </span>

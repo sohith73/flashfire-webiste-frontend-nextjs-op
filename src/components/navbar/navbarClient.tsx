@@ -1229,6 +1229,7 @@ export default function NavbarClient({ links, ctas }: Props) {
                           href={getHref(link.href)}
                           className={styles.featureDropdownFooter}
                           onClick={() => setIsFeatureOpen(false)}
+                          prefetch={true}
                         >
                           All Features →
                         </Link>
@@ -1445,10 +1446,139 @@ export default function NavbarClient({ links, ctas }: Props) {
               const isOnPricingPage = pathname === '/pricing' || pathname === '/en-ca/pricing' || pathname === prefix + '/pricing';
               const isOnSectionPage = pathname === getHref(link.href) || pathname === link.href || pathname === prefix + link.href;
               const isExternal = isExternalHref(link.href) || link.target === "_blank";
+              const isFeaturesLink = link.name.toLowerCase() === "features";
               
               return (
                 <li key={link.href}>
-                  {isSectionLink ? (
+                  {isFeaturesLink ? (
+                    <>
+                      <button
+                        type="button"
+                        className={`${styles.navMobileLink} ${styles.featureToggleMobile}`}
+                        onClick={() => setIsFeatureOpen((prev) => !prev)}
+                      >
+                        {link.name}
+                        <span
+                          className={`${styles.caret} ${
+                            isFeatureOpen ? styles.caretOpen : ""
+                          }`}
+                        >
+                          ▾
+                        </span>
+                      </button>
+
+                      {isFeatureOpen && (
+                        <div className={styles.featureDropdownMobile}>
+                          <div className={styles.featureDropdownGridMobile}>
+                            <a
+                              href={getHref("/ats-optimized-resume-checker")}
+                              className={styles.featureDropdownItemMobile}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsMenuOpen(false);
+                                setIsFeatureOpen(false);
+                                router.push(getHref("/ats-optimized-resume-checker"));
+                                trackButtonClick("ATS Checker", "navigation", "link", {
+                                  button_location: "navbar_mobile_features",
+                                  navigation_type: "internal_link",
+                                  destination: "/ats-optimized-resume-checker"
+                                });
+                              }}
+                            >
+                              <span className={styles.featureBadge}>ATS</span>
+                              <div className={styles.featureTexts}>
+                                <span className={styles.featureTitle}>
+                                  ATS Checker
+                                </span>
+                                <span className={styles.featureSub}>
+                                  Resume score for ATS
+                                </span>
+                              </div>
+                            </a>
+
+                            <a
+                              href={getHref("/linkedin-profile-optimization-services")}
+                              className={styles.featureDropdownItemMobile}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsMenuOpen(false);
+                                setIsFeatureOpen(false);
+                                router.push(getHref("/linkedin-profile-optimization-services"));
+                                trackButtonClick("LinkedIn Opt.", "navigation", "link", {
+                                  button_location: "navbar_mobile_features",
+                                  navigation_type: "internal_link",
+                                  destination: "/linkedin-profile-optimization-services"
+                                });
+                              }}
+                            >
+                              <span className={styles.featureBadge}>IN</span>
+                              <div className={styles.featureTexts}>
+                                <span className={styles.featureTitle}>
+                                  LinkedIn Opt.
+                                </span>
+                                <span className={styles.featureSub}>
+                                  Optimize LinkedIn profile
+                                </span>
+                              </div>
+                            </a>
+
+                            <a
+                              href={getHref("/job-application-automation")}
+                              className={styles.featureDropdownItemMobile}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsMenuOpen(false);
+                                setIsFeatureOpen(false);
+                                router.push(getHref("/job-application-automation"));
+                                trackButtonClick("Job Automation", "navigation", "link", {
+                                  button_location: "navbar_mobile_features",
+                                  navigation_type: "internal_link",
+                                  destination: "/job-application-automation"
+                                });
+                              }}
+                            >
+                              <span className={styles.featureBadge}>AUTO</span>
+                              <div className={styles.featureTexts}>
+                                <span className={styles.featureTitle}>
+                                  Job Automation
+                                </span>
+                                <span className={styles.featureSub}>
+                                  Auto apply to roles
+                                </span>
+                              </div>
+                            </a>
+                          </div>
+
+                          <button
+                            type="button"
+                            className={styles.featureDropdownFooterMobile}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              
+                              // Close menus
+                              setIsMenuOpen(false);
+                              setIsFeatureOpen(false);
+                              
+                              // Track navigation click
+                              trackButtonClick("All Features", "navigation", "link", {
+                                button_location: "navbar_mobile_features",
+                                navigation_type: "internal_link",
+                                destination: link.href
+                              });
+                              
+                              // Small delay to ensure menus close before navigation
+                              setTimeout(() => {
+                                router.push(getHref(link.href));
+                              }, 100);
+                            }}
+                          >
+                            All Features →
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : isSectionLink ? (
                     <a
                       href={`#${link.href.replace('/', '')}`}
                       className={styles.navMobileLink}
@@ -1506,17 +1636,25 @@ export default function NavbarClient({ links, ctas }: Props) {
                       {link.name}
                     </a>
                   ) : (
-                    <Link 
-                      href={getHref(link.href)} 
+                    <a
+                      href={getHref(link.href)}
                       className={styles.navMobileLink}
                       onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Close menu immediately
                         setIsMenuOpen(false);
+                        
+                        // Track navigation click
+                        trackButtonClick(link.name, "navigation", "link", {
+                          button_location: "navbar_mobile",
+                          navigation_type: "internal_link",
+                          destination: link.href
+                        });
                         
                         // Special handling for Pricing link - prevent scroll to top when already on pricing page
                         if (link.href === '/pricing' && isOnPricingPage) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          
                           // Scroll to pricing heading with navbar offset
                           const headingElement = document.getElementById('pricing-heading');
                           if (headingElement) {
@@ -1540,11 +1678,15 @@ export default function NavbarClient({ links, ctas }: Props) {
                               });
                             }
                           }
+                          return;
                         }
+                        
+                        // Navigate using router.push for better control
+                        router.push(getHref(link.href));
                       }}
                     >
                       {link.name}
-                    </Link>
+                    </a>
                   )}
                 </li>
               );

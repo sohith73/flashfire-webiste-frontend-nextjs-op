@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import Navbar from "@/src/components/navbar/navbar"
 import Footer from "@/src/components/footer/footer"
 import {
@@ -20,6 +21,9 @@ import {
   TrendingUp,
   Award,
 } from "lucide-react"
+import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking"
+import { GTagUTM } from "@/src/utils/GTagUTM"
+import { useGeoBypass } from "@/src/utils/useGeoBypass"
 
 // Minimal UI primitives (local) to avoid missing imports
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -87,6 +91,143 @@ const CardDescription = ({ className = "", children }: { className?: string; chi
 
 export default function Page() {
   const [score, setScore] = useState(82)
+  const router = useRouter()
+  const pathname = usePathname()
+  const { getButtonProps } = useGeoBypass({
+    onBypass: () => {
+      // Bypass will be handled by the event listener
+    },
+  })
+
+  const handleGetMeInterview = () => {
+    try {
+      const utmSource = typeof window !== "undefined" && window.localStorage
+        ? localStorage.getItem("utm_source") || "WEBSITE"
+        : "WEBSITE"
+      const utmMedium = typeof window !== "undefined" && window.localStorage
+        ? localStorage.getItem("utm_medium") || "ATS_Page"
+        : "ATS_Page"
+
+      try {
+        GTagUTM({
+          eventName: "sign_up_click",
+          label: "ATS_Get_Me_Interview_Button",
+          utmParams: {
+            utm_source: utmSource,
+            utm_medium: utmMedium,
+            utm_campaign: typeof window !== "undefined" && window.localStorage
+              ? localStorage.getItem("utm_campaign") || "Website"
+              : "Website",
+          },
+        })
+      } catch (gtagError) {
+        console.warn('GTagUTM error:', gtagError)
+      }
+
+      try {
+        trackButtonClick("Get Me Interview", "ats_cta", "cta", {
+          button_location: "ats_hero_section",
+          section: "ats_hero"
+        })
+        trackSignupIntent("ats_cta", {
+          signup_source: "ats_hero_button",
+          funnel_stage: "signup_intent"
+        })
+      } catch (trackError) {
+        console.warn('Tracking error:', trackError)
+      }
+
+      // Check current path first
+      const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '')
+      const normalizedPath = currentPath.split('?')[0] // Remove query params
+      const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
+        normalizedPath === '/en-ca/get-me-interview'
+      const isOnATSPage = normalizedPath === '/ats-optimized-resume-checker' ||
+        normalizedPath === '/en-ca/ats-optimized-resume-checker'
+
+      // If already on the route, save scroll position and prevent navigation
+      if (isAlreadyOnGetMeInterview) {
+        const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0
+
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'))
+        }
+
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+          requestAnimationFrame(() => {
+            window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+            setTimeout(() => {
+              window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+            }, 50)
+          })
+        })
+
+        return
+      }
+
+      // Dispatch custom event to force show modal FIRST
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'))
+      }
+
+      // If on ATS page, change URL but keep page content visible
+      if (isOnATSPage) {
+        if (typeof window !== 'undefined') {
+          const currentScrollY = window.scrollY
+          sessionStorage.setItem('previousPageBeforeGetMeInterview', '/ats-optimized-resume-checker')
+          sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString())
+        }
+
+        const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview'
+        router.replace(targetPath)
+        return
+      }
+
+      // Save current scroll position before navigation to preserve it
+      if (typeof window !== 'undefined') {
+        const currentScrollY = window.scrollY
+        sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString())
+      }
+
+      // Only navigate if NOT already on the page
+      const targetPath = '/get-me-interview'
+      router.push(targetPath)
+    } catch (error) {
+      console.warn('Error in Get Me Interview handler:', error)
+    }
+  }
+
+  const handleHowItWorks = () => {
+    try {
+      trackButtonClick("How It Works", "ats_cta", "cta", {
+        button_location: "ats_hero_section",
+        section: "ats_hero",
+        action: "how_it_works"
+      })
+    } catch (trackError) {
+      console.warn('Tracking error:', trackError)
+    }
+
+    // Check current path
+    const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '')
+    const normalizedPath = currentPath.split('?')[0]
+    const isOnATSPage = normalizedPath === '/ats-optimized-resume-checker' ||
+      normalizedPath === '/en-ca/ats-optimized-resume-checker'
+
+    // If on ATS page, scroll to the "How It Works" section
+    if (isOnATSPage && typeof window !== 'undefined') {
+      const howItWorksSection = document.getElementById('how-it-works')
+      if (howItWorksSection) {
+        howItWorksSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        return
+      }
+    }
+
+    // Otherwise, navigate to the How It Works page
+    const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/how-it-works' : '/how-it-works'
+    router.push(targetPath)
+  }
 
   return (
     <>
@@ -120,14 +261,20 @@ export default function Page() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="text-base font-semibold group">
-                    <Upload className="size-4 mr-2 group-hover:scale-110 transition-transform" />
-                    Upload Your Resume
-                  </Button>
-                  <Button size="lg" variant="outline" className="text-base font-semibold bg-transparent">
-                    <FileText className="size-4 mr-2" />
-                    View Sample Report
-                  </Button>
+                  <button
+                    {...getButtonProps()}
+                    onClick={handleGetMeInterview}
+                    className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#f9e8e0] transition-colors rounded-lg inline-flex items-center justify-center gap-2"
+                    style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}
+                  >
+                    Get Me Interview →
+                  </button>
+                  <button
+                    onClick={handleHowItWorks}
+                    className="border-2 border-[#ff4c00] text-[#ff4c00] bg-transparent hover:bg-[#fff2ea] px-6 sm:px-8 py-3 sm:py-4 font-semibold text-base sm:text-lg transition-colors rounded-lg inline-flex items-center justify-center gap-2"
+                  >
+                    How It Works
+                  </button>
                 </div>
 
                 <div className="flex items-center gap-6 pt-2 flex-wrap">
