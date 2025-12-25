@@ -62,15 +62,6 @@ export default function HTMLSitemapPage() {
                   textDecoration: "none",
                   border: "1px solid #e5e7eb",
                   borderRadius: "4px",
-                  transition: "all 0.2s",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f3f4f6";
-                  e.currentTarget.style.borderColor = "#f97316";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.borderColor = "#e5e7eb";
                 }}
               >
                 {page.title}
@@ -96,15 +87,6 @@ export default function HTMLSitemapPage() {
                   textDecoration: "none",
                   border: "1px solid #e5e7eb",
                   borderRadius: "4px",
-                  transition: "all 0.2s",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f3f4f6";
-                  e.currentTarget.style.borderColor = "#f97316";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.borderColor = "#e5e7eb";
                 }}
               >
                 <strong style={{ display: "block", marginBottom: "0.25rem", color: "#111" }}>{post.title}</strong>
