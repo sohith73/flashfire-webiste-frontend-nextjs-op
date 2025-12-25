@@ -720,7 +720,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "./navbar.module.css";
@@ -741,6 +741,21 @@ type Props = {
 export default function NavbarClient({ links, ctas }: Props) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFeatureOpen, setIsFeatureOpen] = useState(false);
+  const featureCloseTimer = useRef<NodeJS.Timeout | null>(null);
+  const cancelFeatureClose = () => {
+    if (featureCloseTimer.current) {
+      clearTimeout(featureCloseTimer.current);
+      featureCloseTimer.current = null;
+    }
+  };
+
+  const scheduleFeatureClose = () => {
+    cancelFeatureClose();
+    featureCloseTimer.current = setTimeout(() => {
+      setIsFeatureOpen(false);
+    }, 400); // slightly longer delay so users can move into the dropdown
+  };
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -754,7 +769,7 @@ export default function NavbarClient({ links, ctas }: Props) {
   
   const isBookPage = pathname === "/schedule-a-free-career-call" || pathname === "/en-ca/schedule-a-free-career-call";
   const isImageTestimonialsPage = pathname === "/testimonials" || pathname === "/en-ca/testimonials" || pathname === "/image-testimonials" || pathname === "/en-ca/image-testimonials";
-  const isBlogsPage = pathname.startsWith("/blog") || pathname.startsWith("/en-ca/blog");
+  const isBlogsPage = pathname.startsWith("/blogs") || pathname.startsWith("/en-ca/blogs");
   
   // Geo-bypass hook for Book Now button
   const { getButtonProps: getBookNowButtonProps } = useGeoBypass({
@@ -1120,9 +1135,129 @@ export default function NavbarClient({ links, ctas }: Props) {
             const isOnSectionPage = pathname === getHref(link.href) || pathname === link.href || pathname === prefix + link.href;
             const isExternal = isExternalHref(link.href) || link.target === "_blank";
             
+            const isFeaturesLink = link.name.toLowerCase() === "features";
+
             return (
-              <li key={link.href} className={styles.navLinkItem}>
-                {isSectionLink ? (
+              <li
+                key={link.href}
+                className={styles.navLinkItem}
+                onMouseEnter={() => {
+                  if (isFeaturesLink) {
+                    cancelFeatureClose();
+                    setIsFeatureOpen(true);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (isFeaturesLink) {
+                    scheduleFeatureClose();
+                  }
+                }}
+              >
+                {isFeaturesLink ? (
+                  <>
+                    <button
+                      type="button"
+                      className={`${styles.navLinkText} ${styles.featureToggle}`}
+                      onClick={() => setIsFeatureOpen((prev) => !prev)}
+                    >
+                      {link.name}
+                      <span
+                        className={`${styles.caret} ${
+                          isFeatureOpen ? styles.caretOpen : ""
+                        }`}
+                      >
+                        ▾
+                      </span>
+                    </button>
+
+                    {isFeatureOpen && (
+                      <div
+                        className={styles.featureDropdown}
+                        onMouseEnter={cancelFeatureClose}
+                        onMouseLeave={scheduleFeatureClose}
+                      >
+                        <div className={styles.featureDropdownGrid}>
+                          <Link
+                            href={getHref("/features/ats-optimizer")}
+                            className={styles.featureDropdownItem}
+                            onClick={() => setIsFeatureOpen(false)}
+                          >
+                            <div className={styles.featureIcon}>
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M14 2V8H20" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M16 13H8" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M16 17H8" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M10 9H9H8" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                            <div className={styles.featureTexts}>
+                              <span className={styles.featureTitle}>
+                                ATS Optimizer
+                              </span>
+                              <span className={styles.featureSub}>
+                                Resume score for ATS
+                              </span>
+                            </div>
+                          </Link>
+
+                          <Link
+                            href={getHref("/features/linkedin-profile-optimization")}
+                            className={styles.featureDropdownItem}
+                            onClick={() => setIsFeatureOpen(false)}
+                          >
+                            <div className={styles.featureIcon}>
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M6 9H2V21H6V9Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <circle cx="4" cy="4" r="2" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                            <div className={styles.featureTexts}>
+                              <span className={styles.featureTitle}>
+                                LinkedIn Opt.
+                              </span>
+                              <span className={styles.featureSub}>
+                                Optimize LinkedIn profile
+                              </span>
+                            </div>
+                          </Link>
+
+                          <Link
+                            href={getHref("/features/job-automation")}
+                            className={styles.featureDropdownItem}
+                            onClick={() => setIsFeatureOpen(false)}
+                          >
+                            <div className={styles.featureIcon}>
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M2 17L12 22L22 17" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M2 12L12 17L22 12" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                            <div className={styles.featureTexts}>
+                              <span className={styles.featureTitle}>
+                                Job Automation
+                              </span>
+                              <span className={styles.featureSub}>
+                                Auto apply to roles
+                              </span>
+                            </div>
+                          </Link>
+                        </div>
+
+                        <Link
+                          href={getHref(link.href)}
+                          className={styles.featureDropdownFooter}
+                          onClick={() => setIsFeatureOpen(false)}
+                          prefetch={true}
+                        >
+                          All Features →
+                        </Link>
+                      </div>
+                    )}
+                  </>
+                ) : isSectionLink ? (
                   <a 
                     href={`#${link.href.replace('/', '')}`}
                     className={styles.navLinkText}
@@ -1332,10 +1467,159 @@ export default function NavbarClient({ links, ctas }: Props) {
               const isOnPricingPage = pathname === '/pricing' || pathname === '/en-ca/pricing' || pathname === prefix + '/pricing';
               const isOnSectionPage = pathname === getHref(link.href) || pathname === link.href || pathname === prefix + link.href;
               const isExternal = isExternalHref(link.href) || link.target === "_blank";
+              const isFeaturesLink = link.name.toLowerCase() === "features";
               
               return (
                 <li key={link.href}>
-                  {isSectionLink ? (
+                  {isFeaturesLink ? (
+                    <>
+                      <button
+                        type="button"
+                        className={`${styles.navMobileLink} ${styles.featureToggleMobile}`}
+                        onClick={() => setIsFeatureOpen((prev) => !prev)}
+                      >
+                        {link.name}
+                        <span
+                          className={`${styles.caret} ${
+                            isFeatureOpen ? styles.caretOpen : ""
+                          }`}
+                        >
+                          ▾
+                        </span>
+                      </button>
+
+                      {isFeatureOpen && (
+                        <div className={styles.featureDropdownMobile}>
+                          <div className={styles.featureDropdownGridMobile}>
+                            <a
+                              href={getHref("/features/ats-optimizer")}
+                              className={styles.featureDropdownItemMobile}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsMenuOpen(false);
+                                setIsFeatureOpen(false);
+                                router.push(getHref("/features/ats-optimizer"));
+                                trackButtonClick("ATS Optimizer", "navigation", "link", {
+                                  button_location: "navbar_mobile_features",
+                                  navigation_type: "internal_link",
+                                  destination: "/features/ats-optimizer"
+                                });
+                              }}
+                            >
+                              <div className={styles.featureIcon}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M14 2V8H20" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M16 13H8" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M16 17H8" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M10 9H9H8" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </div>
+                              <div className={styles.featureTexts}>
+                                <span className={styles.featureTitle}>
+                                  ATS Optimizer
+                                </span>
+                                <span className={styles.featureSub}>
+                                  Resume score for ATS
+                                </span>
+                              </div>
+                            </a>
+
+                            <a
+                              href={getHref("/features/linkedin-profile-optimization")}
+                              className={styles.featureDropdownItemMobile}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsMenuOpen(false);
+                                setIsFeatureOpen(false);
+                                router.push(getHref("/features/linkedin-profile-optimization"));
+                                trackButtonClick("LinkedIn Opt.", "navigation", "link", {
+                                  button_location: "navbar_mobile_features",
+                                  navigation_type: "internal_link",
+                                  destination: "/features/linkedin-profile-optimization"
+                                });
+                              }}
+                            >
+                              <div className={styles.featureIcon}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M6 9H2V21H6V9Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <circle cx="4" cy="4" r="2" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </div>
+                              <div className={styles.featureTexts}>
+                                <span className={styles.featureTitle}>
+                                  LinkedIn Opt.
+                                </span>
+                                <span className={styles.featureSub}>
+                                  Optimize LinkedIn profile
+                                </span>
+                              </div>
+                            </a>
+
+                            <a
+                              href={getHref("/features/job-automation")}
+                              className={styles.featureDropdownItemMobile}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setIsMenuOpen(false);
+                                setIsFeatureOpen(false);
+                                router.push(getHref("/features/job-automation"));
+                                trackButtonClick("Job Automation", "navigation", "link", {
+                                  button_location: "navbar_mobile_features",
+                                  navigation_type: "internal_link",
+                                  destination: "/features/job-automation"
+                                });
+                              }}
+                            >
+                              <div className={styles.featureIcon}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M2 17L12 22L22 17" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M2 12L12 17L22 12" stroke="#ff4c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </div>
+                              <div className={styles.featureTexts}>
+                                <span className={styles.featureTitle}>
+                                  Job Automation
+                                </span>
+                                <span className={styles.featureSub}>
+                                  Auto apply to roles
+                                </span>
+                              </div>
+                            </a>
+                          </div>
+
+                          <button
+                            type="button"
+                            className={styles.featureDropdownFooterMobile}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              
+                              // Close menus
+                              setIsMenuOpen(false);
+                              setIsFeatureOpen(false);
+                              
+                              // Track navigation click
+                              trackButtonClick("All Features", "navigation", "link", {
+                                button_location: "navbar_mobile_features",
+                                navigation_type: "internal_link",
+                                destination: link.href
+                              });
+                              
+                              // Small delay to ensure menus close before navigation
+                              setTimeout(() => {
+                                router.push(getHref(link.href));
+                              }, 100);
+                            }}
+                          >
+                            All Features →
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : isSectionLink ? (
                     <a
                       href={`#${link.href.replace('/', '')}`}
                       className={styles.navMobileLink}
@@ -1393,17 +1677,25 @@ export default function NavbarClient({ links, ctas }: Props) {
                       {link.name}
                     </a>
                   ) : (
-                    <Link 
-                      href={getHref(link.href)} 
+                    <a
+                      href={getHref(link.href)}
                       className={styles.navMobileLink}
                       onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Close menu immediately
                         setIsMenuOpen(false);
+                        
+                        // Track navigation click
+                        trackButtonClick(link.name, "navigation", "link", {
+                          button_location: "navbar_mobile",
+                          navigation_type: "internal_link",
+                          destination: link.href
+                        });
                         
                         // Special handling for Pricing link - prevent scroll to top when already on pricing page
                         if (link.href === '/pricing' && isOnPricingPage) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          
                           // Scroll to pricing heading with navbar offset
                           const headingElement = document.getElementById('pricing-heading');
                           if (headingElement) {
@@ -1427,11 +1719,15 @@ export default function NavbarClient({ links, ctas }: Props) {
                               });
                             }
                           }
+                          return;
                         }
+                        
+                        // Navigate using router.push for better control
+                        router.push(getHref(link.href));
                       }}
                     >
                       {link.name}
-                    </Link>
+                    </a>
                   )}
                 </li>
               );
