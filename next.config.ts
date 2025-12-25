@@ -147,7 +147,17 @@ const nextConfig: NextConfig = {
       // Redirect old feature pages to new /features/ paths
       {
         source: "/ats-optimized-resume-checker",
-        destination: "/features/ats-optimizer",
+        destination: "/features/resume-optimizer",
+        permanent: true,
+      },
+      {
+        source: "/features/ats-optimizer",
+        destination: "/features/resume-optimizer",
+        permanent: true,
+      },
+      {
+        source: "/en-ca/features/ats-optimizer",
+        destination: "/en-ca/features/resume-optimizer",
         permanent: true,
       },
       {
