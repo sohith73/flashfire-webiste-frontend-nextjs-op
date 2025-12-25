@@ -144,6 +144,8 @@ export default function Page() {
         normalizedPath === '/en-ca/get-me-interview'
       const isOnATSPage = normalizedPath === '/ats-optimized-resume-checker' ||
         normalizedPath === '/en-ca/ats-optimized-resume-checker' ||
+        normalizedPath === '/features/resume-optimizer' ||
+        normalizedPath === '/en-ca/features/resume-optimizer' ||
         normalizedPath === '/features/ats-optimizer' ||
         normalizedPath === '/en-ca/features/ats-optimizer'
 
