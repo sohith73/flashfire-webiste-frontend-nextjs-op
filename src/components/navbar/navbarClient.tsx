@@ -1187,7 +1187,7 @@ export default function NavbarClient({ links, ctas }: Props) {
                       >
                         <div className={styles.featureDropdownGrid}>
                           <Link
-                            href={getHref("/features/ats-optimizer")}
+                            href={getHref("/features/resume-optimizer")}
                             className={styles.featureDropdownItem}
                             onClick={() => setIsFeatureOpen(false)}
                           >
@@ -1502,17 +1502,17 @@ export default function NavbarClient({ links, ctas }: Props) {
                         <div className={styles.featureDropdownMobile}>
                           <div className={styles.featureDropdownGridMobile}>
                             <a
-                              href={getHref("/features/ats-optimizer")}
+                              href={getHref("/features/resume-optimizer")}
                               className={styles.featureDropdownItemMobile}
                               onClick={(e) => {
                                 e.preventDefault();
                                 setIsMenuOpen(false);
                                 setIsFeatureOpen(false);
-                                router.push(getHref("/features/ats-optimizer"));
+                                router.push(getHref("/features/resume-optimizer"));
                                 trackButtonClick("Resume Optimizer", "navigation", "link", {
                                   button_location: "navbar_mobile_features",
                                   navigation_type: "internal_link",
-                                  destination: "/features/ats-optimizer"
+                                  destination: "/features/resume-optimizer"
                                 });
                               }}
                             >
