@@ -7,10 +7,11 @@ import styles from "./blogs.module.css";
 import BlogCard from "./blogCard";
 import { blogPosts } from "@/src/data/blogsData";
 import { FaSearch } from "react-icons/fa";
-import { categoryToSlug, slugToCategory } from "@/src/utils/blogCategoryUtils";
+import { categoryToSlug, slugToCategory, tagToSlug, slugToTag } from "@/src/utils/blogCategoryUtils";
 
 type BlogsClientProps = {
   categorySlug?: string;
+  tagSlug?: string;
 };
 
 // Function to generate default tags based on category and content
@@ -78,17 +79,20 @@ const blogsWithTags = blogPosts.map((blog) => {
   };
 });
 
-export default function BlogsClient({ categorySlug }: BlogsClientProps = {}) {
+export default function BlogsClient({ categorySlug, tagSlug }: BlogsClientProps = {}) {
   const searchParams = useSearchParams();
   const tagParam = searchParams.get("tag");
   const categoryParam = searchParams.get("category");
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Decode and normalize tag from URL
+  // Decode and normalize tag from URL (prioritize tagSlug prop over query param)
   const decodedTag = useMemo(() => {
+    if (tagSlug) {
+      return slugToTag(tagSlug);
+    }
     if (!tagParam) return "";
     return decodeURIComponent(tagParam.replace(/\+/g, " ")).trim();
-  }, [tagParam]);
+  }, [tagSlug, tagParam]);
 
   // Decode and normalize category from URL (prioritize categorySlug prop over query param)
   const decodedCategory = useMemo(() => {

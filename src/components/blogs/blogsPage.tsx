@@ -14,7 +14,7 @@ import Footer from "../footer/footer";
 import Link from "next/link";
 import { FaLinkedinIn, FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
 import { blogPosts } from "@/src/data/blogsData";
-import { categoryToSlug } from "@/src/utils/blogCategoryUtils";
+import { categoryToSlug, tagToSlug } from "@/src/utils/blogCategoryUtils";
 
 type BlogPost = {
   id: number;
@@ -512,7 +512,7 @@ export default function BlogsPage({ post }: { post: BlogPost }) {
                   {postTags.map((tag, index) => (
                     <Link
                       key={index}
-                      href={`/blog?tag=${encodeURIComponent(tag)}`}
+                      href={`/blog/tag/${tagToSlug(tag)}`}
                       className={styles.tag}
                     >
                       {tag}

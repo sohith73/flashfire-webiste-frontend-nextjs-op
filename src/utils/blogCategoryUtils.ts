@@ -58,3 +58,27 @@ export function getAllCategorySlugs(): string[] {
   return categories.map(categoryToSlug);
 }
 
+/**
+ * Converts a tag name to a URL-friendly slug
+ * Example: "Career Advice" -> "career-advice"
+ */
+export function tagToSlug(tag: string): string {
+  return tag
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Converts a tag slug back to its original tag name
+ * Example: "career-advice" -> "Career Advice"
+ */
+export function slugToTag(slug: string): string {
+  // Fallback: convert slug to title case
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
