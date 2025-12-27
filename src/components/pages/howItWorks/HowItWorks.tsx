@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { RefreshCw, Mail, BarChart3, PhoneCall } from "lucide-react";
+import { RefreshCw, Mail, BarChart3, PhoneCall, FileText, Rocket } from "lucide-react";
+import { FaLinkedin } from "react-icons/fa";
 
 import Footer from "@/src/components/footer/footer";
 import Navbar from "@/src/components/navbar/navbar";
@@ -468,67 +469,67 @@ export default function HowItWorks() {
             </div>
 
             {/* ================= CARDS ================= */}
-            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
-
-              {/* Card 1 */}
-              <div className="rounded-xl bg-white px-8 py-12 shadow-md">
-                <div className="mb-6 flex justify-center">
-                  <RefreshCw className="h-7 w-7 text-black" strokeWidth={1.5} />
+              {/* Card 1: Resume Tailoring */}
+              <div className="rounded-xl bg-white px-6 py-8 shadow-md hover:shadow-lg transition-shadow">
+                <div className="mb-4 flex justify-center">
+                  <div className="bg-[#10b981] rounded-lg p-2.5 flex items-center justify-center w-12 h-12">
+                    <FileText className="h-5 w-5 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-black">
-                  Automatically apply to jobs
+                <h3 className="text-lg font-bold text-black mb-3 text-center">
+                  Resume Tailoring
                 </h3>
-                <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                  Flashfire collects new job postings every day and automatically
-                  applies using ATS-safe resumes. Prefer control? Apply manually.
+                <p className="text-sm leading-relaxed text-gray-700 text-center">
+                  Your resume is customized for each role with role-specific keywords and formatting recruiters love.
                 </p>
-
               </div>
 
-              {/* Card 2 */}
-              <div className="rounded-xl bg-white px-8 py-12 shadow-md">
-                <div className="mb-6 flex justify-center">
-                  <Mail className="h-7 w-7 text-black" strokeWidth={1.5} />
+              {/* Card 2: LinkedIn Optimization */}
+              <div className="rounded-xl bg-white px-6 py-8 shadow-md hover:shadow-lg transition-shadow">
+                <div className="mb-4 flex justify-center">
+                  <div className="bg-[#ff4c00] rounded-lg p-2.5 flex items-center justify-center w-12 h-12">
+                    <FaLinkedin className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-black">
-                  Automatically email recruiters
+                <h3 className="text-lg font-bold text-black mb-3 text-center">
+                  LinkedIn Optimization
                 </h3>
-                <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                  We find recruiter emails and send personalised outreach
-                  using proven or custom templates.
+                <p className="text-sm leading-relaxed text-gray-700 text-center">
+                  We rewrite your LinkedIn to stand out in U.S. recruiter searches, using AI-powered keyword matching.
                 </p>
-
               </div>
 
-              {/* Card 3 */}
-              <div className="rounded-xl bg-white px-8 py-12 shadow-md">
-                <div className="mb-6 flex justify-center">
-                  <BarChart3 className="h-7 w-7 text-black" strokeWidth={1.5} />
+              {/* Card 3: Smart Job Applications */}
+              <div className="rounded-xl bg-white px-6 py-8 shadow-md hover:shadow-lg transition-shadow">
+                <div className="mb-4 flex justify-center">
+                  <div className="bg-[#8b5cf6] rounded-lg p-2.5 flex items-center justify-center w-12 h-12">
+                    <Rocket className="h-5 w-5 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-black">
-                  Measure and improve
+                <h3 className="text-lg font-bold text-black mb-3 text-center">
+                  Smart Job Applications
                 </h3>
-                <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                  Track opens, replies, resume performance and keyword impact
-                  to improve interview conversion.
+                <p className="text-sm leading-relaxed text-gray-700 text-center">
+                  We apply to 1000+ curated jobs that match your goals, location, and visa needs — no spam, just precision.
                 </p>
-
               </div>
-              {/* Card 4 */}
-              <div className="rounded-xl bg-white px-8 py-12 shadow-md">
-                <div className="mb-6 flex justify-center">
-                  <PhoneCall className="h-7 w-7 text-black" strokeWidth={1.5} />
+
+              {/* Card 4: Get Interview Calls */}
+              <div className="rounded-xl bg-white px-6 py-8 shadow-md hover:shadow-lg transition-shadow">
+                <div className="mb-4 flex justify-center">
+                  <div className="bg-[#ef4444] rounded-lg p-2.5 flex items-center justify-center w-12 h-12">
+                    <PhoneCall className="h-5 w-5 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-black">
+                <h3 className="text-lg font-bold text-black mb-3 text-center">
                   Get Interview Calls
                 </h3>
-                <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                  Start receiving interview invites as we track and optimize every
-                  application. You focus on prep, we handle the hustle.
+                <p className="text-sm leading-relaxed text-gray-700 text-center">
+                  Start receiving interview invites as we track and optimize every application. You focus on prep, we handle the hustle.
                 </p>
               </div>
-
 
             </div>
           </div>

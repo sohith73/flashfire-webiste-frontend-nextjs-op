@@ -25,6 +25,18 @@ const LinkedInPage = dynamic(() => import("@/app/features/linkedin-profile-optim
   ssr: false,
 });
 
+const JobTrackerPage = dynamic(() => import("@/app/features/job-tracker/page"), {
+  ssr: false,
+});
+
+const PrecisionTargetingPage = dynamic(() => import("@/app/features/precision-targeting/page"), {
+  ssr: false,
+});
+
+const DashboardAnalyticsPage = dynamic(() => import("@/app/features/dashboard-analytics/page"), {
+  ssr: false,
+});
+
 export default function GetMeInterviewPage() {
     const [previousPage, setPreviousPage] = useState<string | null>(null);
     const [isMounted, setIsMounted] = useState(false);
@@ -108,6 +120,21 @@ export default function GetMeInterviewPage() {
         previousPage === '/features/linkedin-profile-optimization-services' ||
         previousPage === '/en-ca/features/linkedin-profile-optimization-services') {
         return <LinkedInPage />;
+    }
+
+    if (previousPage === '/features/job-tracker' ||
+        previousPage === '/en-ca/features/job-tracker') {
+        return <JobTrackerPage />;
+    }
+
+    if (previousPage === '/features/precision-targeting' ||
+        previousPage === '/en-ca/features/precision-targeting') {
+        return <PrecisionTargetingPage />;
+    }
+
+    if (previousPage === '/features/dashboard-analytics' ||
+        previousPage === '/en-ca/features/dashboard-analytics') {
+        return <DashboardAnalyticsPage />;
     }
 
     return <HomePage />;

@@ -110,6 +110,9 @@ export default function Footer() {
               >
                 LinkedIn Optimization
               </Link>
+              <Link href={getHref("/contact-us")} className={linkClass}>
+                Contact Us
+              </Link>
             </div>
           </div>
 
