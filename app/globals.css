@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff6f4;
-  --foreground: #fff6f4;
+  --background: #ffffff;     /* pure white */
+  --foreground: #0b0b0b;     /* true black text */
 }
 
 @theme inline {
@@ -14,8 +14,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #fff6f4;
-    --foreground: #fff6f4;
+    --background: #ffffff;     /* pure white */
+    --foreground: #0b0b0b;     /* true black text */
   }
 }
 
@@ -66,4 +66,6 @@ img {
 .steps-carousel {
   overscroll-behavior: contain;
 }
+
+/* force rebuild after removing invalid classes */
 

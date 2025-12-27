@@ -721,6 +721,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styles from "./navbar.module.css";
@@ -1144,7 +1145,7 @@ export default function NavbarClient({ links, ctas }: Props) {
             const isExternal = isExternalHref(link.href) || link.target === "_blank";
             
             const isFeaturesLink = link.name.toLowerCase() === "features";
-
+            
             return (
               <li
                 key={link.href}
@@ -1224,7 +1225,7 @@ export default function NavbarClient({ links, ctas }: Props) {
                             </div>
                             <div className={styles.featureTexts}>
                               <span className={styles.featureTitle}>
-                                LinkedIn Opt.
+                                LinkedIn Optimization
                               </span>
                               <span className={styles.featureSub}>
                                 Optimize LinkedIn profile
@@ -1688,7 +1689,7 @@ export default function NavbarClient({ links, ctas }: Props) {
                     </a>
                   ) : (
                     <a
-                      href={getHref(link.href)}
+                      href={getHref(link.href)} 
                       className={styles.navMobileLink}
                       onClick={(e) => {
                         e.preventDefault();

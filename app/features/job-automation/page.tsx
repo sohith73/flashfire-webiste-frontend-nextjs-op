@@ -167,7 +167,7 @@ export default function JobApplicationAutomationPage() {
       <Navbar />
       <main className="min-h-screen bg-white text-[#0f172a] font-['Space_Grotesk',sans-serif]">
         {/* Hero */}
-        <section className="min-h-[100vh] flex items-center bg-[#fff6f4]">
+        <section className="min-h-[95vh] -mt-20 flex items-center bg-[#fff6f4]">
           <div className="mx-auto max-w-6xl px-6 text-center">
 
             <h1 className="text-4xl md:text-5xl xl:text-6xl font-extrabold text-[#0b0b0b] leading-tight">

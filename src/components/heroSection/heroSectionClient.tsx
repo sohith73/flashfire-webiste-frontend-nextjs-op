@@ -40,32 +40,32 @@ export default function HeroSectionClient({ data }: Props) {
   });
 
   return (
-    <section className="bg-[#f9e8e0] text-center p-8 pb-16 pt-8 font-['Space_Grotesk',sans-serif] overflow-x-hidden w-full max-w-full box-border max-[768px]:p-6 max-[768px]:px-4 max-[768px]:pb-12 max-[768px]:pt-6 max-[480px]:p-4 max-[480px]:px-3 max-[480px]:pb-8 max-[480px]:pt-4">
+    <section className="bg-[#f8ebe5] text-center p-8 pb-16 pt-8 font-['Space_Grotesk',sans-serif] overflow-x-hidden w-full max-w-full box-border max-[768px]:p-4 max-[768px]:pb-10 max-[768px]:pt-6 max-[480px]:p-3 max-[480px]:pb-8 max-[480px]:pt-4">
       {/* === Top Badges === */}
-      <div className="flex justify-center gap-2.5 flex-wrap mb-8 mt-8 max-[768px]:flex-row">
+      <div className="flex justify-center gap-2 flex-wrap mb-6 mt-4 max-[768px]:mb-4 max-[768px]:mt-2 max-[480px]:gap-1.5 max-[480px]:mb-3">
         {data.badges.map((badge) => (
-          <span key={badge} className="border-[0.5px] border-black text-[#F55D1D] font-['Space_Grotesk',sans-serif] text-xs font-bold leading-none tracking-[0.72px] text-center uppercase px-3 py-1.5 rounded-none inline-flex items-center justify-center h-[27px] w-48 whitespace-nowrap opacity-100 max-[768px]:flex max-[768px]:flex-row max-[768px]:text-[0.7rem] max-[768px]:px-2 max-[768px]:py-1">
+          <span key={badge} className="border-[0.5px] border-black text-[#F55D1D] font-['Space_Grotesk',sans-serif] text-xs font-bold leading-tight tracking-[0.72px] text-center uppercase px-3 py-1.5 rounded-none inline-flex items-center justify-center min-h-[27px] whitespace-nowrap opacity-100 max-[768px]:text-[0.65rem] max-[768px]:px-2 max-[768px]:py-1 max-[768px]:min-h-[24px] max-[480px]:text-[0.6rem] max-[480px]:px-1.5 max-[480px]:py-0.5 max-[480px]:min-h-[22px]">
             {badge}
           </span>
         ))}
       </div>
 
       {/* === Headline === */}
-      <h1 className="text-[3.5rem] leading-[0.5] font-bold text-black max-w-[900px] w-full mx-auto mb-1 flex flex-col items-center justify-center text-center break-keep px-4 gap-0 max-[1200px]:text-[3rem] max-[1200px]:max-w-[800px] max-[968px]:text-[2.5rem] max-[968px]:max-w-[700px] max-[968px]:overflow-x-hidden max-[768px]:sticky max-[768px]:top-[120px] max-[768px]:z-40 max-[768px]:bg-[#f9e8e0] max-[768px]:text-2xl max-[768px]:font-bold max-[768px]:max-w-full max-[768px]:w-full max-[768px]:text-black max-[768px]:leading-[1.2] max-[768px]:px-2 max-[768px]:py-3 max-[768px]:mb-2 max-[768px]:overflow-x-hidden max-[480px]:text-[1.6rem] max-[480px]:leading-[1.3] max-[480px]:px-3 max-[480px]:top-[110px] max-[480px]:py-2">
-        <span className="block whitespace-nowrap leading-[0.5] text-center w-full m-0 p-0 h-auto -mt-[0.1em] -mb-[0.1em] first:mb-0 max-[968px]:whitespace-normal max-[968px]:break-words max-[968px]:break-keep max-[768px]:whitespace-normal max-[768px]:block max-[768px]:leading-[1.2] max-[768px]:break-words max-[480px]:leading-[1.3]">{data.headlineMain}</span>
-        <span className="block whitespace-nowrap leading-[0.5] text-center w-full m-0 p-0 h-auto -mt-[0.1em] -mb-[0.1em] first:mb-0 max-[968px]:whitespace-normal max-[968px]:break-words max-[968px]:break-keep max-[768px]:whitespace-normal max-[768px]:block max-[768px]:leading-[1.2] max-[768px]:break-words max-[480px]:leading-[1.3]">
-          <span className="text-black whitespace-nowrap tracking-[-0.05em] inline-block max-[968px]:whitespace-normal max-[768px]:whitespace-normal max-[768px]:inline">{data.headlineHighlight}</span>
+      <h1 className="text-[3.5rem] leading-[0.85] font-bold text-black max-w-[900px] w-full mx-auto mb-2 flex flex-col items-center justify-center text-center break-words px-4 gap-0 max-[1200px]:text-[3rem] max-[1200px]:max-w-[800px] max-[968px]:text-[2.5rem] max-[968px]:max-w-[700px] max-[768px]:text-2xl max-[768px]:leading-[0.9] max-[768px]:max-w-full max-[768px]:w-full max-[768px]:px-3 max-[768px]:mb-3 max-[480px]:text-xl max-[480px]:leading-[0.95] max-[480px]:px-2 max-[480px]:mb-2">
+        <span className="block text-center w-full m-0 p-0">{data.headlineMain}</span>
+        <span className="block text-center w-full m-0 p-0 flex items-center justify-center flex-wrap gap-0 -mt-4 max-[768px]:-mt-3 max-[480px]:-mt-2">
+          <span className="text-black tracking-[-0.02em] inline-block">{data.headlineHighlight}</span>
           <FlashfireLogo
-            width={60}
-            height={60}
-            className="inline-block align-middle -mx-[0.4em] h-[2.3em] w-auto leading-none flex-shrink-0 object-contain max-[768px]:h-[2.8em] max-[768px]:w-auto max-[768px]:mx-[0.2em] max-[768px]:align-middle max-[768px]:flex-shrink-0 max-[480px]:h-[2.5em] max-[480px]:mx-[0.15em]"
+            width={80}
+            height={80}
+            className="inline-block align-middle h-[2.4em] w-auto leading-none flex-shrink-0 object-contain -mx-8 max-[768px]:h-[2.6em] max-[768px]:-mx-6 max-[480px]:h-[2.2em] max-[480px]:-mx-4"
           />
-          <span className="text-black whitespace-nowrap tracking-[-0.05em] inline-block max-[968px]:whitespace-normal max-[768px]:whitespace-normal max-[768px]:inline">{data.headlineSuffix}</span>
+          <span className="text-black tracking-[-0.02em] inline-block">{data.headlineSuffix}</span>
         </span>
       </h1>
 
       {/* === Description === */}
-      <p className="font-['Satoshi',sans-serif] text-xl font-medium leading-[144%] tracking-[-0.4px] text-center text-black max-w-[620px] mx-auto mb-8 max-[768px]:text-[0.95rem] max-[768px]:font-bold max-[768px]:text-black max-[480px]:text-[0.9rem] max-[480px]:px-2">{data.description}</p>
+      <p className="font-['Satoshi',sans-serif] text-xl font-medium leading-[1.5] tracking-[-0.4px] text-center text-black max-w-[620px] mx-auto mb-8 px-4 max-[768px]:text-base max-[768px]:leading-[1.6] max-[768px]:mb-6 max-[768px]:px-3 max-[480px]:text-sm max-[480px]:leading-[1.5] max-[480px]:mb-4 max-[480px]:px-2">{data.description}</p>
 
       {/* === CTA Button === */}
       <button
@@ -146,13 +146,13 @@ export default function HeroSectionClient({ data }: Props) {
           const targetPath = '/get-me-interview';
           router.push(targetPath);
         }}
-        className="inline-block bg-black text-white py-3.5 px-7 rounded-lg font-semibold no-underline mb-6 shadow-[0_3px_0_#ff4c00] transition-all duration-300 border-none cursor-pointer text-base font-inherit hover:bg-[#222] hover:-translate-y-0.5 max-[768px]:py-3 max-[768px]:px-5"
+        className="inline-block bg-black text-white py-3.5 px-7 rounded-lg font-semibold no-underline mb-6 shadow-[0_3px_0_#ff4c00] transition-all duration-300 border-none cursor-pointer text-base font-inherit hover:bg-[#222] hover:-translate-y-0.5 active:translate-y-0 max-[768px]:py-3.5 max-[768px]:px-6 max-[768px]:text-[0.95rem] max-[768px]:mb-5 max-[480px]:py-3 max-[480px]:px-5 max-[480px]:text-sm max-[480px]:mb-4 max-[480px]:w-full max-[480px]:max-w-[280px]"
       >
         {data.cta.label}
       </button>
 
       {/* === Trusted Users === */}
-      <div className="flex items-center justify-center gap-2.5 mb-12">
+      <div className="flex items-center justify-center gap-2.5 mb-12 max-[768px]:mb-8 max-[768px]:gap-2 max-[480px]:mb-6 max-[480px]:flex-col max-[480px]:gap-2">
         <div className="flex items-center">
           {[
             "https://pub-4518f8276e4445ffb4ae9629e58c26af.r2.dev/amit%20(1).jpg",
@@ -161,7 +161,7 @@ export default function HeroSectionClient({ data }: Props) {
           ].map((url, i) => (
             <div
               key={i}
-              className={`relative w-[2.2rem] h-[2.2rem] rounded-full border-2 border-white overflow-hidden -ml-3.5 shadow-[0_0_0_1px_rgba(0,0,0,0.05)] ${i === 0 ? "ml-0" : ""
+              className={`relative w-[2.2rem] h-[2.2rem] rounded-full border-2 border-white overflow-hidden -ml-3.5 shadow-[0_0_0_1px_rgba(0,0,0,0.05)] max-[768px]:w-[2rem] max-[768px]:h-[2rem] max-[768px]:-ml-3 max-[480px]:w-[1.8rem] max-[480px]:h-[1.8rem] max-[480px]:-ml-2.5 ${i === 0 ? "ml-0" : ""
                 }`}
             >
               <Image
@@ -176,20 +176,20 @@ export default function HeroSectionClient({ data }: Props) {
           ))}
         </div>
 
-        <p className="text-base text-black font-medium">{data.trustText}</p>
+        <p className="text-base text-black font-medium max-[768px]:text-sm max-[480px]:text-xs max-[480px]:text-center max-[480px]:px-2">{data.trustText}</p>
       </div>
 
 
       {/* === Universities Section === */}
-      <div className="w-[70%] mx-auto mb-8 flex flex-col gap-[0.05rem] items-center justify-center max-[768px]:w-full max-[768px]:p-2 max-[768px]:mb-4">
+      <div className="w-[70%] mx-auto mb-8 flex flex-col gap-[0.05rem] items-center justify-center max-[768px]:w-full max-[768px]:p-2 max-[768px]:mb-6 max-[480px]:mb-4">
         {/* Heading in separate box */}
-        <div className="bg-white rounded-none py-4 px-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] w-[90%] max-w-[90%] mx-auto mb-0">
-          <p className="text-[0.9rem] font-normal uppercase text-[#555] tracking-[0.05em] m-0">{data.universityHeading}</p>
+        <div className="bg-white rounded-none py-4 px-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] w-[90%] max-w-[90%] mx-auto mb-0 max-[768px]:w-[95%] max-[768px]:py-3 max-[768px]:px-4 max-[480px]:w-full max-[480px]:py-2.5 max-[480px]:px-3">
+          <p className="text-[0.9rem] font-normal uppercase text-[#555] tracking-[0.05em] m-0 max-[768px]:text-[0.8rem] max-[480px]:text-[0.75rem]">{data.universityHeading}</p>
         </div>
 
         {/* University logos below */}
-        <div className="flex justify-start items-center overflow-x-auto overflow-y-hidden relative p-0 rounded-none w-[90%] max-w-[90%] mx-auto mt-0 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-[768px]:max-w-[95%]">
-          <div className="flex items-center justify-start gap-[0.05rem] flex-nowrap w-max pl-0 pr-0">
+        <div className="flex justify-start items-center overflow-x-auto overflow-y-hidden relative p-0 rounded-none w-[90%] max-w-[90%] mx-auto mt-0 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-[768px]:max-w-[95%] max-[480px]:w-full max-[480px]:max-w-full">
+          <div className="flex items-center justify-start gap-[0.05rem] flex-nowrap w-max pl-2 pr-2 max-[480px]:pl-1 max-[480px]:pr-1">
             {data.universities.map((uni, index) => {
               const logoSrc =
                 UNIVERSITY_LOGOS[uni.name] ||
@@ -198,43 +198,35 @@ export default function HeroSectionClient({ data }: Props) {
               return (
                 <div
                   key={index}
-                  className="flex-none bg-white border border-gray-200 rounded-md p-2.5 w-[200px] h-20 flex flex-row items-center justify-start gap-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out snap-start"
+                  className="flex-none bg-white border border-gray-200 rounded-md p-2.5 w-[200px] h-20 flex flex-row items-center justify-start gap-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out snap-start max-[768px]:w-[180px] max-[768px]:h-[72px] max-[768px]:p-2 max-[480px]:w-[160px] max-[480px]:h-16 max-[480px]:p-1.5 max-[480px]:gap-2"
                 >
                   <Image
                     src={logoSrc}
                     alt={uni.name}
                     width={60}
                     height={40}
-                    className="object-contain w-auto max-w-[50px] h-8 max-h-8 flex-shrink-0 max-[768px]:h-8"
+                    className="object-contain w-auto max-w-[50px] h-8 max-h-8 flex-shrink-0 max-[768px]:max-w-[45px] max-[768px]:h-7 max-[480px]:max-w-[40px] max-[480px]:h-6"
                     unoptimized
+                    loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       let attempts = parseInt(target.getAttribute('data-attempts') || '0');
                       
-                      // Try Clearbit without size parameter if using mapped logo
-                      if (UNIVERSITY_LOGOS[uni.name] && attempts === 0) {
+                      // Fail fast - skip to Google favicons if Clearbit fails
+                      if (attempts === 0 && target.src.includes('clearbit.com')) {
                         target.setAttribute('data-attempts', '1');
-                        target.src = `https://logo.clearbit.com/${uni.domain}`;
-                        return;
-                      }
-                      // Try with size parameter
-                      if (attempts < 2 && !target.src.includes('?size=')) {
-                        target.setAttribute('data-attempts', '2');
-                        target.src = `https://logo.clearbit.com/${uni.domain}?size=128`;
-                        return;
-                      }
-                      // Try Google favicons as last resort
-                      if (attempts < 3) {
-                        target.setAttribute('data-attempts', '3');
                         target.src = `https://www.google.com/s2/favicons?domain=${uni.domain}&sz=128`;
                         return;
                       }
-                      // Keep logo visible even if it fails - show placeholder
+                      // Hide logo if all attempts fail
+                      if (attempts >= 1) {
                       target.style.opacity = '0.3';
+                        target.style.pointerEvents = 'none';
+                      }
                     }}
                   />
 
-                  <p className="text-black text-[0.8rem] font-medium text-left leading-[1.3] m-0 p-0 whitespace-nowrap flex-1">
+                  <p className="text-black text-[0.8rem] font-medium text-left leading-[1.3] m-0 p-0 flex-1 max-[768px]:text-[0.75rem] max-[480px]:text-[0.7rem] max-[480px]:leading-[1.2] line-clamp-2">
                     {uni.name}
                   </p>
                 </div>

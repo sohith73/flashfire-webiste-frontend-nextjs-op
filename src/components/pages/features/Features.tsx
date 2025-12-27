@@ -1,43 +1,51 @@
 "use client"
 
-import { useState } from "react"
+import { useState, memo, useMemo } from "react"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { FaPlus, FaTimes, FaWhatsapp } from "react-icons/fa"
+import { usePathname, useRouter } from "next/navigation"
+import { FaPlus, FaTimes, FaWhatsapp, FaBrain, FaFileAlt, FaLinkedin, FaBullseye, FaBolt, FaChartBar } from "react-icons/fa"
 import { questionsData } from "@/src/data/questionsData"
 import faqStyles from "@/src/components/homePageFAQ/homePageFAQ.module.css"
 import FlashfireLogo from "@/src/components/FlashfireLogo"
+import { trackButtonClick, trackSignupIntent } from "@/src/utils/PostHogTracking"
+import { GTagUTM } from "@/src/utils/GTagUTM"
 
 const features = [
   {
     title: "AI-Powered Matching",
     description:
       "For each and every application, your base resume is automatically optimized to the job description with ATS-friendly keywords and skills.",
+    icon: FaBrain,
   },
   {
     title: "Dynamic Resume Optimization",
     description:
       "We build your base resume from scratch and tailor it for each job, making it ATS-friendly and recruiter-visible.",
+    icon: FaFileAlt,
   },
   {
     title: "LinkedIn Profile Optimization",
     description:
       "We professionally optimize your LinkedIn profile to boost recruiter visibility and align with your job search goals.",
+    icon: FaLinkedin,
   },
   {
     title: "Precision Targeting",
     description:
       "We only apply to jobs that fit your pay, location, company size, and career goals — and only to jobs posted in the last 24–48 hours.",
+    icon: FaBullseye,
   },
   {
     title: "Lightning Fast Applications",
     description:
       "A dedicated team of 4–5 people handles your job hunt, applying to 1200+ roles in 6–7 weeks. We'll keep you posted with every update in a WhatsApp group made just for you.",
+    icon: FaBolt,
   },
   {
     title: "Dashboard & Analytics",
     description:
       "Access a personalized dashboard to track applications, monitor success rates, and get real-time insights to improve your job search strategy.",
+    icon: FaChartBar,
   },
 ]
 
@@ -80,9 +88,13 @@ const steps = [
   },
 ]
 
-export default function Features() {
+function Features() {
   const pathname = usePathname()
+  const router = useRouter()
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
+  
+  // Memoize FAQ data to prevent re-computation
+  const faqData = useMemo(() => questionsData.slice(0, 6), [])
 
   const handleFaqToggle = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index)
@@ -98,37 +110,196 @@ export default function Features() {
   }
 
   const handleGetStarted = () => {
-    // Dispatch modal event
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("showGetMeInterviewModal"))
+    // Track button click
+    try {
+      trackButtonClick("Get Started Today", "features_cta", "cta", {
+        button_location: "features_footer_section",
+        section: "features_footer"
+      })
+      trackSignupIntent("features_cta", {
+        signup_source: "features_footer_button",
+        funnel_stage: "signup_intent"
+      })
+    } catch (trackError) {
+      console.error('Tracking error:', trackError)
     }
 
-    // Check current path
+    // Check current path first
     const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '')
     const normalizedPath = currentPath.split('?')[0] // Remove query params
     const isOnFeatures = normalizedPath === '/feature' ||
       normalizedPath === '/features' ||
       normalizedPath === '/en-ca/feature' ||
       normalizedPath === '/en-ca/features'
+    const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
+      normalizedPath === '/en-ca/get-me-interview'
+
+    // If already on the route, save scroll position and prevent navigation
+    if (isAlreadyOnGetMeInterview) {
+      // Save current scroll position before modal opens
+      const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0
+
+      // Dispatch custom event to force show modal
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'))
+      }
+
+      // Restore scroll position immediately after modal opens
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+          setTimeout(() => {
+            window.scrollTo({ top: currentScrollY, behavior: 'instant' })
+          }, 50)
+        })
+      })
+
+      // Just trigger the modal, don't navigate or scroll
+      return
+    }
+
+    // Dispatch custom event to force show modal FIRST
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'))
+    }
 
     // If on features page, change URL but keep page content visible
     if (isOnFeatures) {
-      const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-started-now' : '/get-started-now'
+      // Save current scroll position before navigation to preserve it
       if (typeof window !== 'undefined') {
-        window.history.pushState({}, '', targetPath)
+        const currentScrollY = window.scrollY
+        sessionStorage.setItem('previousPageBeforeGetMeInterview', '/features')
+        sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString())
       }
+
+      // Change URL to /get-me-interview without navigating (keep features page visible)
+      const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview'
+      router.replace(targetPath)
       // Just trigger the modal, don't navigate
       return
     }
 
-    // For other pages, navigate normally (if needed)
-    // Currently just showing modal, navigation can be added if required
+    // Save current scroll position before navigation to preserve it
+    if (typeof window !== 'undefined') {
+      const currentScrollY = window.scrollY
+      sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString())
+    }
+
+    // Only navigate if NOT already on the page
+    const targetPath = '/get-me-interview'
+    router.push(targetPath)
   }
 
   return (
     <div className="bg-[#f9e8e0] min-h-screen">
       {/* Orange Header Bar */}
-     
+      <header className="bg-gradient-to-b from-[#fff0e6] via-[#fff7f2] to-[#fffaf7] py-24 ">
+  <div className="mx-auto max-w-4xl text-center px-4">
+
+    <h1 className="text-4xl md:text-5xl font-extrabold text-[#ff4c00] mb-6 leading-tight">
+      Everything you need to get interviews — automated.
+    </h1>
+
+    <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-10">
+      Flashfire combines{" "}
+      <span className="font-semibold text-[#ff4c00]">AI precision</span> and{" "}
+      <span className="font-semibold text-[#ff4c00]">human expertise</span>{" "}
+      to turn job applications into real interview opportunities.
+    </p>
+
+    {/* CTA */}
+    <div className="flex justify-center">
+      <button
+        onClick={() => {
+          try {
+            const utmSource =
+              typeof window !== "undefined" && window.localStorage
+                ? localStorage.getItem("utm_source") || "WEBSITE"
+                : "WEBSITE";
+
+            const utmMedium =
+              typeof window !== "undefined" && window.localStorage
+                ? localStorage.getItem("utm_medium") || "LinkedIn_Page"
+                : "LinkedIn_Page";
+
+            try {
+              GTagUTM({
+                eventName: "sign_up_click",
+                label: "LinkedIn_Get_Me_Interview_Button",
+                utmParams: {
+                  utm_source: utmSource,
+                  utm_medium: utmMedium,
+                  utm_campaign:
+                    typeof window !== "undefined" && window.localStorage
+                      ? localStorage.getItem("utm_campaign") || "Website"
+                      : "Website",
+                },
+              });
+            } catch {}
+
+            try {
+              trackButtonClick("Get Me Interview", "linkedin_cta", "cta", {
+                button_location: "features_hero_section",
+                section: "features_hero",
+              });
+
+              trackSignupIntent("linkedin_cta", {
+                signup_source: "features_hero_button",
+                funnel_stage: "signup_intent",
+              });
+            } catch {}
+
+            const currentPath =
+              pathname ||
+              (typeof window !== "undefined"
+                ? window.location.pathname
+                : "");
+
+            const normalizedPath = currentPath.split("?")[0];
+
+            if (
+              normalizedPath === "/get-me-interview" ||
+              normalizedPath === "/en-ca/get-me-interview"
+            ) {
+              window.dispatchEvent(
+                new CustomEvent("showGetMeInterviewModal")
+              );
+              return;
+            }
+
+            // Save current page and scroll position before navigation
+            if (typeof window !== "undefined") {
+              const currentScrollY = window.scrollY;
+              const isOnFeatures = normalizedPath === '/feature' ||
+                normalizedPath === '/features' ||
+                normalizedPath === '/en-ca/feature' ||
+                normalizedPath === '/en-ca/features';
+              
+              if (isOnFeatures) {
+                sessionStorage.setItem('previousPageBeforeGetMeInterview', normalizedPath);
+                sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+              }
+            }
+
+            window.dispatchEvent(
+              new CustomEvent("showGetMeInterviewModal")
+            );
+            
+            const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview';
+            router.push(targetPath);
+          } catch {}
+        }}
+        className="bg-white border-2 border-black px-8 py-4 font-bold text-black text-lg hover:bg-[#f9e8e0] transition-colors rounded-xl inline-flex items-center justify-center"
+        style={{ boxShadow: "0 5px 0 0 rgba(245, 93, 29, 1)" }}
+      >
+        Get Me Interview →
+      </button>
+    </div>
+
+  </div>
+</header>
+
 
     <section
       id="feature"
@@ -150,20 +321,30 @@ export default function Features() {
         {/* Features Grid - 3 rows x 2 columns */}
         <div className="relative z-10 mx-auto mb-16 max-w-6xl md:mb-20 overflow-visible">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-            {features.map((feature, index) => (
-              <article
-                key={index}
-                className="bg-white border border-[#ff4c00]/50 border-b-4 border-b-[#ff4c00] rounded-lg p-6 text-left shadow-sm"
-              >
-                <h3 className="mb-3 text-xl font-bold text-[#ff4c00] md:text-2xl">
-                  {feature.title}
-                </h3>
-                <p className="text-base leading-relaxed text-gray-700">
-                  {feature.description}
-            </p>
-          </article>
-            ))}
-            </div>
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <article
+                  key={index}
+                  className="group bg-white border border-[#ff4c00]/50 border-b-4 border-b-[#ff4c00] rounded-lg p-6 text-left shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                >
+                  {/* Icon Container */}
+                  <div className="mb-4 flex items-center justify-start">
+                    <div className="bg-gradient-to-br from-[#ff4c00] to-[#ff6b2b] p-3 rounded-xl shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
+                      <IconComponent className="text-white text-2xl" />
+                    </div>
+                  </div>
+                  
+                  <h3 className="mb-3 text-xl font-bold text-[#ff4c00] md:text-2xl group-hover:text-[#e24300] transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-base leading-relaxed text-gray-700">
+                    {feature.description}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
         </div>
 
         {/* Steps Section - Orange Background */}
@@ -292,6 +473,8 @@ export default function Features() {
                                 width={80}
                                 height={80}
                                 className="w-full h-full object-contain"
+                                loading={index === 0 ? "eager" : "lazy"}
+                                priority={index === 0}
                               />
             </div>
                             <h3 className="text-2xl font-bold md:text-3xl">
@@ -311,6 +494,7 @@ export default function Features() {
                                 width={80}
                                 height={80}
                                 className="w-full h-full object-contain"
+                                loading="lazy"
                               />
             </div>
                           </>
@@ -333,6 +517,9 @@ export default function Features() {
                           width={100}
                           height={100}
                           className="w-full h-full object-contain"
+                          style={{ width: 'auto', height: 'auto' }}
+                          loading={index === 0 ? "eager" : "lazy"}
+                          priority={index === 0}
                         />
               </div>
             </div>
@@ -354,7 +541,7 @@ export default function Features() {
           </div>
 
           <div className={`${faqStyles.faqContainer} text-left !rounded-none`}>
-            {questionsData.slice(0, 6).map((faq, index) => (
+            {faqData.map((faq, index) => (
               <div
                 key={faq.question}
                 className={`${faqStyles.faqItem} ${activeFaq === index ? faqStyles.active : ""}`}
@@ -431,6 +618,7 @@ export default function Features() {
               width={260}
               height={480}
               className="absolute top-[-70%] right-[-9%] h-[300%] w-auto object-contain brightness-100 contrast-105 max-[1024px]:static max-[1024px]:h-full max-[1024px]:w-full max-[1024px]:object-contain max-[1024px]:top-0 max-[1024px]:right-0 max-[768px]:object-cover max-[768px]:scale-110 max-[480px]:object-top"
+              loading="lazy"
               unoptimized
             />
             <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 via-black/30 to-transparent pointer-events-none" />
@@ -461,3 +649,5 @@ export default function Features() {
     </div>
   )
 }
+
+export default memo(Features)

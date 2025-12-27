@@ -48,166 +48,144 @@ export default function AboutUs() {
   return (
     <div className="bg-[#f9e8e0] min-h-screen font-['Space_Grotesk',sans-serif] relative overflow-hidden">
       {/* === HERO SECTION === */}
-     
-        {/* Orange top bar */}
-       
-        
-        {/* Gradient background */}
-        <div className="bg-[#f9e8e0] py-16 px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-6xl mx-auto">
-            {/* Achievement Badges */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="border-2 border-black px-4 py-2 bg-[#f9e8e0]">
-                <p className="text-[#F55D1D] font-bold text-sm uppercase">LAND INTERVIEW IN 1 WEEK</p>
-              </div>
-              <div className="border-2 border-black px-4 py-2 bg-[#f9e8e0]">
-                <p className="text-[#F55D1D] font-bold text-sm uppercase">50 USERS LANDED JOB</p>
-              </div>
+
+      {/* Orange top bar */}
+
+
+      {/* Gradient background */}
+      <div className="bg-[#f9e8e0] py-16 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-6xl mx-auto">
+          {/* Achievement Badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <div className="border-2 border-black px-4 py-2 bg-[#f9e8e0]">
+              <p className="text-[#F55D1D] font-bold text-sm uppercase">LAND INTERVIEW IN 1 WEEK</p>
             </div>
-
-            {/* Main Headline */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center mb-6 text-[#F55D1D] leading-tight px-2">
-              FLASHFIRE WAS BUILT TO FIX<br className="hidden sm:block" />
-              <span className="sm:hidden"> </span>A BROKEN HIRING SYSTEM
-            </h1>
-
-            {/* Supporting Text with Mascot */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8 sm:mb-12 px-2">
-              <div className="text-center md:text-left">
-                <p className="text-base sm:text-lg text-gray-900 mb-2">
-                  Hiring today rewards <span className="text-[#F55D1D] font-bold">speed, volume, and precision.</span>
-                </p>
-                <p className="text-base sm:text-lg text-gray-900">
-                  Yet candidates are still expected to do everything manually.
-                </p>
-              </div>
-              <div className="flex-shrink-0">
-                <Image
-                  src="/images/flashfire-logo.png"
-                  alt="Flashfire Mascot"
-                  width={80}
-                  height={80}
-                  className="object-contain w-16 h-16 sm:w-20 sm:h-20"
-                  priority
-                  unoptimized
-                />
-              </div>
+            <div className="border-2 border-black px-4 py-2 bg-[#f9e8e0]">
+              <p className="text-[#F55D1D] font-bold text-sm uppercase">50 USERS LANDED JOB</p>
             </div>
+          </div>
 
-            {/* Call-to-Action Button */}
-            <div className="flex justify-center px-2">
-              <button 
-                {...getButtonProps()}
-                className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#f9e8e0] transition-colors rounded-lg w-full sm:w-auto max-w-xs sm:max-w-none" 
-                style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}
-                onClick={() => {
-                  const utmSource = typeof window !== "undefined"
-                    ? localStorage.getItem("utm_source") || "WEBSITE"
-                    : "WEBSITE";
-                  const utmMedium = typeof window !== "undefined"
-                    ? localStorage.getItem("utm_medium") || "About_Us_Page"
-                    : "About_Us_Page";
+          {/* Main Headline */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center mb-6 text-[#F55D1D] leading-tight px-2">
+            FLASHFIRE WAS BUILT TO FIX<br className="hidden sm:block" />
+            <span className="sm:hidden"> </span>A BROKEN HIRING SYSTEM
+          </h1>
 
-                  try {
-                    GTagUTM({
-                      eventName: "sign_up_click",
-                      label: "About_Us_Get_Me_Interview_Button",
-                      utmParams: {
-                        utm_source: utmSource,
-                        utm_medium: utmMedium,
-                        utm_campaign: typeof window !== "undefined"
-                          ? localStorage.getItem("utm_campaign") || "Website"
-                          : "Website",
-                      },
-                    });
-                  } catch (gtagError) {
-                    console.warn('GTagUTM error:', gtagError);
+          {/* Supporting Text with Mascot */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8 sm:mb-12 px-2">
+            <div className="text-center md:text-left">
+              <p className="text-base sm:text-lg text-gray-900 mb-2">
+                Hiring today rewards <span className="text-[#F55D1D] font-bold">speed, volume, and precision.</span>
+              </p>
+              <p className="text-base sm:text-lg text-gray-900">
+                Yet candidates are still expected to do everything manually.
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <Image
+                src="/images/flashfire-logo.png"
+                alt="Flashfire Mascot"
+                width={80}
+                height={80}
+                className="object-contain w-16 h-16 sm:w-20 sm:h-20"
+                priority
+                unoptimized
+              />
+            </div>
+          </div>
+
+          {/* Call-to-Action Button */}
+          <div className="flex justify-center px-2">
+            <button
+              {...getButtonProps()}
+              className="bg-white border-2 border-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-black text-base sm:text-lg hover:bg-[#f9e8e0] transition-colors rounded-lg w-full sm:w-auto max-w-xs sm:max-w-none"
+              style={{ boxShadow: '0 4px 0 0 rgba(245, 93, 29, 1)' }}
+              onClick={() => {
+                const utmSource = typeof window !== "undefined"
+                  ? localStorage.getItem("utm_source") || "WEBSITE"
+                  : "WEBSITE";
+                const utmMedium = typeof window !== "undefined"
+                  ? localStorage.getItem("utm_medium") || "About_Us_Page"
+                  : "About_Us_Page";
+
+                try {
+                  GTagUTM({
+                    eventName: "sign_up_click",
+                    label: "About_Us_Get_Me_Interview_Button",
+                    utmParams: {
+                      utm_source: utmSource,
+                      utm_medium: utmMedium,
+                      utm_campaign: typeof window !== "undefined"
+                        ? localStorage.getItem("utm_campaign") || "Website"
+                        : "Website",
+                    },
+                  });
+                } catch (gtagError) {
+                  console.warn('GTagUTM error:', gtagError);
+                }
+
+                try {
+                  trackButtonClick("Get Me Interview", "about_us_cta", "cta", {
+                    button_location: "about_us_hero_section",
+                    section: "about_us_hero"
+                  });
+                  trackSignupIntent("about_us_cta", {
+                    signup_source: "about_us_hero_button",
+                    funnel_stage: "signup_intent"
+                  });
+                } catch (trackError) {
+                  console.warn('Tracking error:', trackError);
+                }
+
+                // Check current path first
+                const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
+                const normalizedPath = currentPath.split('?')[0]; // Remove query params
+                const isAboutUsPage = normalizedPath === '/about-us' || normalizedPath === '/en-ca/about-us';
+                const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
+                  normalizedPath === '/en-ca/get-me-interview';
+
+                // If already on the route, save scroll position and prevent navigation
+                if (isAlreadyOnGetMeInterview) {
+                  // Save current scroll position before modal opens
+                  const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
+                  // Dispatch custom event to force show modal
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
                   }
 
-                  try {
-                    trackButtonClick("Get Me Interview", "about_us_cta", "cta", {
-                      button_location: "about_us_hero_section",
-                      section: "about_us_hero"
-                    });
-                    trackSignupIntent("about_us_cta", {
-                      signup_source: "about_us_hero_button",
-                      funnel_stage: "signup_intent"
-                    });
-                  } catch (trackError) {
-                    console.warn('Tracking error:', trackError);
-                  }
-
-                  // Check current path first
-                  const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
-                  const normalizedPath = currentPath.split('?')[0]; // Remove query params
-                  const isAboutUsPage = normalizedPath === '/about-us' || normalizedPath === '/en-ca/about-us';
-                  const isAlreadyOnGetMeInterview = normalizedPath === '/get-me-interview' ||
-                    normalizedPath === '/en-ca/get-me-interview';
-
-                  // If already on the route, save scroll position and prevent navigation
-                  if (isAlreadyOnGetMeInterview) {
-                    // Save current scroll position before modal opens
-                    const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-
-                    // Dispatch custom event to force show modal
-                    if (typeof window !== 'undefined') {
-                      window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
-                    }
-
-                    // Restore scroll position immediately after modal opens
+                  // Restore scroll position immediately after modal opens
+                  requestAnimationFrame(() => {
+                    window.scrollTo({ top: currentScrollY, behavior: 'instant' });
                     requestAnimationFrame(() => {
                       window.scrollTo({ top: currentScrollY, behavior: 'instant' });
-                      requestAnimationFrame(() => {
+                      setTimeout(() => {
                         window.scrollTo({ top: currentScrollY, behavior: 'instant' });
-                        setTimeout(() => {
-                          window.scrollTo({ top: currentScrollY, behavior: 'instant' });
-                        }, 50);
-                      });
+                      }, 50);
                     });
+                  });
 
-                    // Just trigger the modal, don't navigate or scroll
-                    return;
+                  // Just trigger the modal, don't navigate or scroll
+                  return;
+                }
+
+                // If on about-us page, change URL but keep page content visible
+                if (isAboutUsPage) {
+                  // Save the previous page path to sessionStorage
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.setItem('previousPageBeforeGetMeInterview', normalizedPath);
                   }
 
-                  // If on about-us page, change URL but keep page content visible
-                  if (isAboutUsPage) {
-                    // Save the previous page path to sessionStorage
-                    if (typeof window !== 'undefined') {
-                      sessionStorage.setItem('previousPageBeforeGetMeInterview', normalizedPath);
-                    }
-                    
-                    // Save current scroll position before modal opens
-                    const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-                    if (typeof window !== 'undefined') {
-                      sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
-                    }
+                  // Save current scroll position before modal opens
+                  const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+                  }
 
-                    // Change URL to /get-me-interview using pushState
-                    const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview';
-                    if (typeof window !== 'undefined') {
-                      window.history.pushState({}, '', targetPath);
-                    }
-
-                    // Dispatch custom event to force show modal FIRST
-                    if (typeof window !== 'undefined') {
-                      window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
-                    }
-
-                    // Use router.replace to update Next.js state
-                    router.replace(targetPath);
-
-                    // Restore scroll position immediately after modal opens
-                    requestAnimationFrame(() => {
-                      window.scrollTo({ top: currentScrollY, behavior: 'instant' });
-                      requestAnimationFrame(() => {
-                        window.scrollTo({ top: currentScrollY, behavior: 'instant' });
-                        setTimeout(() => {
-                          window.scrollTo({ top: currentScrollY, behavior: 'instant' });
-                        }, 50);
-                      });
-                    });
-
-                    return;
+                  // Change URL to /get-me-interview using pushState
+                  const targetPath = normalizedPath.startsWith('/en-ca') ? '/en-ca/get-me-interview' : '/get-me-interview';
+                  if (typeof window !== 'undefined') {
+                    window.history.pushState({}, '', targetPath);
                   }
 
                   // Dispatch custom event to force show modal FIRST
@@ -215,23 +193,45 @@ export default function AboutUs() {
                     window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
                   }
 
-                  // Save current scroll position before navigation to preserve it
-                  if (typeof window !== 'undefined') {
-                    const currentScrollY = window.scrollY;
-                    sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
-                  }
+                  // Use router.replace to update Next.js state
+                  router.replace(targetPath);
 
-                  // Only navigate if NOT already on the page
-                  const targetPath = '/get-me-interview';
-                  router.push(targetPath);
-                }}
-              >
-                Get Me Interview
-              </button>
-            </div>
+                  // Restore scroll position immediately after modal opens
+                  requestAnimationFrame(() => {
+                    window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                    requestAnimationFrame(() => {
+                      window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                      setTimeout(() => {
+                        window.scrollTo({ top: currentScrollY, behavior: 'instant' });
+                      }, 50);
+                    });
+                  });
+
+                  return;
+                }
+
+                // Dispatch custom event to force show modal FIRST
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('showGetMeInterviewModal'));
+                }
+
+                // Save current scroll position before navigation to preserve it
+                if (typeof window !== 'undefined') {
+                  const currentScrollY = window.scrollY;
+                  sessionStorage.setItem('preserveScrollPosition', currentScrollY.toString());
+                }
+
+                // Only navigate if NOT already on the page
+                const targetPath = '/get-me-interview';
+                router.push(targetPath);
+              }}
+            >
+              Get Me Interview
+            </button>
           </div>
         </div>
-      
+      </div>
+
 
       {/* === OUR FOUNDERS SECTION === */}
       <section className="bg-[#F55D1D] py-8 sm:py-10 mb-8 sm:mb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden rounded-xl sm:rounded-2xl max-w-5xl mx-auto my-4 sm:my-8 border-2 sm:border-4 border-[#F55D1D] z-10">
@@ -379,8 +379,7 @@ export default function AboutUs() {
               <div className="p-6 sm:p-8">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F55D1D] mb-3 sm:mb-4 uppercase" style={{ textShadow: '2px 2px 0px rgba(0, 0, 0, 1)' }}>OUR VISION</h3>
                 <p className="text-black leading-relaxed text-base sm:text-lg">
-                  To become the world's fastest and most intelligent job application engine, enabling anyone to apply to over 1,200 targeted roles and land interviews ten times faster  all without wasting time or effort. 
-                </p>
+                  To become the world&apos;s fastest and most intelligent job application engine, enabling anyone to apply to over 1,200 targeted roles and land interviews ten times faster all without wasting time or effort.                </p>
               </div>
             </div>
           </div>
