@@ -117,7 +117,7 @@ export default function Page() {
     },
     {
       question: "Is there a resume maker for fresher beginners on FlashFireJobs?",
-      answer: "Ans. Yes. Our team builds ATS-compliant resumes even for freshers, highlighting education, projects, and relevant skills with proper structure."
+      answer: "Ans. Our team builds ATS-compliant resumes even for freshers, highlighting education, projects, and relevant skills with proper structure."
     },
     {
       question: "Which resume builder app is best for creating professional resumes?",
@@ -129,7 +129,7 @@ export default function Page() {
     },
     {
       question: "Is there an ATS resume checker free tool I can use right now?",
-      answer: "Ans. Yes — users can access resume feedback and ATS alignment checks as part of their FlashFireJobs onboarding."
+      answer: "Ans. Users can access resume feedback and ATS alignment checks as part of their FlashFireJobs onboarding."
     },
     {
       question: "What features should I look for in the best free resume builder?",
@@ -137,7 +137,7 @@ export default function Page() {
     },
     {
       question: "Can I create a resume using a free resume builder AI?",
-      answer: "Ans. Yes — but FlashFire goes a step beyond by manually optimizing your resume with AI guidance and human input."
+      answer: "Ans. FlashFire goes a step beyond by manually optimizing your resume with AI guidance and human input."
     },
     {
       question: "How does a free resume maker AI help me craft a compelling resume?",
@@ -149,7 +149,7 @@ export default function Page() {
     },
     {
       question: "Does FlashFireJobs offer an AI job board to find smart job matches?",
-      answer: "Ans. Yes. We scrape jobs based on your preferences, optimize your resume, and apply on your behalf to save 150+ hours."
+      answer: "Ans. We scrape jobs based on your preferences, optimize your resume, and apply on your behalf to save 150+ hours."
     },
     {
       question: "How does an AI powered job search help me find jobs faster?",
@@ -161,7 +161,7 @@ export default function Page() {
     },
     {
       question: "Can FlashFireJobs auto apply to jobs and provide job application assistance to streamline my applications?",
-      answer: "Ans. Yes. Our team manually applies to 1,200+ jobs on your behalf, using AI-optimized resumes, tracked in a real-time dashboard."
+      answer: "Ans. Our team manually applies to 1,200+ jobs on your behalf, using AI-optimized resumes, tracked in a real-time dashboard."
     }
   ]
 
