@@ -177,21 +177,21 @@ export default function JobSearch() {
           </p>
 
           {/* Key Benefits Bullet Points */}
-          <div className="flex flex-col gap-4 text-left max-w-2xl mx-auto mb-10">
-            <div className="flex items-start gap-3">
-              <span className="text-black font-bold text-2xl mt-1">▪</span>
+          <div className="flex flex-col gap-4 text-center max-w-2xl mx-auto mb-10">
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-black font-bold text-2xl">▪</span>
               <p className="text-base md:text-lg font-bold text-black">
                 Flashfire scans job listings near your location
               </p>
             </div>
-            <div className="flex items-start gap-3">
-              <span className="text-black font-bold text-2xl mt-1">▪</span>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-black font-bold text-2xl">▪</span>
               <p className="text-base md:text-lg font-bold text-black">
                 Our team applies to matched roles for you
               </p>
             </div>
-            <div className="flex items-start gap-3">
-              <span className="text-black font-bold text-2xl mt-1">▪</span>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-black font-bold text-2xl">▪</span>
               <p className="text-base md:text-lg font-bold text-black">
                 You get updates without lifting a finger
               </p>
