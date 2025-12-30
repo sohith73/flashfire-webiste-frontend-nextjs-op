@@ -397,7 +397,7 @@ export const blogPosts = [
       bio: "Career expert and resume strategist helping job seekers land their dream roles.",
     },
     image:
-      "https://res.cloudinary.com/dcrj8p79e/image/upload/v1767102051/Screenshot_2025-12-30_190552_ll1eol.png",
+      "https://res.cloudinary.com/drcka8x04/image/upload/v1767125218/blog_thumbnails-52_dxp73c.jpg",
     categoryColor: "bg-purple-100 text-purple-600",
     content: `
 
