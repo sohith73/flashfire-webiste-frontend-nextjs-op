@@ -3,9 +3,9 @@ import HomePage from "@/src/components/pages/home/Home";
 import HomeImagePreloader from "./HomeImagePreloader";
 
 export const metadata: Metadata = {
-  title: "FLASHFIRE - AI-Powered Job Search Automation | Land Your Dream Job Faster",
+  title: "AI Job Search, Job Application Platform | Ai Job Hunting Sites - FlashFireJobs",
   description:
-    "We apply to 1000+ jobs on your behalf with tailored resumes for every role. Save 150+ hours, skip the grunt work, and stay in control with real-time updates. Your job hunt—automated.",
+    "FlashFireJobs is an AI-powered job search platform offering auto apply to jobs, job application assistance, AI job board & smart career job search tools.",
   robots: {
     index: true,
     follow: true,
@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     canonical: "https://www.flashfirejobs.com/",
   },
   openGraph: {
-    title: "FLASHFIRE - AI-Powered Job Search Automation",
+    title: "AI Job Search, Job Application Platform | Ai Job Hunting Sites - FlashFireJobs",
     description:
-      "We apply to 1000+ jobs on your behalf with tailored resumes for every role. Save 150+ hours, skip the grunt work, and stay in control with real-time updates.",
+      "FlashFireJobs is an AI-powered job search platform offering auto apply to jobs, job application assistance, AI job board & smart career job search tools.",
     url: "https://www.flashfirejobs.com/",
     type: "website",
     images: [
