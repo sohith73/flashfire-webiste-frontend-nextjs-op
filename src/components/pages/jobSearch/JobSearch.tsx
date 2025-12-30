@@ -167,7 +167,8 @@ export default function JobSearch() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-black mb-6 leading-tight">
-            Find Jobs Faster With<span className="text-[#ff4c00] font-bold"> Human-Powered</span> Automation.
+            Find Jobs Faster With<br />
+            <span className="text-[#ff4c00] font-bold">Human-Powered</span> Automation.
           </h1>
 
           {/* Sub-heading */}
