@@ -33,7 +33,7 @@ const steps = [
   },
 ];
 
-export default function JobSearch() {
+export default function JobSearchNearMeContent() {
   const router = useRouter();
   const pathname = usePathname();
   const { getButtonProps } = useGeoBypass({
@@ -93,7 +93,8 @@ export default function JobSearch() {
         normalizedPath === "/en-ca/get-me-interview";
       const isOnJobSearchPage =
         normalizedPath === "/job-search" ||
-        normalizedPath === "/en-ca/job-search";
+        normalizedPath === "/en-ca/job-search" ||
+        normalizedPath === "/Job-Search-Immediately-near-me";
 
       // If already on the route, save scroll position and prevent navigation
       if (isAlreadyOnGetMeInterview) {
@@ -167,14 +168,12 @@ export default function JobSearch() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-black mb-6 leading-tight">
-            Find Jobs Faster With<br />
-            <span className="text-[#ff4c00] font-bold">Human-Powered</span> Automation.
+            Job Search Near Me – Jobs Hiring Immediately Near Me
           </h1>
 
           {/* Sub-heading */}
           <p className="text-lg md:text-2xl font-bold text-black mb-8 leading-relaxed max-w-3xl mx-auto">
-            Flashfire applies to relevant jobs on your behalf so you don't have
-            to search manually.
+            Find the best job search near me results with FlashFireJobs. Discover jobs hiring immediately near me and apply faster with AI-powered tools.
           </p>
 
           {/* Key Benefits Bullet Points */}
