@@ -8,45 +8,33 @@ export default function PrivacyPolicy() {
   return (
     <div className="bg-orange-50/30 min-h-screen font-sans selection:bg-orange-100 selection:text-orange-900">
       {/* Header */}
-      <section className="bg-gradient-to-b from-[#ff4c00]/10 via-[#ff4c00]/5 to-white border-b border-[#ff4c00]/20">
-        <div className="max-w-4xl mx-auto px-6 py-16 md:py-24 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-[#ff4c00] hover:opacity-80 mb-8 transition"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
-
-          <div className="flex flex-col items-center gap-6">
-            <div className="p-4 rounded-2xl bg-[#ff4c00]/15 ring-1 ring-[#ff4c00]/30 shadow-sm">
-              <FileText className="w-8 h-8 text-[#ff4c00]" />
-            </div>
-
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
-                Privacy Policy
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                How we collect, use, process, store, and protect your personal information when you access or use our AI-powered job application automation platform.
-              </p>
-
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-500 pt-2">
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-[#ff4c00]" />
-                  Updated January 2025
-                </span>
-               
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Content */}
       <main className="relative">
         <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
           <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-16 text-slate-600 leading-relaxed space-y-20">
+          <div className="space-y-4">
+              <div className="max-w-4xl mx-auto ">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-[#ff4c00] hover:opacity-80 transition"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Back to Home
+                </Link>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+                Privacy Policy
+              </h1>
+              <div className="flex gap-4 text-sm text-gray-500 pt-2">
+                <span className="flex  gap-1.5">
+                  <Calendar className="w-4 h-4 text-[#ff4c00]" />
+                  Updated January 2025
+                </span>
+
+              </div>
+            </div>
             {/* 1. Introduction */}
             <section className="space-y-4">
               <div className="inline-block px-3 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold uppercase tracking-widest mb-2">

@@ -5,46 +5,33 @@ import { RotateCcw, ChevronLeft, Calendar, FileText, CheckCircle2 } from "lucide
 
 export default function RefundPolicy() {
   return (
-    <div className="bg-white min-h-screen pb-20">
-      {/* Header */}
-      <section className="bg-gradient-to-b from-[#ff4c00]/10 via-[#ff4c00]/5 to-white border-b border-[#ff4c00]/20">
-        <div className="max-w-4xl mx-auto px-6 py-16 md:py-24 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-[#ff4c00] hover:opacity-80 mb-8 transition"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
-
-          <div className="flex flex-col items-center gap-6">
-            <div className="p-4 rounded-2xl bg-[#ff4c00]/15 ring-1 ring-[#ff4c00]/30 shadow-sm">
-              <RotateCcw className="w-8 h-8 text-[#ff4c00]" />
-            </div>
-
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">Refund Policy</h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Our value-driven approach ensuring you receive maximum value from our AI-powered job application
-                automation services.
-              </p>
-
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-500 pt-2">
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-[#ff4c00]" />
-                  Updated July 2025
-                </span>
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    <div className="bg-white min-h-screen  mt-10 pb-20">
+           
       {/* Content */}
       <main className="max-w-4xl mx-auto px-6 -mt-10">
         <div className="bg-white border border-[#ff4c00]/20 shadow-xl shadow-[#ff4c00]/10 rounded-2xl">
           <div className="p-8 md:p-16 space-y-20 text-gray-700 leading-[1.8]">
+          <div className="space-y-4">
+              <div className="max-w-4xl mx-auto ">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-[#ff4c00] hover:opacity-80 transition"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Back to Home
+                </Link>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+                Refund Policy
+              </h1>
+              <div className="flex gap-4 text-sm text-gray-500 pt-2">
+                <span className="flex  gap-1.5">
+                  <Calendar className="w-4 h-4 text-[#ff4c00]" />
+                  Updated January 2025
+                </span>
+
+              </div>
+            </div>
             {/* Intro */}
             <section>
               <p className="text-lg">
