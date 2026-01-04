@@ -34,19 +34,16 @@ export default function HomePageCareerCTA() {
 
           <ul className={styles.featuresList}>
             <li>
-              <FaBolt className={styles.icon} /> Resume built from scratch &
-              tailored for every job
+              <FaBolt className={styles.icon} /> Resumes tailored according to each job description.
             </li>
             <li>
-              <FaBolt className={styles.icon} /> LinkedIn optimized for
-              recruiter visibility
+              <FaBolt className={styles.icon} /> Optimized LinkedIn profile so recruiters notice you.
             </li>
             <li>
-              <FaBolt className={styles.icon} /> AI-backed job targeting for
-              your goals
+              <FaBolt className={styles.icon} /> Targeting jobs with AI, even for new hires
             </li>
             <li>
-              <FaBolt className={styles.icon} /> Weekly WhatsApp updates
+              <FaBolt className={styles.icon} /> Updated weekly through WhatsApp on the application status and interviews.
             </li>
           </ul>
 
