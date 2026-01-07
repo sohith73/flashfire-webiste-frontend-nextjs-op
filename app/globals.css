@@ -20,6 +20,11 @@
 }
 
 html {
+  scroll-behavior: auto;
+}
+
+/* Apply smooth scrolling only when explicitly needed (e.g., anchor links) */
+html.smooth-scroll {
   scroll-behavior: smooth;
 }
 
